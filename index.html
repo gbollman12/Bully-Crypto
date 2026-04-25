@@ -11,15 +11,12 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system,BlinkMacS
 .header{display:flex;align-items:center;gap:14px;padding:18px;border-bottom:1px solid #1f1f1f}
 .logo{width:54px;height:54px;border-radius:12px;object-fit:cover}
 .title{font-size:24px;font-weight:900}.sub{font-size:12px;color:#888;letter-spacing:1px}
-
 input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white;font-size:16px;box-sizing:border-box}
 .quick{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
 .quick button{flex:1 1 28%;padding:11px;border-radius:10px;border:1px solid #2a2a2a;background:#101010;color:white;font-weight:800}
-
 .tabs{display:flex;border-top:1px solid #1f1f1f;border-bottom:1px solid #1f1f1f}
 .tab{flex:1;text-align:center;padding:14px;color:#777;font-weight:800}
 .tab.active{color:#7cff55;border-bottom:3px solid #7cff55}
-
 .screen{display:none;padding:14px}.screen.active{display:block}
 .card{background:linear-gradient(180deg,#121412,#080908);border:1px solid #242a25;border-radius:18px;padding:16px;margin-bottom:12px}
 .topline{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
@@ -30,24 +27,16 @@ input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;backgr
 .buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08)}
 .sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08)}
 .hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08)}
-
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .label{font-size:11px;color:#777;font-weight:900;text-transform:uppercase;letter-spacing:1px}
 .value{font-size:24px;font-weight:900;margin-top:6px}
 .small{font-size:14px;color:#aaa;line-height:1.45}
-
 .bar{height:8px;background:#252525;border-radius:20px;overflow:hidden;margin-top:10px}
 .fill{height:100%;background:#7cff55;width:0%}
-
 .row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #222}
-.row:last-child{border-bottom:0}
-.row span:first-child{color:#888}
-.row span:last-child{font-weight:850;text-align:right}
-
-.settingsGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.settingInput{border:1px solid #2a2a2a;border-radius:12px;background:#090909}
+.row:last-child{border-bottom:0}.row span:first-child{color:#888}.row span:last-child{font-weight:850;text-align:right}
+.settingInput{border:1px solid #2a2a2a;border-radius:12px;background:#090909;margin-top:8px}
 .saveBtn{width:100%;padding:13px;border-radius:12px;border:1px solid #7cff55;background:rgba(124,255,85,.08);color:#7cff55;font-weight:900}
-
 iframe{width:100%;height:430px;border:0;border-radius:16px}
 </style>
 </head>
@@ -107,6 +96,11 @@ iframe{width:100%;height:430px;border:0;border-radius:16px}
     <div class="small" id="strengthText">—</div>
   </div>
 
+  <div class="grid">
+    <div class="card"><div class="label">RSI</div><div class="value" id="rsiOut">—</div></div>
+    <div class="card"><div class="label">R/R</div><div class="value" id="rrMini">—</div></div>
+  </div>
+
   <div class="card">
     <div class="label">Read</div>
     <div class="small" id="reason">Waiting.</div>
@@ -142,21 +136,11 @@ iframe{width:100%;height:430px;border:0;border-radius:16px}
     <div class="label">Your Account Funds</div>
     <input id="accountFunds" class="settingInput" inputmode="decimal" placeholder="Example: 500">
   </div>
-
   <div class="card">
     <div class="label">Risk % Per Trade</div>
     <input id="riskPercent" class="settingInput" inputmode="decimal" placeholder="Example: 1">
   </div>
-
   <button class="saveBtn" onclick="saveFunds()">SAVE FUNDS SETTINGS</button>
-
-  <div class="card">
-    <div class="label">Rule</div>
-    <div class="small">
-      This does not place trades. It estimates position size using your account funds and risk percent.
-      Example: $500 account at 1% risk = $5 max risk.
-    </div>
-  </div>
 </div>
 
 </div>
@@ -167,6 +151,7 @@ let chartLoaded = "";
 let requestId = 0;
 const cache = {};
 const CACHE_TIME = 60000;
+let lastPlan = null;
 
 const map = {
   BTC:"bitcoin", ETH:"ethereum", SOL:"solana", XRP:"ripple", ZEC:"zcash",
@@ -176,8 +161,6 @@ const map = {
 const screens = document.querySelectorAll(".screen");
 const tabs = document.querySelectorAll(".tab");
 const ticker = document.getElementById("ticker");
-
-let lastPlan = null;
 
 function tab(i){
   screens.forEach(s=>s.classList.remove("active"));
@@ -201,6 +184,35 @@ ticker.addEventListener("input",()=>{
 
 function money(n){
   return "$" + Number(n).toLocaleString(undefined,{maximumFractionDigits:n>100?2:4});
+}
+
+function ema(values, period){
+  if(values.length < period) return values[values.length-1];
+  const k = 2 / (period + 1);
+  let e = values.slice(0, period).reduce((a,b)=>a+b,0) / period;
+  for(let i=period;i<values.length;i++){
+    e = values[i] * k + e * (1-k);
+  }
+  return e;
+}
+
+function rsi(values, period=14){
+  if(values.length <= period) return 50;
+  let gains = 0, losses = 0;
+  for(let i=values.length-period;i<values.length;i++){
+    const diff = values[i] - values[i-1];
+    if(diff >= 0) gains += diff;
+    else losses -= diff;
+  }
+  if(losses === 0) return 100;
+  const rs = gains / losses;
+  return 100 - (100 / (1 + rs));
+}
+
+function stdev(values){
+  const avg = values.reduce((a,b)=>a+b,0)/values.length;
+  const v = values.reduce((s,x)=>s+Math.pow(x-avg,2),0)/values.length;
+  return Math.sqrt(v);
 }
 
 function getSettings(){
@@ -229,13 +241,10 @@ async function getCoinData(sym,id){
     return cache[sym].data;
   }
 
-  const simple = await fetch(
-    `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`
-  ).then(r=>r.json());
-
-  const chartData = await fetch(
-    `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`
-  ).then(r=>r.json());
+  const [simple, chartData] = await Promise.all([
+    fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`).then(r=>r.json()),
+    fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`).then(r=>r.json())
+  ]);
 
   cache[sym] = { time: now, data: { simple, chartData } };
   return cache[sym].data;
@@ -264,42 +273,98 @@ async function run(){
     const high = Math.max(...prices);
     const low = Math.min(...prices);
     const recent = prices.slice(-24);
-    const recentLow = Math.min(...recent);
-    const recentHigh = Math.max(...recent);
     const recentStart = recent[0] || price;
     const recentMove = ((price - recentStart) / recentStart) * 100;
+
+    const fastEma = ema(prices, 12);
+    const slowEma = ema(prices, 26);
+    const rsiVal = rsi(prices, 14);
+    const volatility = (stdev(recent) / price) * 100;
     const range = high - low || 1;
     const position = (price - low) / range;
 
-    let decision="HOLD", trend="CHOP", setup="WAIT", reason="No clean edge. Wait.", strength=40;
-    let entryLow=price*.995, entryHigh=price*1.005, stop=price*.96, target1=price*1.06, target2=price*1.10;
+    let score = 50;
+    let reasons = [];
 
-    if(move>=4 && position>.75 && recentMove>.4){
-      decision="BUY"; trend="BULL"; setup="BREAKOUT"; strength=88;
-      reason="Strong momentum near range high. Best entry is retest, not chase.";
-      stop=recentLow*.985; target1=price+(price-stop)*1.8; target2=price+(price-stop)*2.8;
-    } else if(move>=1.25 && recentMove>0 && position>.40){
-      decision="BUY"; trend="UP"; setup="PULLBACK"; strength=72;
-      reason="Positive trend holding structure. Small entry only if support holds.";
-      stop=recentLow*.985; target1=recentHigh; target2=high*1.04;
-    } else if(move>.4 && position<.35 && recentMove>.2){
-      decision="HOLD"; trend="EARLY"; setup="REVERSAL WATCH"; strength=60;
-      reason="Possible reversal. Wait for higher low before buy.";
-      stop=low*.985; target1=price+(price-stop)*1.8; target2=price+(price-stop)*2.6;
-    } else if(move<=-4 && position<.35){
-      decision="SELL"; trend="BEAR"; setup="BREAKDOWN"; strength=86;
-      reason="Heavy downside pressure near lower range. Avoid longs.";
-      stop=recentHigh*1.015; target1=low; target2=low*.96;
-    } else if(move<=-1.25){
-      decision="SELL"; trend="DOWN"; setup="WEAK"; strength=70;
-      reason="Momentum is down. Wait for stabilization.";
-      stop=recentHigh*1.015; target1=low; target2=low*.97;
+    if(price > fastEma) { score += 8; reasons.push("price above fast EMA"); }
+    else { score -= 8; reasons.push("price below fast EMA"); }
+
+    if(fastEma > slowEma) { score += 12; reasons.push("EMA trend bullish"); }
+    else { score -= 12; reasons.push("EMA trend bearish"); }
+
+    if(move > 2) { score += 12; reasons.push("24h momentum strong"); }
+    else if(move > .75) { score += 6; reasons.push("24h momentum building"); }
+    else if(move < -2) { score -= 12; reasons.push("24h momentum weak"); }
+    else if(move < -.75) { score -= 6; reasons.push("weakening"); }
+
+    if(recentMove > .5) { score += 8; reasons.push("recent strength"); }
+    else if(recentMove < -.5) { score -= 8; reasons.push("recent weakness"); }
+
+    if(rsiVal > 45 && rsiVal < 68) { score += 8; reasons.push("RSI healthy"); }
+    else if(rsiVal >= 75) { score -= 8; reasons.push("RSI overheated"); }
+    else if(rsiVal < 35) { score -= 6; reasons.push("RSI weak"); }
+
+    if(position > .35 && position < .82) { score += 6; reasons.push("good range position"); }
+    else if(position >= .9) { score -= 8; reasons.push("near range high"); }
+    else if(position <= .18 && recentMove > 0) { score += 5; reasons.push("possible reversal zone"); }
+
+    if(volatility > 8) { score -= 6; reasons.push("high volatility"); }
+    else if(volatility >= 2 && volatility <= 6) { score += 5; reasons.push("controlled volatility"); }
+
+    let trend = "CHOP";
+    if(score >= 70) trend = "BULL";
+    else if(score <= 35) trend = "BEAR";
+    else if(score >= 58) trend = "UP";
+    else if(score <= 45) trend = "DOWN";
+
+    let setup = "WAIT";
+    if(score >= 72 && position > .65) setup = "BREAKOUT";
+    else if(score >= 65 && position > .35 && position < .72) setup = "PULLBACK";
+    else if(score >= 58 && position < .35) setup = "REVERSAL WATCH";
+    else if(score <= 35) setup = "BREAKDOWN";
+
+    let entryLow = price * .995;
+    let entryHigh = price * 1.005;
+    let stop = price * .96;
+    let target1 = price * 1.06;
+    let target2 = price * 1.10;
+
+    if(setup === "BREAKOUT"){
+      stop = low + range * .55;
+      target1 = price + Math.abs(price-stop) * 1.8;
+      target2 = price + Math.abs(price-stop) * 2.8;
+    } else if(setup === "PULLBACK"){
+      stop = low + range * .28;
+      target1 = high;
+      target2 = high * 1.04;
+    } else if(setup === "REVERSAL WATCH"){
+      stop = low * .985;
+      target1 = price + Math.abs(price-stop) * 1.8;
+      target2 = price + Math.abs(price-stop) * 2.6;
+    } else if(setup === "BREAKDOWN"){
+      stop = high - range * .25;
+      target1 = low;
+      target2 = low * .96;
     }
 
     const mid = (entryLow + entryHigh) / 2;
     const risk = Math.abs(mid - stop);
     const reward = Math.abs(target1 - mid);
-    const rr = risk > 0 ? (reward/risk).toFixed(2) : "—";
+    const rrValue = risk > 0 ? reward / risk : 0;
+
+    if(rrValue < 1.4 && score > 55){
+      score -= 12;
+      reasons.push("R/R too weak");
+    }
+
+    score = Math.max(0, Math.min(100, Math.round(score)));
+
+    let decision = "HOLD";
+    if(score >= 72 && rrValue >= 1.4) decision = "BUY";
+    else if(score <= 35) decision = "SELL";
+
+    let reason = reasons.slice(0,4).join(" + ");
+    if(decision === "HOLD") reason = "No clean edge yet. " + reason;
 
     lastPlan = { price, entryLow, entryHigh, stop, target1, target2, risk, decision };
 
@@ -316,14 +381,17 @@ async function run(){
     document.getElementById("trend").textContent = trend;
     document.getElementById("setup").textContent = setup;
     document.getElementById("reason").textContent = reason;
-    document.getElementById("strength").style.width = strength + "%";
-    document.getElementById("strengthText").textContent = strength + "/100";
+    document.getElementById("strength").style.width = score + "%";
+    document.getElementById("strengthText").textContent = score + "/100 confidence";
+
+    document.getElementById("rsiOut").textContent = Math.round(rsiVal);
+    document.getElementById("rrMini").textContent = "1:" + rrValue.toFixed(2);
 
     document.getElementById("entry").textContent = money(entryLow) + " - " + money(entryHigh);
     document.getElementById("stop").textContent = money(stop);
     document.getElementById("target1").textContent = money(target1);
     document.getElementById("target2").textContent = money(target2);
-    document.getElementById("rr").textContent = rr==="—" ? "—" : "1 : " + rr;
+    document.getElementById("rr").textContent = "1 : " + rrValue.toFixed(2);
 
     updateSizing();
 
@@ -375,6 +443,3 @@ function loadChart(){
 loadFunds();
 updateSizing();
 </script>
-
-</body>
-</html>
