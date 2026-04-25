@@ -6,17 +6,16 @@
 
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="logo.PNG">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 <style>
 body {
   margin:0;
   background:#050606;
   color:#fff;
-  font-family:-apple-system, BlinkMacSystemFont, Arial;
+  font-family:-apple-system;
 }
 
+/* HEADER */
 .header {
   display:flex;
   align-items:center;
@@ -24,35 +23,95 @@ body {
   padding:18px;
   border-bottom:1px solid #1f1f1f;
 }
-
 .logo {
-  width:44px;
-  height:44px;
-  border-radius:12px;
+  width:42px;
+  height:42px;
+  border-radius:10px;
 }
-
 .title {
-  font-size:18px;
   font-weight:800;
 }
-
 .sub {
   font-size:12px;
   color:#888;
 }
-</style>
-</head>
 
-<body>
+/* INPUT */
+input {
+  width:100%;
+  padding:14px;
+  border:none;
+  border-bottom:1px solid #1f1f1f;
+  background:#050606;
+  color:white;
+}
 
-<div class="header">
-  <!-- 🔥 LOCKED TO UPPERCASE -->
-  <img src="logo.PNG" class="logo">
-  <div>
-    <div class="title">BULLY</div>
-    <div class="sub">CRYPTO</div>
-  </div>
-</div>
+/* COINS */
+.quick {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:12px;
+}
+.quick button {
+  flex:1 1 28%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #222;
+  background:#101010;
+  color:white;
+  font-weight:700;
+}
 
-</body>
-</html>
+/* TABS */
+.tabs {
+  display:flex;
+  border-bottom:1px solid #1f1f1f;
+}
+.tab {
+  flex:1;
+  text-align:center;
+  padding:12px;
+  color:#777;
+}
+.tab.active {
+  color:#7cff55;
+  border-bottom:2px solid #7cff55;
+}
+
+/* SCREENS */
+.screen { display:none; padding:16px; }
+.screen.active { display:block; }
+
+/* CARDS */
+.card {
+  background:#101010;
+  border:1px solid #1f1f1f;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:12px;
+}
+.big {
+  font-size:34px;
+  font-weight:800;
+}
+.small { color:#999; }
+
+/* SIGNAL */
+.decision {
+  font-size:42px;
+  font-weight:900;
+}
+.buy { color:#7cff55; }
+.sell { color:#ff4d5d; }
+.hold { color:#ffd60a; }
+
+.bar {
+  height:6px;
+  background:#222;
+  border-radius:10px;
+  overflow:hidden;
+}
+.fill {
+  height:100%;
+  background
