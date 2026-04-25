@@ -5,52 +5,41 @@
 
 <title>Bully Crypto</title>
 
-<link rel="apple-touch-icon" sizes="180x180" href="logo.PNG">
-<link rel="icon" type="image/png" sizes="32x32" href="logo.PNG">
-<link rel="icon" type="image/png" sizes="16x16" href="logo.PNG">
-<link rel="shortcut icon" href="logo.PNG">
-
-<link rel="manifest" href="manifest.json">
-</head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bully Crypto</title>
 <link rel="apple-touch-icon" href="logo.PNG">
+<link rel="icon" href="logo.PNG">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
-body{margin:0;background:radial-gradient(circle at top,#101a12,#050606 45%,#000);color:white;font-family:-apple-system,BlinkMacSystemFont,Arial}
+body{margin:0;background:#050606;color:white;font-family:-apple-system,BlinkMacSystemFont,Arial}
 .app{max-width:520px;margin:auto;padding-bottom:30px}
-.header{display:flex;align-items:center;gap:14px;padding:20px 18px;border-bottom:1px solid #1f1f1f}
-.logo{width:58px;height:58px;border-radius:14px;object-fit:cover}
-.title{font-size:26px;font-weight:950}.sub{font-size:12px;color:#7cff55;letter-spacing:2px;font-weight:800}
-input{width:100%;padding:15px 18px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white;font-size:17px;box-sizing:border-box}
-.quick{display:flex;flex-wrap:wrap;gap:8px;padding:14px}
-.quick button{flex:1 1 28%;padding:12px;border-radius:12px;border:1px solid #2a2a2a;background:linear-gradient(180deg,#151515,#0c0c0c);color:white;font-weight:850}
-.quick button:active{transform:scale(.96)}
+.header{display:flex;align-items:center;gap:14px;padding:18px;border-bottom:1px solid #1f1f1f}
+.logo{width:54px;height:54px;border-radius:12px}
+.title{font-size:24px;font-weight:900}
+.sub{font-size:12px;color:#7cff55}
+
+input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white;font-size:16px}
+
+.quick{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
+.quick button{flex:1 1 28%;padding:11px;border-radius:10px;border:1px solid #2a2a2a;background:#101010;color:white;font-weight:800}
+
 .tabs{display:flex;border-top:1px solid #1f1f1f;border-bottom:1px solid #1f1f1f}
-.tab{flex:1;text-align:center;padding:13px;color:#777;font-weight:850}
-.tab.active{color:#7cff55;border-bottom:3px solid #7cff55}
-.screen{display:none}.screen.active{display:block}
-.card{background:linear-gradient(180deg,#121412,#080908);border:1px solid #242a25;border-radius:20px;padding:18px;margin:14px;box-shadow:0 12px 35px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.04)}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.label{font-size:12px;color:#7b827d;font-weight:900;letter-spacing:1.6px;text-transform:uppercase}
-.price{font-size:48px;font-weight:950;letter-spacing:-1px;margin-top:8px}
-.move{font-size:16px;color:#aaa;margin-top:4px}
-.badge{padding:13px 18px;border-radius:999px;font-size:20px;font-weight:950;border:1px solid;min-width:76px;text-align:center}
-.buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08)}
-.sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08)}
-.hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px}
-.stat{background:#101010;border:1px solid #242a25;border-radius:18px;padding:16px}
-.value{font-size:27px;font-weight:950;margin-top:8px}
-.small{color:#aaa;font-size:14px;line-height:1.45}
-.bar{height:8px;background:#282828;border-radius:20px;overflow:hidden;margin-top:12px}
-.fill{height:100%;background:linear-gradient(90deg,#55d941,#8aff68);width:0%}
-.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #242424}
-.row:last-child{border-bottom:0}
-.row span:first-child{color:#8b928c}
-.row span:last-child{font-weight:850;text-align:right}
-.saveBtn{width:100%;padding:13px;border-radius:12px;border:1px solid #7cff55;background:rgba(124,255,85,.08);color:#7cff55;font-weight:900}
-iframe{width:100%;height:430px;border:0;border-radius:16px}
+.tab{flex:1;text-align:center;padding:12px;color:#777;font-weight:800}
+.tab.active{color:#7cff55;border-bottom:2px solid #7cff55}
+
+.screen{display:none}
+.screen.active{display:block}
+
+.card{background:#101010;border:1px solid #242a25;border-radius:18px;padding:16px;margin:14px}
+.price{font-size:44px;font-weight:950}
+.badge{padding:12px 18px;border-radius:999px;font-size:18px;font-weight:950;border:1px solid}
+.buy{color:#7cff55;border-color:#7cff55}
+.sell{color:#ff4d5d;border-color:#ff4d5d}
+.hold{color:#ffd60a;border-color:#ffd60a}
+
+.row{display:flex;justify-content:space-between;margin-top:10px}
+.small{color:#aaa}
 </style>
 </head>
 
@@ -58,404 +47,203 @@ iframe{width:100%;height:430px;border:0;border-radius:16px}
 <div class="app">
 
 <div class="header">
-  <img src="logo.PNG" class="logo">
-  <div>
-    <div class="title">BULLY</div>
-    <div class="sub">CRYPTO</div>
-  </div>
+<img src="logo.PNG" class="logo">
+<div>
+<div class="title">BULLY</div>
+<div class="sub">CRYPTO</div>
+</div>
 </div>
 
-<input id="ticker" placeholder="Search coin: BTC, ETH, SOL, ZEC">
+<input id="ticker" placeholder="BTC, ETH, SOL">
 
 <div class="quick">
-  <button onclick="pick('BTC')">BTC</button>
-  <button onclick="pick('ETH')">ETH</button>
-  <button onclick="pick('SOL')">SOL</button>
-  <button onclick="pick('XRP')">XRP</button>
-  <button onclick="pick('ZEC')">ZEC</button>
-  <button onclick="pick('DOGE')">DOGE</button>
-  <button onclick="pick('LTC')">LTC</button>
-  <button onclick="pick('ADA')">ADA</button>
-  <button onclick="pick('AVAX')">AVAX</button>
+<button onclick="pick('BTC')">BTC</button>
+<button onclick="pick('ETH')">ETH</button>
+<button onclick="pick('SOL')">SOL</button>
+<button onclick="pick('XRP')">XRP</button>
+<button onclick="pick('DOGE')">DOGE</button>
+<button onclick="pick('ADA')">ADA</button>
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="tab(0)">Overview</div>
-  <div class="tab" onclick="tab(1); loadChart()">Chart</div>
-  <div class="tab" onclick="tab(2)">Plan</div>
-  <div class="tab" onclick="tab(3)">Funds</div>
+<div class="tab active" onclick="tab(0)">Overview</div>
+<div class="tab" onclick="tab(1)">Plan</div>
+<div class="tab" onclick="tab(2)">Funds</div>
 </div>
 
 <div class="screen active">
-  <div class="card">
-    <div class="top">
-      <div>
-        <div id="coin" class="label">SELECT COIN</div>
-        <div id="price" class="price">—</div>
-        <div id="move" class="move">Tap a coin to scan</div>
-      </div>
-      <div id="signal" class="badge hold">WAIT</div>
-    </div>
-  </div>
+<div class="card">
+<div id="coin" class="small">SELECT COIN</div>
+<div id="price" class="price">—</div>
+<div id="move" class="small">Tap a coin</div>
+<br>
+<div id="signal" class="badge hold">WAIT</div>
+</div>
 
-  <div class="grid">
-    <div class="stat"><div class="label">Trend</div><div id="trend" class="value">—</div></div>
-    <div class="stat"><div class="label">Setup</div><div id="setup" class="value">—</div></div>
-  </div>
+<div class="card">
+<div class="row"><span>Trend</span><span id="trend">—</span></div>
+<div class="row"><span>Setup</span><span id="setup">—</span></div>
+<div class="row"><span>RSI</span><span id="rsiOut">—</span></div>
+<div class="row"><span>Confidence</span><span id="confidence">—</span></div>
+</div>
 
-  <div class="card">
-    <div class="label">Confidence</div>
-    <div class="bar"><div id="strength" class="fill"></div></div>
-    <div id="strengthText" class="small">—</div>
-  </div>
-
-  <div class="grid">
-    <div class="stat"><div class="label">RSI</div><div id="rsiOut" class="value">—</div></div>
-    <div class="stat"><div class="label">R/R</div><div id="rrMini" class="value">—</div></div>
-  </div>
-
-  <div class="card">
-    <div class="label">Read</div>
-    <div id="reason" class="small">Waiting.</div>
-  </div>
+<div class="card">
+<div id="reason" class="small">Waiting.</div>
+</div>
 </div>
 
 <div class="screen">
-  <div id="chart"></div>
+<div class="card">
+<div class="row"><span>Entry</span><span id="entry">—</span></div>
+<div class="row"><span>Stop</span><span id="stop">—</span></div>
+<div class="row"><span>Target</span><span id="target">—</span></div>
+<div class="row"><span>R/R</span><span id="rr">—</span></div>
+</div>
+
+<div class="card">
+<div class="row"><span>Position $</span><span id="position">—</span></div>
+<div class="row"><span>Coins</span><span id="coins">—</span></div>
+</div>
 </div>
 
 <div class="screen">
-  <div class="card">
-    <div class="label">Trading Plan</div>
-    <div class="row"><span>Entry</span><span id="entry">—</span></div>
-    <div class="row"><span>Stop</span><span id="stop">—</span></div>
-    <div class="row"><span>Target 1</span><span id="target1">—</span></div>
-    <div class="row"><span>Target 2</span><span id="target2">—</span></div>
-    <div class="row"><span>Risk / Reward</span><span id="rr">—</span></div>
-  </div>
-
-  <div class="card">
-    <div class="label">Position Sizing</div>
-    <div class="row"><span>Account Funds</span><span id="fundsOut">—</span></div>
-    <div class="row"><span>Risk %</span><span id="riskOut">—</span></div>
-    <div class="row"><span>Max Dollar Risk</span><span id="maxRiskOut">—</span></div>
-    <div class="row"><span>Suggested Position</span><span id="positionOut">—</span></div>
-    <div class="row"><span>Estimated Coins</span><span id="coinsOut">—</span></div>
-  </div>
+<div class="card">
+<input id="funds" placeholder="Account funds">
+<input id="risk" placeholder="Risk %">
+<button onclick="saveFunds()">Save</button>
 </div>
-
-<div class="screen">
-  <div class="card">
-    <div class="label">Account Funds</div>
-    <input id="accountFunds" inputmode="decimal" placeholder="Example: 500">
-  </div>
-  <div class="card">
-    <div class="label">Risk % Per Trade</div>
-    <input id="riskPercent" inputmode="decimal" placeholder="Example: 1">
-  </div>
-  <div class="card">
-    <button class="saveBtn" onclick="saveFunds()">SAVE FUNDS</button>
-  </div>
 </div>
 
 </div>
 
 <script>
-const PAIRS={
-  BTC:"BTCUSDT",ETH:"ETHUSDT",SOL:"SOLUSDT",XRP:"XRPUSDT",ZEC:"ZECUSDT",
-  DOGE:"DOGEUSDT",LTC:"LTCUSDT",ADA:"ADAUSDT",AVAX:"AVAXUSDT"
-};
+const PAIRS={BTC:"BTCUSDT",ETH:"ETHUSDT",SOL:"SOLUSDT",XRP:"XRPUSDT",DOGE:"DOGEUSDT",ADA:"ADAUSDT"};
 
-const BASES=[
-  "https://api.binance.com/api/v3",
-  "https://api1.binance.com/api/v3",
-  "https://api.binance.us/api/v3"
-];
-
-let current="";
-let chartLoaded="";
-let requestId=0;
-let cache={};
+let liveTimer=null;
 let lastPlan=null;
-const CACHE_MS=45000;
-
-const ticker=document.getElementById("ticker");
-const screens=document.querySelectorAll(".screen");
-const tabs=document.querySelectorAll(".tab");
 
 function tab(i){
-  screens.forEach(s=>s.classList.remove("active"));
-  tabs.forEach(t=>t.classList.remove("active"));
-  screens[i].classList.add("active");
-  tabs[i].classList.add("active");
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+document.querySelectorAll(".screen")[i].classList.add("active");
+document.querySelectorAll(".tab")[i].classList.add("active");
+}
+
+function money(n){return "$"+Number(n).toFixed(2)}
+
+function setSignal(d){
+let el=document.getElementById("signal");
+el.textContent=d;
+el.className="badge "+(d==="BUY"?"buy":d==="SELL"?"sell":"hold");
 }
 
 function pick(sym){
-  ticker.value=sym;
-  current="";
-  chartLoaded="";
-  run();
+document.getElementById("ticker").value=sym;
+if(liveTimer)clearInterval(liveTimer);
+run();
+liveTimer=setInterval(()=>run(true),2500);
 }
 
-ticker.addEventListener("input",()=>{
-  clearTimeout(window.timer);
-  window.timer=setTimeout(run,450);
-});
-
-function money(n){
-  return "$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:n>100?2:4});
+function ema(v,p){let k=2/(p+1),e=v[0];for(let i=1;i<v.length;i++)e=v[i]*k+e*(1-k);return e}
+function rsi(v,p=14){
+let g=0,l=0;
+for(let i=v.length-p;i<v.length;i++){let d=v[i]-v[i-1];if(d>=0)g+=d;else l-=d}
+if(l===0)return 100;let rs=g/l;return 100-(100/(1+rs))
 }
 
-function setSignal(decision){
-  const el=document.getElementById("signal");
-  el.textContent=decision;
-  el.className="badge "+(decision==="BUY"?"buy":decision==="SELL"?"sell":"hold");
+async function run(live=false){
+let sym=document.getElementById("ticker").value.toUpperCase();
+if(!PAIRS[sym])return;
+
+if(!live){
+document.getElementById("coin").textContent=sym;
+document.getElementById("price").textContent="Loading...";
 }
 
-function resetSafe(msg){
-  setSignal("WAIT");
-  document.getElementById("trend").textContent="—";
-  document.getElementById("setup").textContent="—";
-  document.getElementById("strength").style.width="0%";
-  document.getElementById("strengthText").textContent="—";
-  document.getElementById("rsiOut").textContent="—";
-  document.getElementById("rrMini").textContent="—";
-  document.getElementById("reason").textContent=msg||"Waiting.";
+try{
+let [t,k]=await Promise.all([
+fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${PAIRS[sym]}`).then(r=>r.json()),
+fetch(`https://api.binance.com/api/v3/klines?symbol=${PAIRS[sym]}&interval=15m&limit=50`).then(r=>r.json())
+]);
+
+let price=+t.lastPrice;
+let move=+t.priceChangePercent;
+let closes=k.map(x=>+x[4]);
+
+let fast=ema(closes,12);
+let slow=ema(closes,26);
+let r=rsi(closes);
+
+let score=50;
+if(price>fast)score+=10;else score-=10;
+if(fast>slow)score+=15;else score-=15;
+if(move>2)score+=10;
+if(move<-2)score-=10;
+if(r>45&&r<70)score+=5;
+if(r>75)score-=5;
+
+score=Math.max(0,Math.min(100,score));
+
+let decision="HOLD";
+if(score>=70)decision="BUY";
+if(score<=35)decision="SELL";
+
+document.getElementById("price").textContent=money(price);
+document.getElementById("move").textContent=move.toFixed(2)+"%";
+setSignal(decision);
+
+document.getElementById("trend").textContent=score>70?"BULL":score<35?"BEAR":"MIXED";
+document.getElementById("setup").textContent=decision==="BUY"?"MOMENTUM":decision==="SELL"?"WEAK":"WAIT";
+document.getElementById("rsiOut").textContent=Math.round(r);
+document.getElementById("confidence").textContent=score+"/100";
+
+document.getElementById("reason").textContent=decision==="BUY"?"Momentum + trend aligned":decision==="SELL"?"Downtrend + weakness":"No edge";
+
+let entryLow=price*.99;
+let entryHigh=price*1.01;
+let stop=price*.96;
+let target=price*1.06;
+
+let mid=(entryLow+entryHigh)/2;
+let risk=Math.abs(mid-stop);
+let reward=Math.abs(target-mid);
+let rr=reward/risk;
+
+document.getElementById("entry").textContent=money(entryLow)+"-"+money(entryHigh);
+document.getElementById("stop").textContent=money(stop);
+document.getElementById("target").textContent=money(target);
+document.getElementById("rr").textContent="1:"+rr.toFixed(2);
+
+lastPlan={mid,stop};
+
+updateSizing();
+
+}catch(e){
+setSignal("WAIT");
+document.getElementById("reason").textContent="Connection issue";
 }
-
-function ema(values,period){
-  if(values.length<period)return values[values.length-1]||0;
-  const k=2/(period+1);
-  let e=values.slice(0,period).reduce((a,b)=>a+b,0)/period;
-  for(let i=period;i<values.length;i++) e=values[i]*k+e*(1-k);
-  return e;
-}
-
-function rsi(values,period=14){
-  if(values.length<=period)return 50;
-  let gains=0,losses=0;
-  for(let i=values.length-period;i<values.length;i++){
-    const d=values[i]-values[i-1];
-    if(d>=0)gains+=d; else losses-=d;
-  }
-  if(losses===0)return 100;
-  const rs=gains/losses;
-  return 100-(100/(1+rs));
-}
-
-function stdev(values){
-  if(!values.length)return 0;
-  const avg=values.reduce((a,b)=>a+b,0)/values.length;
-  return Math.sqrt(values.reduce((s,x)=>s+Math.pow(x-avg,2),0)/values.length);
-}
-
-async function fetchJson(url,timeout=5000){
-  const controller=new AbortController();
-  const t=setTimeout(()=>controller.abort(),timeout);
-  try{
-    const r=await fetch(url,{signal:controller.signal});
-    if(!r.ok)throw new Error("bad response");
-    return await r.json();
-  }finally{
-    clearTimeout(t);
-  }
-}
-
-async function tryBases(path){
-  let lastErr;
-  for(const base of BASES){
-    try{
-      return await fetchJson(base+path);
-    }catch(e){
-      lastErr=e;
-    }
-  }
-  throw lastErr;
-}
-
-async function getMarket(sym){
-  const now=Date.now();
-  if(cache[sym]&&now-cache[sym].time<CACHE_MS)return cache[sym].data;
-
-  const pair=PAIRS[sym];
-  const [ticker24,klines]=await Promise.all([
-    tryBases(`/ticker/24hr?symbol=${pair}`),
-    tryBases(`/klines?symbol=${pair}&interval=15m&limit=96`)
-  ]);
-
-  const data={ticker24,klines};
-  cache[sym]={time:now,data};
-  return data;
-}
-
-async function run(){
-  const sym=ticker.value.toUpperCase().trim();
-  if(!PAIRS[sym]||sym===current)return;
-
-  current=sym;
-  const myReq=++requestId;
-
-  document.getElementById("coin").textContent=sym;
-  document.getElementById("price").textContent="Loading...";
-  document.getElementById("move").textContent="";
-  resetSafe("Checking Binance market data...");
-
-  try{
-    const {ticker24,klines}=await getMarket(sym);
-    if(myReq!==requestId)return;
-
-    const price=Number(ticker24.lastPrice);
-    const move=Number(ticker24.priceChangePercent);
-    const closes=klines.map(k=>Number(k[4]));
-    const highs=klines.map(k=>Number(k[2]));
-    const lows=klines.map(k=>Number(k[3]));
-
-    const high=Math.max(...highs);
-    const low=Math.min(...lows);
-    const recent=closes.slice(-8);
-    const recentMove=((price-recent[0])/recent[0])*100;
-    const fast=ema(closes,12);
-    const slow=ema(closes,26);
-    const rsiVal=rsi(closes,14);
-    const vol=(stdev(recent)/price)*100;
-    const range=high-low||1;
-    const pos=(price-low)/range;
-
-    let score=50;
-    let reasons=[];
-
-    if(price>fast){score+=8;reasons.push("above fast EMA");}else{score-=8;reasons.push("below fast EMA");}
-    if(fast>slow){score+=12;reasons.push("EMA bullish");}else{score-=12;reasons.push("EMA bearish");}
-    if(move>2){score+=10;reasons.push("24h strength");}else if(move<-2){score-=10;reasons.push("24h weakness");}
-    if(recentMove>.4){score+=8;reasons.push("recent push");}else if(recentMove<-.4){score-=8;reasons.push("recent fade");}
-    if(rsiVal>45&&rsiVal<68){score+=8;reasons.push("RSI healthy");}
-    else if(rsiVal>=75){score-=8;reasons.push("RSI hot");}
-    else if(rsiVal<35){score-=6;reasons.push("RSI weak");}
-    if(pos>.35&&pos<.82){score+=6;reasons.push("good range position");}
-    else if(pos>=.9){score-=8;reasons.push("near range high");}
-    if(vol>5){score-=5;reasons.push("volatile");}
-
-    let setup="WAIT";
-    if(score>=72&&pos>.62)setup="BREAKOUT";
-    else if(score>=64&&pos>.35&&pos<.75)setup="PULLBACK";
-    else if(score>=58&&pos<.35)setup="REVERSAL";
-    else if(score<=35)setup="BREAKDOWN";
-
-    let entryLow=price*.995,entryHigh=price*1.005,stop=price*.96,target1=price*1.06,target2=price*1.10;
-
-    if(setup==="BREAKOUT"){
-      stop=low+range*.55;
-      target1=price+Math.abs(price-stop)*1.8;
-      target2=price+Math.abs(price-stop)*2.8;
-    }else if(setup==="PULLBACK"){
-      stop=low+range*.30;
-      target1=high;
-      target2=high*1.04;
-    }else if(setup==="REVERSAL"){
-      stop=low*.985;
-      target1=price+Math.abs(price-stop)*1.8;
-      target2=price+Math.abs(price-stop)*2.6;
-    }else if(setup==="BREAKDOWN"){
-      stop=high-range*.25;
-      target1=low;
-      target2=low*.96;
-    }
-
-    const mid=(entryLow+entryHigh)/2;
-    const risk=Math.abs(mid-stop);
-    const reward=Math.abs(target1-mid);
-    const rr=risk>0?reward/risk:0;
-
-    if(rr<1.35&&score>55){score-=12;reasons.push("R/R weak");}
-    score=Math.max(0,Math.min(100,Math.round(score)));
-
-    let decision="HOLD";
-    if(score>=72&&rr>=1.35)decision="BUY";
-    else if(score<=35)decision="SELL";
-
-    let trend=score>=70?"BULL":score<=35?"BEAR":score>=58?"UP":score<=45?"DOWN":"CHOP";
-
-    document.getElementById("price").textContent=money(price);
-    const moveEl=document.getElementById("move");
-    moveEl.textContent=move.toFixed(2)+"% over 24h";
-    moveEl.style.color=move>0?"#7cff55":move<0?"#ff4d5d":"#aaa";
-
-    setSignal(decision);
-    document.getElementById("trend").textContent=trend;
-    document.getElementById("setup").textContent=setup;
-    document.getElementById("strength").style.width=score+"%";
-    document.getElementById("strengthText").textContent=score+"/100";
-    document.getElementById("rsiOut").textContent=Math.round(rsiVal);
-    document.getElementById("rrMini").textContent="1:"+rr.toFixed(2);
-    document.getElementById("reason").textContent=(decision==="HOLD"?"No clean edge. ":"")+reasons.slice(0,4).join(" + ");
-
-    document.getElementById("entry").textContent=money(entryLow)+" - "+money(entryHigh);
-    document.getElementById("stop").textContent=money(stop);
-    document.getElementById("target1").textContent=money(target1);
-    document.getElementById("target2").textContent=money(target2);
-    document.getElementById("rr").textContent="1 : "+rr.toFixed(2);
-
-    lastPlan={price,entryLow,entryHigh,stop};
-    updateSizing();
-
-  }catch(e){
-    document.getElementById("price").textContent="Data error";
-    document.getElementById("move").textContent="";
-    resetSafe("Market data blocked or slowed. Tap again in a few seconds.");
-  }
-}
-
-function getSettings(){
-  return{
-    funds:Number(localStorage.getItem("bc_funds"))||500,
-    risk:Number(localStorage.getItem("bc_risk"))||1
-  };
-}
-
-function loadFunds(){
-  const s=getSettings();
-  document.getElementById("accountFunds").value=s.funds;
-  document.getElementById("riskPercent").value=s.risk;
 }
 
 function saveFunds(){
-  localStorage.setItem("bc_funds",document.getElementById("accountFunds").value||500);
-  localStorage.setItem("bc_risk",document.getElementById("riskPercent").value||1);
-  updateSizing();
-  alert("Funds saved.");
+localStorage.setItem("f",document.getElementById("funds").value);
+localStorage.setItem("r",document.getElementById("risk").value);
+updateSizing();
 }
 
 function updateSizing(){
-  const s=getSettings();
-  const maxRisk=s.funds*(s.risk/100);
-  document.getElementById("fundsOut").textContent=money(s.funds);
-  document.getElementById("riskOut").textContent=s.risk+"%";
-  document.getElementById("maxRiskOut").textContent=money(maxRisk);
+let f=+localStorage.getItem("f")||500;
+let r=+localStorage.getItem("r")||1;
 
-  if(!lastPlan){
-    document.getElementById("positionOut").textContent="—";
-    document.getElementById("coinsOut").textContent="—";
-    return;
-  }
+let maxRisk=f*(r/100);
 
-  const mid=(lastPlan.entryLow+lastPlan.entryHigh)/2;
-  const riskPerCoin=Math.abs(mid-lastPlan.stop);
-  if(riskPerCoin<=0)return;
+if(!lastPlan)return;
 
-  const coinAmt=maxRisk/riskPerCoin;
-  document.getElementById("positionOut").textContent=money(coinAmt*mid);
-  document.getElementById("coinsOut").textContent=coinAmt.toFixed(4);
+let riskPerCoin=Math.abs(lastPlan.mid-lastPlan.stop);
+let coins=maxRisk/riskPerCoin;
+
+document.getElementById("position").textContent=money(coins*lastPlan.mid);
+document.getElementById("coins").textContent=coins.toFixed(4);
 }
-
-function loadChart(){
-  if(!current||chartLoaded===current)return;
-  chartLoaded=current;
-  document.getElementById("chart").innerHTML=
-    `<iframe src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:${current}USDT&theme=dark" frameborder="0"></iframe>`;
-}
-
-loadFunds();
-updateSizing();
 </script>
 
 </body>
