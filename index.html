@@ -137,7 +137,7 @@ let rs=gains/losses;
 return 100-(100/(1+rs));
 }
 
-async function run(isLive=false){
+async function run(isLive=false){async function run(isLive=false){
 const sym=document.getElementById("ticker").value.toUpperCase().trim();
 if(!PAIRS[sym]) return;
 
@@ -148,6 +148,83 @@ document.getElementById("coin").textContent=sym;
 document.getElementById("price").textContent="Loading...";
 document.getElementById("move").textContent="";
 setSignal("WAIT");
+}
+
+try{
+const {ticker,klines}=await fetchData(pair);
+
+const price=Number(ticker.lastPrice);
+const move=Number(ticker.priceChangePercent);
+const closes=klines.map(k=>Number(k[4]));
+
+// ---- NEW LOGIC ----
+const fast=ema(closes,12);
+const slow=ema(closes,26);
+const rsiVal=rsi(closes);
+
+// scoring
+let score=50;
+
+// trend
+if(price>fast) score+=8;
+else score-=8;
+
+if(fast>slow) score+=12;
+else score-=12;
+
+// momentum
+if(move>2) score+=10;
+else if(move<-2) score-=10;
+
+// RSI (THIS IS NEW + IMPORTANT)
+if(rsiVal>45 && rsiVal<68) score+=8;
+else if(rsiVal>=75) score-=10;
+else if(rsiVal<35) score-=6;
+
+score=Math.max(0,Math.min(100,score));
+
+// decision (cleaner thresholds)
+let decision="HOLD";
+if(score>=70) decision="BUY";
+else if(score<=35) decision="SELL";
+
+// ---- UI ----
+document.getElementById("price").textContent=money(price);
+
+const moveEl=document.getElementById("move");
+moveEl.textContent=move.toFixed(2)+"%";
+moveEl.style.color=move>0?"#7cff55":"#ff4d5d";
+
+setSignal(decision);
+
+document.getElementById("trend").textContent=
+score>=70?"BULL":
+score<=35?"BEAR":
+"MIXED";
+
+document.getElementById("setup").textContent=
+decision==="BUY"?"MOMENTUM":
+decision==="SELL"?"WEAK":
+"WAIT";
+
+document.getElementById("confidence").textContent=score+"/100";
+
+// upgraded explanation
+let reason =
+decision==="BUY"
+  ? "Trend + momentum aligned with healthy RSI"
+  : decision==="SELL"
+  ? "Downtrend with weak momentum and poor RSI"
+  : "No clean setup. Market is mixed";
+
+document.getElementById("reason").textContent = reason;
+
+}catch(e){
+document.getElementById("price").textContent="Error";
+setSignal("WAIT");
+document.getElementById("reason").textContent="Connection issue.";
+}
+
 }
 
 try{
