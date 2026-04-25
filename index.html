@@ -395,10 +395,34 @@ async function run(){
 
     updateSizing();
 
-  } catch(e){
-    document.getElementById("price").textContent = "Data error";
-    document.getElementById("reason").textContent = "API slowed down. Wait a few seconds and try again.";
-  }
+  catch(e){
+  document.getElementById("price").textContent = "Data error";
+  document.getElementById("move").textContent = "";
+  
+  // RESET SIGNAL (this is the key fix)
+  const signal = document.getElementById("signal");
+  signal.textContent = "WAIT";
+  signal.className = "badge hold";
+
+  document.getElementById("trend").textContent = "—";
+  document.getElementById("setup").textContent = "—";
+  document.getElementById("reason").textContent = "Connection issue. Try again.";
+
+  document.getElementById("strength").style.width = "0%";
+  document.getElementById("strengthText").textContent = "—";
+
+  document.getElementById("rsiOut").textContent = "—";
+  document.getElementById("rrMini").textContent = "—";
+
+  document.getElementById("entry").textContent = "—";
+  document.getElementById("stop").textContent = "—";
+  document.getElementById("target1").textContent = "—";
+  document.getElementById("target2").textContent = "—";
+  document.getElementById("rr").textContent = "—";
+
+  lastPlan = null;
+  updateSizing();
+}
 }
 
 function updateSizing(){
