@@ -149,15 +149,28 @@ function rsi(values,period=14){
 }
 
 async function fetchData(pair){
-  const tickerUrl=`https://api.binance.com/api/v3/ticker/24hr?symbol=${pair}`;
-  const klineUrl=`https://api.binance.com/api/v3/klines?symbol=${pair}&interval=15m&limit=50`;
 
-  const tickerRes=await fetch(tickerUrl);
-  const klineRes=await fetch(klineUrl);
+const base = "https://api.binance.com";
 
-  if(!tickerRes.ok || !klineRes.ok){
-    throw new Error("Bad response");
-  }
+const proxy = "https://api.allorigins.win/raw?url=";
+
+const tickerUrl = proxy + encodeURIComponent(base + "/api/v3/ticker/24hr?symbol=" + pair);
+const klineUrl = proxy + encodeURIComponent(base + "/api/v3/klines?symbol=" + pair + "&interval=15m&limit=50");
+
+const [tickerRes, klineRes] = await Promise.all([
+fetch(tickerUrl),
+fetch(klineUrl)
+]);
+
+if(!tickerRes.ok || !klineRes.ok){
+throw new Error("Bad response");
+}
+
+const ticker = await tickerRes.json();
+const klines = await klineRes.json();
+
+return { ticker, klines };
+}
 
   const ticker=await tickerRes.json();
   const klines=await klineRes.json();
