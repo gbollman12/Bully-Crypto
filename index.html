@@ -6,49 +6,40 @@
 <link rel="apple-touch-icon" href="logo.PNG">
 
 <style>
-body{margin:0;background:#050606;color:#fff;font-family:-apple-system,BlinkMacSystemFont,Arial}
+body{margin:0;background:#050606;color:white;font-family:-apple-system,BlinkMacSystemFont,Arial}
 .app{max-width:520px;margin:auto;padding-bottom:30px}
-
 .header{display:flex;align-items:center;gap:14px;padding:18px;border-bottom:1px solid #1f1f1f}
-.logo{width:52px;height:52px;border-radius:12px}
-.title{font-size:22px;font-weight:900}
-.sub{font-size:12px;color:#888}
-
-input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white}
-
+.logo{width:54px;height:54px;border-radius:12px;object-fit:cover}
+.title{font-size:24px;font-weight:900}.sub{font-size:12px;color:#888;letter-spacing:1px}
+input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white;font-size:16px;box-sizing:border-box}
 .quick{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
-.quick button{flex:1 1 28%;padding:10px;border-radius:10px;border:1px solid #2a2a2a;background:#101010;color:white;font-weight:800}
-
-.hero,.card{
-  background:linear-gradient(180deg,#121412,#080908);
-  border:1px solid #242a25;
-  border-radius:18px;
-  padding:16px;
-  margin:12px;
-}
-
-.price{font-size:44px;font-weight:950}
-.move{font-size:16px}
-
-.badge{
-  padding:10px 16px;
-  border-radius:999px;
-  font-weight:900;
-}
-
-.buy{color:#7cff55;border:1px solid #7cff55}
-.sell{color:#ff4d5d;border:1px solid #ff4d5d}
-.hold{color:#ffd60a;border:1px solid #ffd60a}
-
-.bar{height:8px;background:#252525;border-radius:20px;margin-top:10px}
-.fill{height:100%;background:#7cff55}
-
-.small{color:#aaa;margin-top:6px}
+.quick button{flex:1 1 28%;padding:11px;border-radius:10px;border:1px solid #2a2a2a;background:#101010;color:white;font-weight:800}
+.tabs{display:flex;border-top:1px solid #1f1f1f;border-bottom:1px solid #1f1f1f}
+.tab{flex:1;text-align:center;padding:14px;color:#777;font-weight:800}
+.tab.active{color:#7cff55;border-bottom:3px solid #7cff55}
+.screen{display:none;padding:14px}.screen.active{display:block}
+.card{background:linear-gradient(180deg,#121412,#080908);border:1px solid #242a25;border-radius:18px;padding:16px;margin-bottom:12px}
+.topline{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.coin{font-size:14px;color:#888;font-weight:900;letter-spacing:1px}
+.price{font-size:44px;font-weight:950;margin-top:6px}
+.move{font-size:16px;margin-top:4px;color:#999}
+.badge{padding:12px 18px;border-radius:999px;font-size:18px;font-weight:950;border:1px solid}
+.buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08)}
+.sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08)}
+.hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.label{font-size:11px;color:#777;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+.value{font-size:24px;font-weight:900;margin-top:6px}
+.small{font-size:14px;color:#aaa;line-height:1.45}
+.bar{height:8px;background:#252525;border-radius:20px;overflow:hidden;margin-top:10px}
+.fill{height:100%;background:#7cff55;width:0%}
+.row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #222}
+.row:last-child{border-bottom:0}.row span:first-child{color:#888}.row span:last-child{font-weight:850;text-align:right}
+iframe{width:100%;height:430px;border:0;border-radius:16px}
 </style>
 </head>
 
 <body>
-
 <div class="app">
 
 <div class="header">
@@ -59,7 +50,7 @@ input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;backgr
   </div>
 </div>
 
-<input id="ticker" placeholder="BTC, ETH, SOL">
+<input id="ticker" placeholder="Search: BTC, ETH, SOL, ZEC">
 
 <div class="quick">
   <button onclick="pick('BTC')">BTC</button>
@@ -67,120 +58,183 @@ input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;backgr
   <button onclick="pick('SOL')">SOL</button>
   <button onclick="pick('XRP')">XRP</button>
   <button onclick="pick('ZEC')">ZEC</button>
+  <button onclick="pick('DOGE')">DOGE</button>
+  <button onclick="pick('LTC')">LTC</button>
+  <button onclick="pick('AVAX')">AVAX</button>
+  <button onclick="pick('ADA')">ADA</button>
 </div>
 
-<div class="hero">
-  <div id="price">—</div>
-  <div id="move">—</div>
-  <div id="signal" class="badge hold">WAIT</div>
+<div class="tabs">
+  <div class="tab active" onclick="tab(0)">Overview</div>
+  <div class="tab" onclick="tab(1); loadChart()">Chart</div>
+  <div class="tab" onclick="tab(2)">Plan</div>
 </div>
 
-<div class="card">
-  <div>Trend: <span id="trend">—</span></div>
-  <div>Setup: <span id="setup">—</span></div>
-  <div class="bar"><div id="strength" class="fill"></div></div>
-  <div class="small" id="reason">Waiting for coin</div>
+<div class="screen active">
+  <div class="card">
+    <div class="topline">
+      <div>
+        <div class="coin" id="coin">SELECT COIN</div>
+        <div class="price" id="price">—</div>
+        <div class="move" id="move">Tap a coin</div>
+      </div>
+      <div id="signal" class="badge hold">WAIT</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="label">Trend</div><div class="value" id="trend">—</div></div>
+    <div class="card"><div class="label">Setup</div><div class="value" id="setup">—</div></div>
+  </div>
+
+  <div class="card">
+    <div class="label">Confidence</div>
+    <div class="bar"><div id="strength" class="fill"></div></div>
+    <div class="small" id="strengthText">—</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Read</div>
+    <div class="small" id="reason">Waiting.</div>
+  </div>
 </div>
 
-<div class="card">
-  <div>Entry: <span id="entry">—</span></div>
-  <div>Stop: <span id="stop">—</span></div>
-  <div>Target: <span id="target">—</span></div>
+<div class="screen">
+  <div id="chart"></div>
+</div>
+
+<div class="screen">
+  <div class="card">
+    <div class="label">Trading Plan</div>
+    <div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
+    <div class="row"><span>Stop Loss</span><span id="stop">—</span></div>
+    <div class="row"><span>Target 1</span><span id="target1">—</span></div>
+    <div class="row"><span>Target 2</span><span id="target2">—</span></div>
+    <div class="row"><span>Risk / Reward</span><span id="rr">—</span></div>
+  </div>
 </div>
 
 </div>
 
 <script>
-const map={
-BTC:"bitcoin",
-ETH:"ethereum",
-SOL:"solana",
-XRP:"ripple",
-ZEC:"zcash"
-};
+let current="", chartLoaded="";
+const map={BTC:"bitcoin",ETH:"ethereum",SOL:"solana",XRP:"ripple",ZEC:"zcash",DOGE:"dogecoin",LTC:"litecoin",AVAX:"avalanche-2",ADA:"cardano"};
 
+const screens=document.querySelectorAll(".screen");
+const tabs=document.querySelectorAll(".tab");
 const ticker=document.getElementById("ticker");
+
+function tab(i){
+  screens.forEach(s=>s.classList.remove("active"));
+  tabs.forEach(t=>t.classList.remove("active"));
+  screens[i].classList.add("active");
+  tabs[i].classList.add("active");
+}
 
 function pick(sym){
   ticker.value=sym;
+  current="";
+  chartLoaded="";
   run();
 }
 
-ticker.addEventListener("input",()=>run());
+let timer;
+ticker.addEventListener("input",()=>{
+  clearTimeout(timer);
+  timer=setTimeout(run,350);
+});
 
-function money(x){
-  return "$"+Number(x).toFixed(2);
+function money(n){
+  return "$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:n>100?2:4});
 }
 
 async function run(){
-  const sym=ticker.value.toUpperCase();
-  if(!map[sym]) return;
+  const sym=ticker.value.toUpperCase().trim();
+  if(!map[sym] || sym===current) return;
+  current=sym;
+
+  document.getElementById("coin").textContent=sym;
+  document.getElementById("price").textContent="Loading...";
 
   const id=map[sym];
 
-  const data=await fetch(
-    `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`
-  ).then(r=>r.json());
+  const [simple,chartData]=await Promise.all([
+    fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`).then(r=>r.json()),
+    fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`).then(r=>r.json())
+  ]);
 
-  const price=data[id].usd;
-  const move=data[id].usd_24h_change || 0;
+  const price=simple[id].usd;
+  const move=simple[id].usd_24h_change||0;
+  const prices=(chartData.prices||[]).map(x=>x[1]);
 
-  let decision="HOLD";
-  let trend="CHOP";
-  let setup="WAIT";
-  let reason="No clear edge";
-  let strength=40;
+  const high=Math.max(...prices);
+  const low=Math.min(...prices);
+  const recent=prices.slice(-24);
+  const recentLow=Math.min(...recent);
+  const recentHigh=Math.max(...recent);
+  const recentStart=recent[0]||price;
+  const recentMove=((price-recentStart)/recentStart)*100;
+  const range=high-low||1;
+  const position=(price-low)/range;
 
-  if(move>4){
-    decision="BUY";
-    trend="BULL";
-    setup="BREAKOUT";
-    reason="Strong momentum";
-    strength=85;
+  let decision="HOLD", trend="CHOP", setup="WAIT", reason="No clean edge. Wait.", strength=40;
+  let entryLow=price*.995, entryHigh=price*1.005, stop=price*.96, target1=price*1.06, target2=price*1.10;
+
+  if(move>=4 && position>.75 && recentMove>.4){
+    decision="BUY"; trend="BULL"; setup="BREAKOUT"; strength=88;
+    reason="Strong momentum near range high. Best entry is retest, not chase.";
+    stop=recentLow*.985; target1=price+(price-stop)*1.8; target2=price+(price-stop)*2.8;
+  } else if(move>=1.25 && recentMove>0 && position>.40){
+    decision="BUY"; trend="UP"; setup="PULLBACK"; strength=72;
+    reason="Positive trend holding structure. Small entry only if support holds.";
+    stop=recentLow*.985; target1=recentHigh; target2=high*1.04;
+  } else if(move>.4 && position<.35 && recentMove>.2){
+    decision="HOLD"; trend="EARLY"; setup="REVERSAL WATCH"; strength=60;
+    reason="Possible reversal. Wait for higher low before buy.";
+    stop=low*.985; target1=price+(price-stop)*1.8; target2=price+(price-stop)*2.6;
+  } else if(move<=-4 && position<.35){
+    decision="SELL"; trend="BEAR"; setup="BREAKDOWN"; strength=86;
+    reason="Heavy downside pressure near lower range. Avoid longs.";
+    stop=recentHigh*1.015; target1=low; target2=low*.96;
+  } else if(move<=-1.25){
+    decision="SELL"; trend="DOWN"; setup="WEAK"; strength=70;
+    reason="Momentum is down. Wait for stabilization.";
+    stop=recentHigh*1.015; target1=low; target2=low*.97;
   }
-  else if(move>1){
-    decision="BUY";
-    trend="UP";
-    setup="BUILD";
-    reason="Momentum forming";
-    strength=70;
-  }
-  else if(move<-4){
-    decision="SELL";
-    trend="BEAR";
-    setup="BREAKDOWN";
-    reason="Heavy selling";
-    strength=85;
-  }
-  else if(move<-1){
-    decision="SELL";
-    trend="DOWN";
-    setup="WEAK";
-    reason="Weak structure";
-    strength=70;
-  }
+
+  const mid=(entryLow+entryHigh)/2;
+  const risk=Math.abs(mid-stop);
+  const reward=Math.abs(target1-mid);
+  const rr=risk>0?(reward/risk).toFixed(2):"—";
 
   document.getElementById("price").textContent=money(price);
-  document.getElementById("move").textContent=move.toFixed(2)+"%";
-  document.getElementById("move").style.color=move>0?"#7cff55":"#ff4d5d";
+  const moveEl=document.getElementById("move");
+  moveEl.textContent=move.toFixed(2)+"% over 24h";
+  moveEl.style.color=move>0?"#7cff55":move<0?"#ff4d5d":"#aaa";
 
-  const sig=document.getElementById("signal");
-  sig.textContent=decision;
-  sig.className="badge "+(decision==="BUY"?"buy":decision==="SELL"?"sell":"hold");
+  const signal=document.getElementById("signal");
+  signal.textContent=decision;
+  signal.className="badge "+(decision==="BUY"?"buy":decision==="SELL"?"sell":"hold");
 
   document.getElementById("trend").textContent=trend;
   document.getElementById("setup").textContent=setup;
   document.getElementById("reason").textContent=reason;
-
   document.getElementById("strength").style.width=strength+"%";
+  document.getElementById("strengthText").textContent=strength+"/100";
 
-  const entry=price*.99;
-  const stop=price*.96;
-  const target=price*1.06;
-
-  document.getElementById("entry").textContent=money(entry);
+  document.getElementById("entry").textContent=money(entryLow)+" - "+money(entryHigh);
   document.getElementById("stop").textContent=money(stop);
-  document.getElementById("target").textContent=money(target);
+  document.getElementById("target1").textContent=money(target1);
+  document.getElementById("target2").textContent=money(target2);
+  document.getElementById("rr").textContent=rr==="—"?"—":"1 : "+rr;
+}
+
+function loadChart(){
+  if(!current || chartLoaded===current) return;
+  chartLoaded=current;
+  document.getElementById("chart").innerHTML=`
+    <iframe src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:${current}USDT&theme=dark" frameborder="0"></iframe>
+  `;
 }
 </script>
 
