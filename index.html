@@ -158,10 +158,21 @@ async function run(){
 
   const id=map[sym];
 
-  const [simple,chartData]=await Promise.all([
-    fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`).then(r=>r.json()),
-    fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`).then(r=>r.json())
-  ]);
+  const simple = await fetch(
+  `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`
+).then(r=>r.json());
+
+const price=simple[id].usd;
+const move=simple[id].usd_24h_change||0;
+
+document.getElementById("price").textContent=money(price);
+const moveEl=document.getElementById("move");
+moveEl.textContent=move.toFixed(2)+"% over 24h";
+moveEl.style.color=move>0?"#7cff55":move<0?"#ff4d5d":"#aaa";
+
+const chartData = await fetch(
+  `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`
+).then(r=>r.json());
 
   const price=simple[id].usd;
   const move=simple[id].usd_24h_change||0;
