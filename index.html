@@ -6,32 +6,206 @@
 <link rel="apple-touch-icon" href="logo.PNG">
 
 <style>
-body{margin:0;background:#050606;color:white;font-family:-apple-system,BlinkMacSystemFont,Arial}
+body{margin:0;background:radial-gradient(circle at top,#101a12,#050606 45%,#000);color:white;font-family:-apple-system,BlinkMacSystemFont,Arial}
 .app{max-width:520px;margin:auto;padding-bottom:30px}
-.header{display:flex;align-items:center;gap:14px;padding:18px;border-bottom:1px solid #1f1f1f}
-.logo{width:54px;height:54px;border-radius:12px;object-fit:cover}
-.title{font-size:24px;font-weight:900}.sub{font-size:12px;color:#888;letter-spacing:1px}
+.header{display:flex;align-items:center;gap:14px;padding:20px 18px;border-bottom:1px solid #1f1f1f}
+.logo{width:58px;height:58px;border-radius:14px;object-fit:cover}
+.title{font-size:26px;font-weight:950;letter-spacing:1px}
+.sub{font-size:12px;color:#7cff55;letter-spacing:2px;font-weight:800}
 
-input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white;font-size:16px;box-sizing:border-box}
-.quick{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
-.quick button{flex:1 1 28%;padding:11px;border-radius:10px;border:1px solid #2a2a2a;background:#101010;color:white;font-weight:800}
+input{width:100%;padding:15px 18px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white;font-size:17px;box-sizing:border-box}
 
-.tabs{display:flex;border-top:1px solid #1f1f1f;border-bottom:1px solid #1f1f1f}
-.tab{flex:1;text-align:center;padding:14px;color:#777;font-weight:800}
-.tab.active{color:#7cff55;border-bottom:3px solid #7cff55}
+.quick{display:flex;flex-wrap:wrap;gap:8px;padding:14px}
+.quick button{flex:1 1 28%;padding:12px;border-radius:12px;border:1px solid #2a2a2a;background:linear-gradient(180deg,#151515,#0c0c0c);color:white;font-weight:850}
+.quick button:active{transform:scale(.96)}
 
-.screen{display:none;padding:14px}.screen.active{display:block}
-.card{background:linear-gradient(180deg,#121412,#080908);border:1px solid #242a25;border-radius:18px;padding:16px;margin-bottom:12px}
-.topline{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.coin{font-size:14px;color:#888;font-weight:900;letter-spacing:1px}
-.price{font-size:44px;font-weight:950;margin-top:6px}
-.move{font-size:16px;margin-top:4px;color:#999}
-.badge{padding:12px 18px;border-radius:999px;font-size:18px;font-weight:950;border:1px solid}
+.card{background:linear-gradient(180deg,#121412,#080908);border:1px solid #242a25;border-radius:20px;padding:18px;margin:14px;box-shadow:0 12px 35px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.04)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.label{font-size:12px;color:#7b827d;font-weight:900;letter-spacing:1.6px;text-transform:uppercase}
+.price{font-size:48px;font-weight:950;letter-spacing:-1px;margin-top:8px}
+.move{font-size:16px;color:#aaa;margin-top:4px}
+
+.badge{padding:13px 18px;border-radius:999px;font-size:20px;font-weight:950;border:1px solid;min-width:76px;text-align:center}
 .buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08)}
 .sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08)}
 .hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08)}
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.label{font-size:11px;color:#777;font-weight:900;text-transform:uppercase;letter-spacing:1px}
-.value{font-size:24px;font-weight:900;margin-top:6px}
-.small{font
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px}
+.stat{background:#101010;border:1px solid #242a25;border-radius:18px;padding:16px}
+.value{font-size:27px;font-weight:950;margin-top:8px}
+.small{color:#aaa;font-size:14px;line-height:1.45}
+
+.bar{height:8px;background:#282828;border-radius:20px;overflow:hidden;margin-top:12px}
+.fill{height:100%;background:linear-gradient(90deg,#55d941,#8aff68);width:0%}
+
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #242424}
+.row:last-child{border-bottom:0}
+.row span:first-child{color:#8b928c}
+.row span:last-child{font-weight:850;text-align:right}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<div class="header">
+  <img src="logo.PNG" class="logo">
+  <div>
+    <div class="title">BULLY</div>
+    <div class="sub">CRYPTO</div>
+  </div>
+</div>
+
+<input id="ticker" placeholder="Search coin: BTC, ETH, SOL, ZEC">
+
+<div class="quick">
+  <button onclick="pick('BTC')">BTC</button>
+  <button onclick="pick('ETH')">ETH</button>
+  <button onclick="pick('SOL')">SOL</button>
+  <button onclick="pick('XRP')">XRP</button>
+  <button onclick="pick('ZEC')">ZEC</button>
+  <button onclick="pick('DOGE')">DOGE</button>
+  <button onclick="pick('LTC')">LTC</button>
+  <button onclick="pick('ADA')">ADA</button>
+  <button onclick="pick('AVAX')">AVAX</button>
+</div>
+
+<div class="card">
+  <div class="top">
+    <div>
+      <div id="coin" class="label">SELECT COIN</div>
+      <div id="price" class="price">—</div>
+      <div id="move" class="move">Tap a coin to scan</div>
+    </div>
+    <div id="signal" class="badge hold">WAIT</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="stat">
+    <div class="label">Trend</div>
+    <div id="trend" class="value">—</div>
+  </div>
+  <div class="stat">
+    <div class="label">Setup</div>
+    <div id="setup" class="value">—</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="label">Confidence</div>
+  <div class="bar"><div id="strength" class="fill"></div></div>
+  <div id="strengthText" class="small">—</div>
+</div>
+
+<div class="card">
+  <div class="label">Trading Plan</div>
+  <div class="row"><span>Entry</span><span id="entry">—</span></div>
+  <div class="row"><span>Stop</span><span id="stop">—</span></div>
+  <div class="row"><span>Target</span><span id="target">—</span></div>
+</div>
+
+<div class="card">
+  <div class="label">Read</div>
+  <div id="reason" class="small">Waiting.</div>
+</div>
+
+</div>
+
+<script>
+const map={
+  BTC:"bitcoin",ETH:"ethereum",SOL:"solana",XRP:"ripple",ZEC:"zcash",
+  DOGE:"dogecoin",LTC:"litecoin",ADA:"cardano",AVAX:"avalanche-2"
+};
+
+const ticker=document.getElementById("ticker");
+let cache={};
+
+function money(n){
+  return "$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:n>100?2:4});
+}
+
+function pick(sym){
+  ticker.value=sym;
+  run();
+}
+
+ticker.addEventListener("input",()=>{
+  clearTimeout(window.timer);
+  window.timer=setTimeout(run,500);
+});
+
+async function run(){
+  const sym=ticker.value.toUpperCase().trim();
+  if(!map[sym]) return;
+
+  document.getElementById("coin").textContent=sym;
+  document.getElementById("price").textContent="Loading...";
+  document.getElementById("move").textContent="";
+  setSignal("WAIT");
+
+  try{
+    let data;
+    if(cache[sym] && Date.now()-cache[sym].time<60000){
+      data=cache[sym].data;
+    }else{
+      const id=map[sym];
+      data=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`).then(r=>r.json());
+      cache[sym]={time:Date.now(),data};
+    }
+
+    const id=map[sym];
+    const price=data[id].usd;
+    const move=data[id].usd_24h_change||0;
+
+    let decision="HOLD",trend="CHOP",setup="WAIT",reason="No clean edge yet.",strength=42;
+
+    if(move>=3){
+      decision="BUY"; trend="BULL"; setup="MOMENTUM"; reason="Strong upside momentum. Avoid chasing a vertical candle."; strength=78;
+    }else if(move>=1){
+      decision="HOLD"; trend="UP"; setup="BUILDING"; reason="Strength building, but wait for cleaner confirmation."; strength=60;
+    }else if(move<=-3){
+      decision="SELL"; trend="BEAR"; setup="WEAK"; reason="Heavy downside pressure. Avoid new longs."; strength=78;
+    }else if(move<=-1){
+      decision="HOLD"; trend="DOWN"; setup="CAUTION"; reason="Weakening, but not a clean sell signal."; strength=55;
+    }
+
+    document.getElementById("price").textContent=money(price);
+
+    const moveEl=document.getElementById("move");
+    moveEl.textContent=move.toFixed(2)+"% over 24h";
+    moveEl.style.color=move>0?"#7cff55":move<0?"#ff4d5d":"#aaa";
+
+    setSignal(decision);
+
+    document.getElementById("trend").textContent=trend;
+    document.getElementById("setup").textContent=setup;
+    document.getElementById("reason").textContent=reason;
+    document.getElementById("strength").style.width=strength+"%";
+    document.getElementById("strengthText").textContent=strength+"/100";
+
+    document.getElementById("entry").textContent=money(price*.99)+" - "+money(price*1.01);
+    document.getElementById("stop").textContent=money(price*.96);
+    document.getElementById("target").textContent=money(price*1.06);
+
+  }catch(e){
+    document.getElementById("price").textContent="Data error";
+    document.getElementById("move").textContent="";
+    setSignal("WAIT");
+    document.getElementById("trend").textContent="—";
+    document.getElementById("setup").textContent="—";
+    document.getElementById("reason").textContent="Connection issue. Try again.";
+    document.getElementById("strength").style.width="0%";
+    document.getElementById("strengthText").textContent="—";
+  }
+}
+
+function setSignal(decision){
+  const el=document.getElementById("signal");
+  el.textContent=decision;
+  el.className="badge "+(decision==="BUY"?"buy":decision==="SELL"?"sell":"hold");
+}
+</script>
+
+</body>
+</html>
