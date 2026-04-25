@@ -2,31 +2,26 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Bully Crypto</title>
-
 <link rel="apple-touch-icon" href="logo.PNG">
 <link rel="icon" href="logo.PNG">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
 body{margin:0;background:#050606;color:white;font-family:-apple-system,BlinkMacSystemFont,Arial}
 .app{max-width:520px;margin:auto;padding-bottom:30px}
 .header{display:flex;align-items:center;gap:14px;padding:18px;border-bottom:1px solid #1f1f1f}
-.logo{width:54px;height:54px;border-radius:12px}
+.logo{width:54px;height:54px;border-radius:12px;object-fit:cover}
 .title{font-size:24px;font-weight:900}
 .sub{font-size:12px;color:#7cff55}
 
-input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white;font-size:16px}
+input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white;font-size:16px;box-sizing:border-box}
 
 .quick{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
 .quick button{flex:1 1 28%;padding:11px;border-radius:10px;border:1px solid #2a2a2a;background:#101010;color:white;font-weight:800}
 
 .card{background:#101010;border:1px solid #242a25;border-radius:18px;padding:16px;margin:14px}
 .price{font-size:44px;font-weight:950}
-.badge{padding:12px 18px;border-radius:999px;font-size:18px;font-weight:950;border:1px solid}
+.badge{display:inline-block;padding:12px 18px;border-radius:999px;font-size:18px;font-weight:950;border:1px solid}
 .buy{color:#7cff55;border-color:#7cff55}
 .sell{color:#ff4d5d;border-color:#ff4d5d}
 .hold{color:#ffd60a;border-color:#ffd60a}
@@ -40,241 +35,215 @@ input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;backgr
 <div class="app">
 
 <div class="header">
-<img src="logo.PNG" class="logo">
-<div>
-<div class="title">BULLY</div>
-<div class="sub">CRYPTO</div>
-</div>
+  <img src="logo.PNG" class="logo">
+  <div>
+    <div class="title">BULLY</div>
+    <div class="sub">CRYPTO</div>
+  </div>
 </div>
 
 <input id="ticker" placeholder="Search: BTC, ETH, SOL">
 
 <div class="quick">
-<button onclick="pick('BTC')">BTC</button>
-<button onclick="pick('ETH')">ETH</button>
-<button onclick="pick('SOL')">SOL</button>
-<button onclick="pick('XRP')">XRP</button>
-<button onclick="pick('DOGE')">DOGE</button>
-<button onclick="pick('ADA')">ADA</button>
+  <button onclick="pick('BTC')">BTC</button>
+  <button onclick="pick('ETH')">ETH</button>
+  <button onclick="pick('SOL')">SOL</button>
+  <button onclick="pick('XRP')">XRP</button>
+  <button onclick="pick('DOGE')">DOGE</button>
+  <button onclick="pick('ADA')">ADA</button>
 </div>
 
 <div class="card">
-<div id="coin" class="small">SELECT COIN</div>
-<div id="price" class="price">—</div>
-<div id="move" class="small">Tap a coin</div>
-<br>
-<div id="signal" class="badge hold">WAIT</div>
+  <div id="coin" class="small">SELECT COIN</div>
+  <div id="price" class="price">—</div>
+  <div id="move" class="small">Tap a coin</div>
+  <br>
+  <div id="signal" class="badge hold">WAIT</div>
 </div>
 
 <div class="card">
-<div class="row"><span>Trend</span><span id="trend">—</span></div>
-<div class="row"><span>Setup</span><span id="setup">—</span></div>
-<div class="row"><span>Confidence</span><span id="confidence">—</span></div>
+  <div class="row"><span>Trend</span><span id="trend">—</span></div>
+  <div class="row"><span>Setup</span><span id="setup">—</span></div>
+  <div class="row"><span>RSI</span><span id="rsiOut">—</span></div>
+  <div class="row"><span>Confidence</span><span id="confidence">—</span></div>
 </div>
 
 <div class="card">
-<div id="reason" class="small">Waiting.</div>
+  <div id="reason" class="small">Waiting.</div>
 </div>
 
 </div>
 
 <script>
 const PAIRS={
-BTC:"BTCUSDT",
-ETH:"ETHUSDT",
-SOL:"SOLUSDT",
-XRP:"XRPUSDT",
-DOGE:"DOGEUSDT",
-ADA:"ADAUSDT"
+  BTC:"BTCUSDT",
+  ETH:"ETHUSDT",
+  SOL:"SOLUSDT",
+  XRP:"XRPUSDT",
+  DOGE:"DOGEUSDT",
+  ADA:"ADAUSDT"
 };
 
-let current="";
 let liveTimer=null;
 
 function money(n){
-return "$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+  return "$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
 }
 
 function setSignal(decision){
-const el=document.getElementById("signal");
-el.textContent=decision;
-el.className="badge "+(decision==="BUY"?"buy":decision==="SELL"?"sell":"hold");
+  const el=document.getElementById("signal");
+  el.textContent=decision;
+  el.className="badge "+(decision==="BUY"?"buy":decision==="SELL"?"sell":"hold");
 }
 
 function pick(sym){
-document.getElementById("ticker").value=sym;
-current="";
-if(liveTimer) clearInterval(liveTimer);
-run();
-liveTimer=setInterval(()=>run(true),2500);
+  document.getElementById("ticker").value=sym;
+
+  if(liveTimer) clearInterval(liveTimer);
+
+  run(false);
+
+  liveTimer=setInterval(()=>{
+    run(true);
+  },2500);
+}
+
+document.getElementById("ticker").addEventListener("input",()=>{
+  clearTimeout(window.typingTimer);
+  window.typingTimer=setTimeout(()=>{
+    if(liveTimer) clearInterval(liveTimer);
+    run(false);
+    liveTimer=setInterval(()=>run(true),2500);
+  },500);
+});
+
+function ema(values,period){
+  if(values.length===0) return 0;
+  let k=2/(period+1);
+  let e=values[0];
+
+  for(let i=1;i<values.length;i++){
+    e=values[i]*k+e*(1-k);
+  }
+
+  return e;
+}
+
+function rsi(values,period=14){
+  if(values.length<=period) return 50;
+
+  let gains=0;
+  let losses=0;
+
+  for(let i=values.length-period;i<values.length;i++){
+    let diff=values[i]-values[i-1];
+
+    if(diff>=0) gains+=diff;
+    else losses-=diff;
+  }
+
+  if(losses===0) return 100;
+
+  let rs=gains/losses;
+  return 100-(100/(1+rs));
 }
 
 async function fetchData(pair){
-const [ticker,klines]=await Promise.all([
-fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${pair}`).then(r=>r.json()),
-fetch(`https://api.binance.com/api/v3/klines?symbol=${pair}&interval=15m&limit=50`).then(r=>r.json())
-]);
-return {ticker,klines};
+  const tickerUrl=`https://api.binance.com/api/v3/ticker/24hr?symbol=${pair}`;
+  const klineUrl=`https://api.binance.com/api/v3/klines?symbol=${pair}&interval=15m&limit=50`;
+
+  const tickerRes=await fetch(tickerUrl);
+  const klineRes=await fetch(klineUrl);
+
+  if(!tickerRes.ok || !klineRes.ok){
+    throw new Error("Bad response");
+  }
+
+  const ticker=await tickerRes.json();
+  const klines=await klineRes.json();
+
+  return {ticker,klines};
 }
 
-function ema(values,p){
-let k=2/(p+1);
-let e=values[0];
-for(let i=1;i<values.length;i++){
-e=values[i]*k+e*(1-k);
-}
-return e;
-}
+async function run(isLive=false){
+  const sym=document.getElementById("ticker").value.toUpperCase().trim();
 
-function rsi(values,p=14){
-let gains=0,losses=0;
-for(let i=values.length-p;i<values.length;i++){
-let d=values[i]-values[i-1];
-if(d>=0) gains+=d; else losses-=d;
-}
-if(losses===0) return 100;
-let rs=gains/losses;
-return 100-(100/(1+rs));
-}
+  if(!PAIRS[sym]) return;
 
-async function run(isLive=false){async function run(isLive=false){
-const sym=document.getElementById("ticker").value.toUpperCase().trim();
-if(!PAIRS[sym]) return;
+  const pair=PAIRS[sym];
 
-const pair=PAIRS[sym];
+  if(!isLive){
+    document.getElementById("coin").textContent=sym;
+    document.getElementById("price").textContent="Loading...";
+    document.getElementById("move").textContent="";
+    setSignal("WAIT");
+  }
 
-if(!isLive){
-document.getElementById("coin").textContent=sym;
-document.getElementById("price").textContent="Loading...";
-document.getElementById("move").textContent="";
-setSignal("WAIT");
-}
+  try{
+    const data=await fetchData(pair);
 
-try{
-const {ticker,klines}=await fetchData(pair);
+    const price=Number(data.ticker.lastPrice);
+    const move=Number(data.ticker.priceChangePercent);
+    const closes=data.klines.map(k=>Number(k[4]));
 
-const price=Number(ticker.lastPrice);
-const move=Number(ticker.priceChangePercent);
-const closes=klines.map(k=>Number(k[4]));
+    const fast=ema(closes,12);
+    const slow=ema(closes,26);
+    const rsiVal=rsi(closes,14);
 
-// ---- NEW LOGIC ----
-const fast=ema(closes,12);
-const slow=ema(closes,26);
-const rsiVal=rsi(closes);
+    let score=50;
 
-// scoring
-let score=50;
+    if(price>fast) score+=8;
+    else score-=8;
 
-// trend
-if(price>fast) score+=8;
-else score-=8;
+    if(fast>slow) score+=12;
+    else score-=12;
 
-if(fast>slow) score+=12;
-else score-=12;
+    if(move>2) score+=10;
+    else if(move<-2) score-=10;
 
-// momentum
-if(move>2) score+=10;
-else if(move<-2) score-=10;
+    if(rsiVal>45 && rsiVal<68) score+=8;
+    else if(rsiVal>=75) score-=10;
+    else if(rsiVal<35) score-=6;
 
-// RSI (THIS IS NEW + IMPORTANT)
-if(rsiVal>45 && rsiVal<68) score+=8;
-else if(rsiVal>=75) score-=10;
-else if(rsiVal<35) score-=6;
+    score=Math.max(0,Math.min(100,Math.round(score)));
 
-score=Math.max(0,Math.min(100,score));
+    let decision="HOLD";
 
-// decision (cleaner thresholds)
-let decision="HOLD";
-if(score>=70) decision="BUY";
-else if(score<=35) decision="SELL";
+    if(score>=70) decision="BUY";
+    else if(score<=35) decision="SELL";
 
-// ---- UI ----
-document.getElementById("price").textContent=money(price);
+    document.getElementById("price").textContent=money(price);
 
-const moveEl=document.getElementById("move");
-moveEl.textContent=move.toFixed(2)+"%";
-moveEl.style.color=move>0?"#7cff55":"#ff4d5d";
+    const moveEl=document.getElementById("move");
+    moveEl.textContent=move.toFixed(2)+"%";
+    moveEl.style.color=move>0?"#7cff55":move<0?"#ff4d5d":"#aaa";
 
-setSignal(decision);
+    setSignal(decision);
 
-document.getElementById("trend").textContent=
-score>=70?"BULL":
-score<=35?"BEAR":
-"MIXED";
+    document.getElementById("trend").textContent=
+      score>=70?"BULL":
+      score<=35?"BEAR":
+      "MIXED";
 
-document.getElementById("setup").textContent=
-decision==="BUY"?"MOMENTUM":
-decision==="SELL"?"WEAK":
-"WAIT";
+    document.getElementById("setup").textContent=
+      decision==="BUY"?"MOMENTUM":
+      decision==="SELL"?"WEAK":
+      "WAIT";
 
-document.getElementById("confidence").textContent=score+"/100";
+    document.getElementById("rsiOut").textContent=Math.round(rsiVal);
+    document.getElementById("confidence").textContent=score+"/100";
 
-// upgraded explanation
-let reason =
-decision==="BUY"
-  ? "Trend + momentum aligned with healthy RSI"
-  : decision==="SELL"
-  ? "Downtrend with weak momentum and poor RSI"
-  : "No clean setup. Market is mixed";
+    document.getElementById("reason").textContent=
+      decision==="BUY"?"Trend + momentum aligned with healthy RSI.":
+      decision==="SELL"?"Weak trend and downside pressure.":
+      "No clean edge. Hold and wait.";
 
-document.getElementById("reason").textContent = reason;
-
-}catch(e){
-document.getElementById("price").textContent="Error";
-setSignal("WAIT");
-document.getElementById("reason").textContent="Connection issue.";
-}
-
-}
-
-try{
-const {ticker,klines}=await fetchData(pair);
-
-const price=Number(ticker.lastPrice);
-const move=Number(ticker.priceChangePercent);
-const closes=klines.map(k=>Number(k[4]));
-
-const fast=ema(closes,12);
-const slow=ema(closes,26);
-const rsiVal=rsi(closes);
-
-let score=50;
-
-if(price>fast) score+=8; else score-=8;
-if(fast>slow) score+=12; else score-=12;
-if(move>2) score+=10;
-if(move<-2) score-=10;
-if(rsiVal>45&&rsiVal<70) score+=6;
-if(rsiVal>75) score-=6;
-
-score=Math.max(0,Math.min(100,score));
-
-let decision="HOLD";
-if(score>=70) decision="BUY";
-else if(score<=35) decision="SELL";
-
-document.getElementById("price").textContent=money(price);
-
-const moveEl=document.getElementById("move");
-moveEl.textContent=move.toFixed(2)+"%";
-moveEl.style.color=move>0?"#7cff55":"#ff4d5d";
-
-setSignal(decision);
-
-document.getElementById("trend").textContent=score>=70?"BULL":score<=35?"BEAR":"MIXED";
-document.getElementById("setup").textContent=decision==="BUY"?"MOMENTUM":decision==="SELL"?"WEAK":"WAIT";
-document.getElementById("confidence").textContent=score+"/100";
-
-document.getElementById("reason").textContent=
-decision==="BUY"?"Momentum + trend aligned":
-decision==="SELL"?"Downtrend + weakness":
-"No clear edge";
-
-}catch(e){
-document.getElementById("price").textContent="Error";
-setSignal("WAIT");
-document.getElementById("reason").textContent="Connection issue.";
-}
+  }catch(e){
+    document.getElementById("price").textContent="Error";
+    document.getElementById("move").textContent="";
+    setSignal("WAIT");
+    document.getElementById("reason").textContent="Connection issue. Refresh or try again.";
+  }
 }
 </script>
 
