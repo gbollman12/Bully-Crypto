@@ -7,252 +7,136 @@
 <link rel="apple-touch-icon" href="logo.PNG">
 
 <style>
-body{
-  margin:0;
-  background:radial-gradient(circle at top,#111812,#050606 45%,#000);
-  color:#fff;
-  font-family:-apple-system,BlinkMacSystemFont,Arial;
-}
-.app{max-width:540px;margin:auto;padding-bottom:30px}
+body{margin:0;background:#050606;color:#fff;font-family:-apple-system,BlinkMacSystemFont,Arial}
+.app{max-width:520px;margin:auto;padding-bottom:30px}
+.header{display:flex;align-items:center;gap:14px;padding:20px 18px;border-bottom:1px solid #1f1f1f}
+.logo{width:54px;height:54px;border-radius:12px;object-fit:cover}
+.title{font-size:24px;font-weight:900;letter-spacing:1px}
+.sub{font-size:13px;color:#999;letter-spacing:1px}
 
-.header{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  padding:20px 18px;
-  border-bottom:1px solid #1f1f1f;
-}
-.logo{width:58px;height:58px;border-radius:14px;object-fit:cover}
-.title{font-size:28px;font-weight:900;letter-spacing:1px}
-.sub{font-size:14px;color:#7cff55;font-weight:700;letter-spacing:2px}
+.search{padding:14px 18px;border-bottom:1px solid #1f1f1f}
+input{width:100%;padding:14px;border-radius:12px;border:1px solid #252525;background:#0b0b0b;color:white;font-size:16px;box-sizing:border-box}
 
-.searchWrap{
-  padding:14px 16px;
-  display:grid;
-  grid-template-columns:1fr 70px;
-  gap:10px;
-}
-input{
-  width:100%;
-  padding:15px;
-  border-radius:12px;
-  border:1px solid #252525;
-  background:#090909;
-  color:white;
-  font-size:16px;
-}
-.currency{
-  border:1px solid #252525;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-  background:#090909;
-  font-weight:800;
-}
+.quick{display:flex;flex-wrap:wrap;gap:8px;padding:12px 18px}
+.quick button{flex:1 1 28%;padding:11px;border-radius:10px;border:1px solid #2a2a2a;background:#101010;color:white;font-weight:800}
 
-.quick{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  padding:0 16px 14px;
-}
-.quick button{
-  flex:1 1 28%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #292929;
-  background:#111;
-  color:white;
-  font-weight:800;
-}
-.quick button:active{transform:scale(.97)}
+.tabs{display:flex;border-top:1px solid #1f1f1f;border-bottom:1px solid #1f1f1f}
+.tab{flex:1;text-align:center;padding:14px;color:#777;font-weight:800}
+.tab.active{color:#7cff55;border-bottom:3px solid #7cff55}
 
-.tabs{
-  margin:0 16px 14px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  background:#0c0c0c;
-  border:1px solid #252525;
-  border-radius:12px;
-  overflow:hidden;
-}
-.tab{
-  text-align:center;
-  padding:14px 6px;
-  color:#777;
-  font-weight:800;
-}
-.tab.active{
-  color:#fff;
-  background:linear-gradient(135deg,#2b7e22,#62d947);
-}
-
-.screen{display:none;padding:0 16px}
+.screen{display:none;padding:16px 18px}
 .screen.active{display:block}
 
-.card{
-  background:linear-gradient(180deg,#121512,#080908);
-  border:1px solid #242b26;
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:14px;
-  box-shadow:0 12px 34px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
-}
-.label{
-  color:#8c958f;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:2px;
-  text-transform:uppercase;
-}
-.big{font-size:44px;font-weight:950;margin-top:8px}
-.small{color:#b8beb9;font-size:15px;line-height:1.45}
+.hero{background:linear-gradient(180deg,#111,#090909);border:1px solid #262626;border-radius:18px;padding:18px;margin-bottom:12px}
+.heroTop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.coinName{font-size:15px;color:#888;font-weight:800;letter-spacing:1px}
+.price{font-size:46px;font-weight:950;letter-spacing:-1px;margin-top:8px}
+.move{font-size:16px;color:#999;margin-top:4px}
+.badge{padding:10px 14px;border-radius:999px;font-weight:950;font-size:15px;border:1px solid #333}
+.buyBadge{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08)}
+.sellBadge{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08)}
+.holdBadge{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08)}
 
-.signalBox{
-  border-radius:18px;
-  padding:24px 18px;
-  margin-bottom:14px;
-  border:2px solid #333;
-}
-.signalText{
-  font-size:58px;
-  font-weight:950;
-  letter-spacing:-2px;
-}
-.buyBox{border-color:#7cff55;background:rgba(124,255,85,.08)}
-.sellBox{border-color:#ff4d5d;background:rgba(255,77,93,.08)}
-.holdBox{border-color:#ffd60a;background:rgba(255,214,10,.08)}
-.buy{color:#7cff55}
-.sell{color:#ff4d5d}
-.hold{color:#ffd60a}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:#101010;border:1px solid #262626;border-radius:16px;padding:15px;margin-bottom:12px}
+.label{font-size:11px;color:#777;font-weight:900;letter-spacing:1.6px;text-transform:uppercase}
+.value{font-size:26px;font-weight:950;margin-top:8px}
+.small{font-size:14px;color:#aaa;line-height:1.45}
 
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.value{font-size:30px;font-weight:950;margin-top:8px}
-
-.bar{height:9px;background:#262626;border-radius:20px;overflow:hidden;margin-top:14px}
+.bar{height:8px;background:#252525;border-radius:20px;overflow:hidden;margin-top:12px}
 .fill{height:100%;background:linear-gradient(90deg,#55d941,#8aff68)}
 
-.planItem{
-  display:grid;
-  grid-template-columns:42px 1fr;
-  gap:12px;
-  padding:14px 0;
-  border-bottom:1px solid #242424;
-}
-.planItem:last-child{border-bottom:0}
-.dot{
-  width:36px;height:36px;border-radius:10px;
-  background:#122812;
-  color:#7cff55;
-  display:grid;place-items:center;
-  font-weight:900;
-}
-.dot.red{background:#2a1111;color:#ff4d5d}
-.dot.yellow{background:#261f0e;color:#ffd60a}
-.planVal{font-size:18px;font-weight:850;margin-top:4px}
+.planRow{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #222}
+.planRow:last-child{border-bottom:0}
+.planRow span:first-child{color:#888;font-weight:800}
+.planRow span:last-child{font-weight:850}
 
-iframe{width:100%;height:420px;border:0;border-radius:18px}
+.buy{color:#7cff55}.sell{color:#ff4d5d}.hold{color:#ffd60a}
+iframe{width:100%;height:430px;border:0;border-radius:16px}
 </style>
 </head>
 
 <body>
 <div class="app">
 
-  <div class="header">
-    <img src="logo.PNG" class="logo">
-    <div>
-      <div class="title">BULLY</div>
-      <div class="sub">CRYPTO</div>
+<div class="header">
+  <img src="logo.PNG" class="logo">
+  <div>
+    <div class="title">BULLY</div>
+    <div class="sub">CRYPTO</div>
+  </div>
+</div>
+
+<div class="search">
+  <input id="ticker" placeholder="Search coin: BTC, ETH, SOL, ZEC">
+</div>
+
+<div class="quick">
+  <button onclick="selectCoin('BTC')">BTC</button>
+  <button onclick="selectCoin('ETH')">ETH</button>
+  <button onclick="selectCoin('SOL')">SOL</button>
+  <button onclick="selectCoin('XRP')">XRP</button>
+  <button onclick="selectCoin('ZEC')">ZEC</button>
+  <button onclick="selectCoin('DOGE')">DOGE</button>
+  <button onclick="selectCoin('LTC')">LTC</button>
+  <button onclick="selectCoin('AVAX')">AVAX</button>
+  <button onclick="selectCoin('ADA')">ADA</button>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">Overview</div>
+  <div class="tab" onclick="switchTab(1); loadChart()">Chart</div>
+  <div class="tab" onclick="switchTab(2)">Plan</div>
+</div>
+
+<div class="screen active">
+  <div class="hero">
+    <div class="heroTop">
+      <div>
+        <div class="coinName" id="coinLabel">SELECT COIN</div>
+        <div class="price" id="price">—</div>
+        <div class="move" id="move">Tap a coin to scan</div>
+      </div>
+      <div id="signalBadge" class="badge holdBadge">WAIT</div>
     </div>
   </div>
 
-  <div class="searchWrap">
-    <input id="ticker" placeholder="Search coin BTC, ETH, SOL...">
-    <div class="currency">USD</div>
-  </div>
-
-  <div class="quick">
-    <button onclick="selectCoin('BTC')">BTC</button>
-    <button onclick="selectCoin('ETH')">ETH</button>
-    <button onclick="selectCoin('SOL')">SOL</button>
-    <button onclick="selectCoin('XRP')">XRP</button>
-    <button onclick="selectCoin('ZEC')">ZEC</button>
-    <button onclick="selectCoin('DOGE')">DOGE</button>
-    <button onclick="selectCoin('LTC')">LTC</button>
-    <button onclick="selectCoin('AVAX')">AVAX</button>
-    <button onclick="selectCoin('ADA')">ADA</button>
-  </div>
-
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab(0)">Overview</div>
-    <div class="tab" onclick="switchTab(1); loadChart()">Chart</div>
-    <div class="tab" onclick="switchTab(2)">Plan</div>
-  </div>
-
-  <div class="screen active">
-    <div id="signalBox" class="signalBox holdBox">
-      <div id="decisionTop" class="signalText hold">WAIT</div>
-      <div id="reasonTop" class="small">Select a coin</div>
-    </div>
-
+  <div class="grid">
     <div class="card">
-      <div class="label">Price</div>
-      <div class="big" id="price">—</div>
-      <div class="small" id="move">—</div>
+      <div class="label">Trend</div>
+      <div class="value" id="trend">—</div>
     </div>
-
-    <div class="row">
-      <div class="card">
-        <div class="label">Trend</div>
-        <div class="value" id="trend">—</div>
-      </div>
-      <div class="card">
-        <div class="label">Setup</div>
-        <div class="value" id="setup">—</div>
-      </div>
-    </div>
-
     <div class="card">
-      <div class="label">Setup Strength</div>
-      <div class="bar"><div id="strengthBar" class="fill"></div></div>
-      <div class="small" id="strengthText">—</div>
+      <div class="label">Setup</div>
+      <div class="value" id="setup">—</div>
     </div>
   </div>
 
-  <div class="screen">
-    <div id="chart"></div>
+  <div class="card">
+    <div class="label">Setup Strength</div>
+    <div class="bar"><div id="strengthBar" class="fill"></div></div>
+    <div class="small" id="strengthText">—</div>
   </div>
 
-  <div class="screen">
-    <div class="card">
-      <div class="label">Trading Plan</div>
-
-      <div class="planItem">
-        <div class="dot">●</div>
-        <div><div class="label">Entry Zone</div><div class="planVal" id="entryZone">—</div></div>
-      </div>
-
-      <div class="planItem">
-        <div class="dot red">●</div>
-        <div><div class="label">Stop Loss</div><div class="planVal" id="stopLoss">—</div></div>
-      </div>
-
-      <div class="planItem">
-        <div class="dot">◎</div>
-        <div><div class="label">Target 1</div><div class="planVal" id="targetOne">—</div></div>
-      </div>
-
-      <div class="planItem">
-        <div class="dot yellow">⚖</div>
-        <div><div class="label">Risk / Reward</div><div class="planVal" id="rr">—</div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="label">Notes</div>
-      <div class="small" id="notes">Select a coin to generate plan.</div>
-    </div>
+  <div class="card">
+    <div class="label">Read</div>
+    <div class="small" id="reason">Waiting for coin.</div>
   </div>
+</div>
+
+<div class="screen">
+  <div id="chart"></div>
+</div>
+
+<div class="screen">
+  <div class="card">
+    <div class="label">Trading Plan</div>
+    <div class="planRow"><span>Entry Zone</span><span id="entryZone">—</span></div>
+    <div class="planRow"><span>Stop Loss</span><span id="stopLoss">—</span></div>
+    <div class="planRow"><span>Target</span><span id="targetOne">—</span></div>
+    <div class="planRow"><span>Risk / Reward</span><span id="rr">—</span></div>
+  </div>
+</div>
 
 </div>
 
@@ -262,15 +146,15 @@ let chartLoaded = "";
 
 const screens = document.querySelectorAll(".screen");
 const tabs = document.querySelectorAll(".tab");
-
 const ticker = document.getElementById("ticker");
+
+const coinLabel = document.getElementById("coinLabel");
 const priceEl = document.getElementById("price");
 const moveEl = document.getElementById("move");
 const trendEl = document.getElementById("trend");
 const setupEl = document.getElementById("setup");
-const signalBox = document.getElementById("signalBox");
-const decisionTop = document.getElementById("decisionTop");
-const reasonTop = document.getElementById("reasonTop");
+const signalBadge = document.getElementById("signalBadge");
+const reasonEl = document.getElementById("reason");
 const strengthBar = document.getElementById("strengthBar");
 const strengthText = document.getElementById("strengthText");
 const chart = document.getElementById("chart");
@@ -279,11 +163,15 @@ const entryZone = document.getElementById("entryZone");
 const stopLoss = document.getElementById("stopLoss");
 const targetOne = document.getElementById("targetOne");
 const rr = document.getElementById("rr");
-const notes = document.getElementById("notes");
+
+const idMap = {
+  BTC:"bitcoin", ETH:"ethereum", SOL:"solana", XRP:"ripple", ZEC:"zcash",
+  DOGE:"dogecoin", LTC:"litecoin", AVAX:"avalanche-2", ADA:"cardano"
+};
 
 function switchTab(i){
-  screens.forEach(s => s.classList.remove("active"));
-  tabs.forEach(t => t.classList.remove("active"));
+  screens.forEach(s=>s.classList.remove("active"));
+  tabs.forEach(t=>t.classList.remove("active"));
   screens[i].classList.add("active");
   tabs[i].classList.add("active");
 }
@@ -296,100 +184,64 @@ function selectCoin(sym){
 }
 
 let timeout;
-ticker.addEventListener("input", () => {
+ticker.addEventListener("input",()=>{
   clearTimeout(timeout);
-  timeout = setTimeout(run, 300);
+  timeout=setTimeout(run,350);
 });
 
-const idMap = {
-  BTC:"bitcoin",
-  ETH:"ethereum",
-  SOL:"solana",
-  XRP:"ripple",
-  ZEC:"zcash",
-  DOGE:"dogecoin",
-  LTC:"litecoin",
-  AVAX:"avalanche-2",
-  ADA:"cardano"
-};
-
 async function run(){
-  const sym = ticker.value.toUpperCase().trim();
-  if(!sym || sym === currentSymbol) return;
-  currentSymbol = sym;
+  const sym=ticker.value.toUpperCase().trim();
+  if(!sym || sym===currentSymbol) return;
+  currentSymbol=sym;
 
-  const id = idMap[sym];
+  const id=idMap[sym];
   if(!id) return;
 
-  priceEl.textContent = "Loading...";
-  moveEl.textContent = "";
+  coinLabel.textContent=sym;
+  priceEl.textContent="Loading...";
+  moveEl.textContent="";
 
-  const data = await fetch(
+  const data=await fetch(
     `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`
   ).then(r=>r.json());
 
-  const price = data[id].usd;
-  const move = data[id].usd_24h_change || 0;
+  const price=data[id].usd;
+  const move=data[id].usd_24h_change || 0;
 
-  priceEl.textContent = "$" + price.toLocaleString(undefined,{maximumFractionDigits:2});
-  moveEl.textContent = move.toFixed(2) + "% over 24h";
+  let decision="HOLD", trend="CHOP", setup="WAIT", reason="No clean setup yet.", strength=40;
 
-  let decision="HOLD", reason="No clean setup yet.", trend="CHOP", setup="WAIT", strength=40;
+  if(move>=5){decision="BUY";trend="HOT";setup="BREAKOUT";reason="Strong momentum. Watch for a pullback before chasing.";strength=90;}
+  else if(move>=2){decision="BUY";trend="BULL";setup="WATCH";reason="Momentum building. Confirm chart before entry.";strength=75;}
+  else if(move>=.75){decision="HOLD";trend="UP";setup="BUILDING";reason="Strength forming, but entry is not clean yet.";strength=58;}
+  else if(move<=-5){decision="SELL";trend="DUMP";setup="BREAKDOWN";reason="Heavy downside pressure. Avoid new longs.";strength=90;}
+  else if(move<=-2){decision="SELL";trend="BEAR";setup="WEAK";reason="Momentum down. Wait for stabilization.";strength=75;}
+  else if(move<=-.75){decision="HOLD";trend="DOWN";setup="CAUTION";reason="Weakening, but not enough for clean sell signal.";strength=50;}
 
-  if(move >= 5){
-    decision="BUY"; reason="Strong momentum. Watch for pullback before chasing.";
-    trend="HOT"; setup="BREAKOUT"; strength=90;
-  } else if(move >= 2){
-    decision="BUY"; reason="Momentum building. Good candidate, confirm chart.";
-    trend="BULL"; setup="WATCH"; strength=75;
-  } else if(move >= .75){
-    decision="HOLD"; reason="Strength forming, but entry is not clean yet.";
-    trend="UP"; setup="BUILDING"; strength=58;
-  } else if(move <= -5){
-    decision="SELL"; reason="Heavy downside pressure. Avoid new longs.";
-    trend="DUMP"; setup="BREAKDOWN"; strength=90;
-  } else if(move <= -2){
-    decision="SELL"; reason="Momentum is down. Wait for stabilization.";
-    trend="BEAR"; setup="WEAK"; strength=75;
-  } else if(move <= -.75){
-    decision="HOLD"; reason="Weakening, but not enough for clean sell signal.";
-    trend="DOWN"; setup="CAUTION"; strength=50;
-  }
+  priceEl.textContent="$"+price.toLocaleString(undefined,{maximumFractionDigits:2});
+  moveEl.textContent=move.toFixed(2)+"% over 24h";
+  trendEl.textContent=trend;
+  setupEl.textContent=setup;
+  reasonEl.textContent=reason;
+  strengthBar.style.width=strength+"%";
+  strengthText.textContent=strength+"/100";
 
-  updateSignal(decision, reason);
-  trendEl.textContent = trend;
-  setupEl.textContent = setup;
-  strengthBar.style.width = strength + "%";
-  strengthText.textContent = strength + "/100 setup strength";
+  signalBadge.textContent=decision;
+  signalBadge.className="badge "+(decision==="BUY"?"buyBadge":decision==="SELL"?"sellBadge":"holdBadge");
 
-  const stop = decision === "BUY" ? price * .96 : price * 1.04;
-  const target = decision === "BUY" ? price * 1.08 : price * .92;
-  entryZone.textContent = "$" + (price*.99).toFixed(2) + " - $" + (price*1.01).toFixed(2);
-  stopLoss.textContent = "$" + stop.toFixed(2);
-  targetOne.textContent = "$" + target.toFixed(2);
-  rr.textContent = "1 : 2";
-  notes.textContent = reason;
-}
-
-function updateSignal(decision, reason){
-  decisionTop.textContent = decision;
-  reasonTop.textContent = reason;
-  decisionTop.className = "signalText " + (decision==="BUY"?"buy":decision==="SELL"?"sell":"hold");
-  signalBox.className = "signalBox " + (decision==="BUY"?"buyBox":decision==="SELL"?"sellBox":"holdBox");
+  entryZone.textContent="$"+(price*.99).toFixed(2)+" - $"+(price*1.01).toFixed(2);
+  stopLoss.textContent="$"+(decision==="BUY" ? price*.96 : price*1.04).toFixed(2);
+  targetOne.textContent="$"+(decision==="BUY" ? price*1.08 : price*.92).toFixed(2);
+  rr.textContent="1 : 2";
 }
 
 function loadChart(){
   if(!currentSymbol) return;
-  if(chartLoaded === currentSymbol) return;
-  chartLoaded = currentSymbol;
-
-  chart.innerHTML = `
-    <iframe
-      src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:${currentSymbol}USDT&theme=dark"
-      frameborder="0">
-    </iframe>`;
+  if(chartLoaded===currentSymbol) return;
+  chartLoaded=currentSymbol;
+  chart.innerHTML=`
+    <iframe src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:${currentSymbol}USDT&theme=dark" frameborder="0"></iframe>
+  `;
 }
 </script>
-
 </body>
 </html>
