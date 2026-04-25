@@ -1,5 +1,102 @@
 <!DOCTYPE html>
 <html>
+<script>
+let currentSymbol = "";
+let chartLoaded = "";
+
+const screens = document.querySelectorAll(".screen");
+const tabs = document.querySelectorAll(".tab");
+
+const priceEl = document.getElementById("price");
+const moveEl = document.getElementById("move");
+const decisionEl = document.getElementById("decision");
+const reasonEl = document.getElementById("reason");
+const strengthBar = document.getElementById("strengthBar");
+const strengthText = document.getElementById("strengthText");
+const chart = document.getElementById("chart");
+const ticker = document.getElementById("ticker");
+
+function switchTab(i){
+  screens.forEach(s => s.classList.remove("active"));
+  tabs.forEach(t => t.classList.remove("active"));
+  screens[i].classList.add("active");
+  tabs[i].classList.add("active");
+}
+
+function selectCoin(sym){
+  ticker.value = sym;
+  currentSymbol = "";
+  run();
+}
+
+let timeout;
+ticker.addEventListener("input", () => {
+  clearTimeout(timeout);
+  timeout = setTimeout(run, 300);
+});
+
+const idMap = {
+  BTC:"bitcoin",
+  ETH:"ethereum",
+  SOL:"solana",
+  XRP:"ripple",
+  ZEC:"zcash"
+};
+
+async function run(){
+  const sym = ticker.value.toUpperCase();
+  if(!sym || sym === currentSymbol) return;
+  currentSymbol = sym;
+
+  const id = idMap[sym];
+  if(!id) return;
+
+  const data = await fetch(
+    `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`
+  ).then(r=>r.json());
+
+  const price = data[id].usd;
+  const move = data[id].usd_24h_change;
+
+  priceEl.textContent = "$" + price.toFixed(2);
+  moveEl.textContent = move.toFixed(2) + "%";
+
+  let decision="HOLD";
+  let reason="No clean setup";
+  let strength=40;
+
+  if(move > 2){
+    decision="BUY";
+    reason="Strong momentum breakout";
+    strength=80;
+  }
+  else if(move < -2){
+    decision="SELL";
+    reason="Downtrend pressure";
+    strength=80;
+  }
+
+  decisionEl.textContent = decision;
+  decisionEl.className = "decision " +
+    (decision==="BUY" ? "buy" : decision==="SELL" ? "sell" : "hold");
+
+  reasonEl.textContent = reason;
+  strengthBar.style.width = strength + "%";
+  strengthText.textContent = strength + "/100";
+}
+
+function loadChart(){
+  if(!currentSymbol) return;
+  if(chartLoaded === currentSymbol) return;
+  chartLoaded = currentSymbol;
+
+  chart.innerHTML = `
+    <iframe width="100%" height="400"
+      src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:${currentSymbol}USDT&theme=dark"
+      frameborder="0">
+    </iframe>`;
+}
+</script>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bully Crypto</title>
