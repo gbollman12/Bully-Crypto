@@ -1,7 +1,7 @@
 {
   "name": "Bully Crypto",
   "short_name": "Bully",
-  "start_url": "/bully-crypto/index.html",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#050606",
   "theme_color": "#050606",
