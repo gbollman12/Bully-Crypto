@@ -11,12 +11,15 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system,BlinkMacS
 .header{display:flex;align-items:center;gap:14px;padding:18px;border-bottom:1px solid #1f1f1f}
 .logo{width:54px;height:54px;border-radius:12px;object-fit:cover}
 .title{font-size:24px;font-weight:900}.sub{font-size:12px;color:#888;letter-spacing:1px}
+
 input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;background:#050606;color:white;font-size:16px;box-sizing:border-box}
 .quick{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
 .quick button{flex:1 1 28%;padding:11px;border-radius:10px;border:1px solid #2a2a2a;background:#101010;color:white;font-weight:800}
+
 .tabs{display:flex;border-top:1px solid #1f1f1f;border-bottom:1px solid #1f1f1f}
 .tab{flex:1;text-align:center;padding:14px;color:#777;font-weight:800}
 .tab.active{color:#7cff55;border-bottom:3px solid #7cff55}
+
 .screen{display:none;padding:14px}.screen.active{display:block}
 .card{background:linear-gradient(180deg,#121412,#080908);border:1px solid #242a25;border-radius:18px;padding:16px;margin-bottom:12px}
 .topline{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
@@ -27,14 +30,24 @@ input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;backgr
 .buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08)}
 .sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08)}
 .hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08)}
+
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .label{font-size:11px;color:#777;font-weight:900;text-transform:uppercase;letter-spacing:1px}
 .value{font-size:24px;font-weight:900;margin-top:6px}
 .small{font-size:14px;color:#aaa;line-height:1.45}
+
 .bar{height:8px;background:#252525;border-radius:20px;overflow:hidden;margin-top:10px}
 .fill{height:100%;background:#7cff55;width:0%}
+
 .row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #222}
-.row:last-child{border-bottom:0}.row span:first-child{color:#888}.row span:last-child{font-weight:850;text-align:right}
+.row:last-child{border-bottom:0}
+.row span:first-child{color:#888}
+.row span:last-child{font-weight:850;text-align:right}
+
+.settingsGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.settingInput{border:1px solid #2a2a2a;border-radius:12px;background:#090909}
+.saveBtn{width:100%;padding:13px;border-radius:12px;border:1px solid #7cff55;background:rgba(124,255,85,.08);color:#7cff55;font-weight:900}
+
 iframe{width:100%;height:430px;border:0;border-radius:16px}
 </style>
 </head>
@@ -68,6 +81,7 @@ iframe{width:100%;height:430px;border:0;border-radius:16px}
   <div class="tab active" onclick="tab(0)">Overview</div>
   <div class="tab" onclick="tab(1); loadChart()">Chart</div>
   <div class="tab" onclick="tab(2)">Plan</div>
+  <div class="tab" onclick="tab(3)">Funds</div>
 </div>
 
 <div class="screen active">
@@ -112,17 +126,58 @@ iframe{width:100%;height:430px;border:0;border-radius:16px}
     <div class="row"><span>Target 2</span><span id="target2">—</span></div>
     <div class="row"><span>Risk / Reward</span><span id="rr">—</span></div>
   </div>
+
+  <div class="card">
+    <div class="label">Position Sizing</div>
+    <div class="row"><span>Account Funds</span><span id="fundsOut">—</span></div>
+    <div class="row"><span>Risk Per Trade</span><span id="riskOut">—</span></div>
+    <div class="row"><span>Max Dollar Risk</span><span id="maxRiskOut">—</span></div>
+    <div class="row"><span>Suggested Position</span><span id="positionOut">—</span></div>
+    <div class="row"><span>Estimated Coins</span><span id="coinsOut">—</span></div>
+  </div>
+</div>
+
+<div class="screen">
+  <div class="card">
+    <div class="label">Your Account Funds</div>
+    <input id="accountFunds" class="settingInput" inputmode="decimal" placeholder="Example: 500">
+  </div>
+
+  <div class="card">
+    <div class="label">Risk % Per Trade</div>
+    <input id="riskPercent" class="settingInput" inputmode="decimal" placeholder="Example: 1">
+  </div>
+
+  <button class="saveBtn" onclick="saveFunds()">SAVE FUNDS SETTINGS</button>
+
+  <div class="card">
+    <div class="label">Rule</div>
+    <div class="small">
+      This does not place trades. It estimates position size using your account funds and risk percent.
+      Example: $500 account at 1% risk = $5 max risk.
+    </div>
+  </div>
 </div>
 
 </div>
 
 <script>
-let current="", chartLoaded="";
-const map={BTC:"bitcoin",ETH:"ethereum",SOL:"solana",XRP:"ripple",ZEC:"zcash",DOGE:"dogecoin",LTC:"litecoin",AVAX:"avalanche-2",ADA:"cardano"};
+let current = "";
+let chartLoaded = "";
+let requestId = 0;
+const cache = {};
+const CACHE_TIME = 60000;
 
-const screens=document.querySelectorAll(".screen");
-const tabs=document.querySelectorAll(".tab");
-const ticker=document.getElementById("ticker");
+const map = {
+  BTC:"bitcoin", ETH:"ethereum", SOL:"solana", XRP:"ripple", ZEC:"zcash",
+  DOGE:"dogecoin", LTC:"litecoin", AVAX:"avalanche-2", ADA:"cardano"
+};
+
+const screens = document.querySelectorAll(".screen");
+const tabs = document.querySelectorAll(".tab");
+const ticker = document.getElementById("ticker");
+
+let lastPlan = null;
 
 function tab(i){
   screens.forEach(s=>s.classList.remove("active"));
@@ -132,121 +187,193 @@ function tab(i){
 }
 
 function pick(sym){
-  ticker.value=sym;
-  current="";
-  chartLoaded="";
+  ticker.value = sym;
+  current = "";
+  chartLoaded = "";
   run();
 }
 
 let timer;
 ticker.addEventListener("input",()=>{
   clearTimeout(timer);
-  timer=setTimeout(run,350);
+  timer = setTimeout(run, 500);
 });
 
 function money(n){
-  return "$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:n>100?2:4});
+  return "$" + Number(n).toLocaleString(undefined,{maximumFractionDigits:n>100?2:4});
+}
+
+function getSettings(){
+  return {
+    funds: Number(localStorage.getItem("bc_funds")) || 500,
+    risk: Number(localStorage.getItem("bc_risk")) || 1
+  };
+}
+
+function loadFunds(){
+  const s = getSettings();
+  document.getElementById("accountFunds").value = s.funds;
+  document.getElementById("riskPercent").value = s.risk;
+}
+
+function saveFunds(){
+  localStorage.setItem("bc_funds", document.getElementById("accountFunds").value || 500);
+  localStorage.setItem("bc_risk", document.getElementById("riskPercent").value || 1);
+  updateSizing();
+  alert("Funds saved.");
+}
+
+async function getCoinData(sym,id){
+  const now = Date.now();
+  if(cache[sym] && now - cache[sym].time < CACHE_TIME){
+    return cache[sym].data;
+  }
+
+  const simple = await fetch(
+    `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`
+  ).then(r=>r.json());
+
+  const chartData = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`
+  ).then(r=>r.json());
+
+  cache[sym] = { time: now, data: { simple, chartData } };
+  return cache[sym].data;
 }
 
 async function run(){
-  const sym=ticker.value.toUpperCase().trim();
-  if(!map[sym] || sym===current) return;
-  current=sym;
+  const sym = ticker.value.toUpperCase().trim();
+  if(!map[sym] || sym === current) return;
 
-  document.getElementById("coin").textContent=sym;
-  document.getElementById("price").textContent="Loading...";
+  current = sym;
+  const thisRequest = ++requestId;
+  const id = map[sym];
 
-  const id=map[sym];
+  document.getElementById("coin").textContent = sym;
+  document.getElementById("price").textContent = "Loading...";
+  document.getElementById("move").textContent = "";
 
-  const simple = await fetch(
-  `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`
-).then(r=>r.json());
+  try {
+    const { simple, chartData } = await getCoinData(sym,id);
+    if(thisRequest !== requestId) return;
 
-const price=simple[id].usd;
-const move=simple[id].usd_24h_change||0;
+    const price = simple[id].usd;
+    const move = simple[id].usd_24h_change || 0;
+    const prices = (chartData.prices || []).map(x=>x[1]);
 
-document.getElementById("price").textContent=money(price);
-const moveEl=document.getElementById("move");
-moveEl.textContent=move.toFixed(2)+"% over 24h";
-moveEl.style.color=move>0?"#7cff55":move<0?"#ff4d5d":"#aaa";
+    const high = Math.max(...prices);
+    const low = Math.min(...prices);
+    const recent = prices.slice(-24);
+    const recentLow = Math.min(...recent);
+    const recentHigh = Math.max(...recent);
+    const recentStart = recent[0] || price;
+    const recentMove = ((price - recentStart) / recentStart) * 100;
+    const range = high - low || 1;
+    const position = (price - low) / range;
 
-const chartData = await fetch(
-  `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`
-).then(r=>r.json());
+    let decision="HOLD", trend="CHOP", setup="WAIT", reason="No clean edge. Wait.", strength=40;
+    let entryLow=price*.995, entryHigh=price*1.005, stop=price*.96, target1=price*1.06, target2=price*1.10;
 
-  const price=simple[id].usd;
-  const move=simple[id].usd_24h_change||0;
-  const prices=(chartData.prices||[]).map(x=>x[1]);
+    if(move>=4 && position>.75 && recentMove>.4){
+      decision="BUY"; trend="BULL"; setup="BREAKOUT"; strength=88;
+      reason="Strong momentum near range high. Best entry is retest, not chase.";
+      stop=recentLow*.985; target1=price+(price-stop)*1.8; target2=price+(price-stop)*2.8;
+    } else if(move>=1.25 && recentMove>0 && position>.40){
+      decision="BUY"; trend="UP"; setup="PULLBACK"; strength=72;
+      reason="Positive trend holding structure. Small entry only if support holds.";
+      stop=recentLow*.985; target1=recentHigh; target2=high*1.04;
+    } else if(move>.4 && position<.35 && recentMove>.2){
+      decision="HOLD"; trend="EARLY"; setup="REVERSAL WATCH"; strength=60;
+      reason="Possible reversal. Wait for higher low before buy.";
+      stop=low*.985; target1=price+(price-stop)*1.8; target2=price+(price-stop)*2.6;
+    } else if(move<=-4 && position<.35){
+      decision="SELL"; trend="BEAR"; setup="BREAKDOWN"; strength=86;
+      reason="Heavy downside pressure near lower range. Avoid longs.";
+      stop=recentHigh*1.015; target1=low; target2=low*.96;
+    } else if(move<=-1.25){
+      decision="SELL"; trend="DOWN"; setup="WEAK"; strength=70;
+      reason="Momentum is down. Wait for stabilization.";
+      stop=recentHigh*1.015; target1=low; target2=low*.97;
+    }
 
-  const high=Math.max(...prices);
-  const low=Math.min(...prices);
-  const recent=prices.slice(-24);
-  const recentLow=Math.min(...recent);
-  const recentHigh=Math.max(...recent);
-  const recentStart=recent[0]||price;
-  const recentMove=((price-recentStart)/recentStart)*100;
-  const range=high-low||1;
-  const position=(price-low)/range;
+    const mid = (entryLow + entryHigh) / 2;
+    const risk = Math.abs(mid - stop);
+    const reward = Math.abs(target1 - mid);
+    const rr = risk > 0 ? (reward/risk).toFixed(2) : "—";
 
-  let decision="HOLD", trend="CHOP", setup="WAIT", reason="No clean edge. Wait.", strength=40;
-  let entryLow=price*.995, entryHigh=price*1.005, stop=price*.96, target1=price*1.06, target2=price*1.10;
+    lastPlan = { price, entryLow, entryHigh, stop, target1, target2, risk, decision };
 
-  if(move>=4 && position>.75 && recentMove>.4){
-    decision="BUY"; trend="BULL"; setup="BREAKOUT"; strength=88;
-    reason="Strong momentum near range high. Best entry is retest, not chase.";
-    stop=recentLow*.985; target1=price+(price-stop)*1.8; target2=price+(price-stop)*2.8;
-  } else if(move>=1.25 && recentMove>0 && position>.40){
-    decision="BUY"; trend="UP"; setup="PULLBACK"; strength=72;
-    reason="Positive trend holding structure. Small entry only if support holds.";
-    stop=recentLow*.985; target1=recentHigh; target2=high*1.04;
-  } else if(move>.4 && position<.35 && recentMove>.2){
-    decision="HOLD"; trend="EARLY"; setup="REVERSAL WATCH"; strength=60;
-    reason="Possible reversal. Wait for higher low before buy.";
-    stop=low*.985; target1=price+(price-stop)*1.8; target2=price+(price-stop)*2.6;
-  } else if(move<=-4 && position<.35){
-    decision="SELL"; trend="BEAR"; setup="BREAKDOWN"; strength=86;
-    reason="Heavy downside pressure near lower range. Avoid longs.";
-    stop=recentHigh*1.015; target1=low; target2=low*.96;
-  } else if(move<=-1.25){
-    decision="SELL"; trend="DOWN"; setup="WEAK"; strength=70;
-    reason="Momentum is down. Wait for stabilization.";
-    stop=recentHigh*1.015; target1=low; target2=low*.97;
+    document.getElementById("price").textContent = money(price);
+
+    const moveEl = document.getElementById("move");
+    moveEl.textContent = move.toFixed(2) + "% over 24h";
+    moveEl.style.color = move > 0 ? "#7cff55" : move < 0 ? "#ff4d5d" : "#aaa";
+
+    const signal = document.getElementById("signal");
+    signal.textContent = decision;
+    signal.className = "badge " + (decision==="BUY"?"buy":decision==="SELL"?"sell":"hold");
+
+    document.getElementById("trend").textContent = trend;
+    document.getElementById("setup").textContent = setup;
+    document.getElementById("reason").textContent = reason;
+    document.getElementById("strength").style.width = strength + "%";
+    document.getElementById("strengthText").textContent = strength + "/100";
+
+    document.getElementById("entry").textContent = money(entryLow) + " - " + money(entryHigh);
+    document.getElementById("stop").textContent = money(stop);
+    document.getElementById("target1").textContent = money(target1);
+    document.getElementById("target2").textContent = money(target2);
+    document.getElementById("rr").textContent = rr==="—" ? "—" : "1 : " + rr;
+
+    updateSizing();
+
+  } catch(e){
+    document.getElementById("price").textContent = "Data error";
+    document.getElementById("reason").textContent = "API slowed down. Wait a few seconds and try again.";
+  }
+}
+
+function updateSizing(){
+  const s = getSettings();
+
+  document.getElementById("fundsOut").textContent = money(s.funds);
+  document.getElementById("riskOut").textContent = s.risk + "%";
+
+  const maxRisk = s.funds * (s.risk / 100);
+  document.getElementById("maxRiskOut").textContent = money(maxRisk);
+
+  if(!lastPlan){
+    document.getElementById("positionOut").textContent = "—";
+    document.getElementById("coinsOut").textContent = "—";
+    return;
   }
 
-  const mid=(entryLow+entryHigh)/2;
-  const risk=Math.abs(mid-stop);
-  const reward=Math.abs(target1-mid);
-  const rr=risk>0?(reward/risk).toFixed(2):"—";
+  const entryMid = (lastPlan.entryLow + lastPlan.entryHigh) / 2;
+  const riskPerCoin = Math.abs(entryMid - lastPlan.stop);
 
-  document.getElementById("price").textContent=money(price);
-  const moveEl=document.getElementById("move");
-  moveEl.textContent=move.toFixed(2)+"% over 24h";
-  moveEl.style.color=move>0?"#7cff55":move<0?"#ff4d5d":"#aaa";
+  if(riskPerCoin <= 0){
+    document.getElementById("positionOut").textContent = "—";
+    document.getElementById("coinsOut").textContent = "—";
+    return;
+  }
 
-  const signal=document.getElementById("signal");
-  signal.textContent=decision;
-  signal.className="badge "+(decision==="BUY"?"buy":decision==="SELL"?"sell":"hold");
+  const coinAmount = maxRisk / riskPerCoin;
+  const positionDollars = coinAmount * entryMid;
 
-  document.getElementById("trend").textContent=trend;
-  document.getElementById("setup").textContent=setup;
-  document.getElementById("reason").textContent=reason;
-  document.getElementById("strength").style.width=strength+"%";
-  document.getElementById("strengthText").textContent=strength+"/100";
-
-  document.getElementById("entry").textContent=money(entryLow)+" - "+money(entryHigh);
-  document.getElementById("stop").textContent=money(stop);
-  document.getElementById("target1").textContent=money(target1);
-  document.getElementById("target2").textContent=money(target2);
-  document.getElementById("rr").textContent=rr==="—"?"—":"1 : "+rr;
+  document.getElementById("positionOut").textContent = money(positionDollars);
+  document.getElementById("coinsOut").textContent = coinAmount.toFixed(4);
 }
 
 function loadChart(){
   if(!current || chartLoaded===current) return;
   chartLoaded=current;
-  document.getElementById("chart").innerHTML=`
+  document.getElementById("chart").innerHTML = `
     <iframe src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:${current}USDT&theme=dark" frameborder="0"></iframe>
   `;
 }
+
+loadFunds();
+updateSizing();
 </script>
 
 </body>
