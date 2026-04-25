@@ -1,5 +1,173 @@
 <!DOCTYPE html>
 <html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bully Crypto</title>
+
+<style>
+body {
+  margin:0;
+  background:#050606;
+  color:#fff;
+  font-family:-apple-system;
+}
+
+/* HEADER */
+.header {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:18px;
+  border-bottom:1px solid #1f1f1f;
+}
+.logo {
+  width:44px;
+  height:44px;
+  border-radius:12px;
+}
+.title {
+  font-weight:800;
+}
+.sub {
+  font-size:12px;
+  color:#888;
+}
+
+/* INPUT */
+input {
+  width:100%;
+  padding:14px;
+  border:none;
+  border-bottom:1px solid #1f1f1f;
+  background:#050606;
+  color:white;
+}
+
+/* COINS */
+.quick {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:12px;
+}
+.quick button {
+  flex:1 1 28%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #222;
+  background:#101010;
+  color:white;
+  font-weight:700;
+}
+
+/* TABS */
+.tabs {
+  display:flex;
+  border-bottom:1px solid #1f1f1f;
+}
+.tab {
+  flex:1;
+  text-align:center;
+  padding:12px;
+  color:#777;
+}
+.tab.active {
+  color:#7cff55;
+  border-bottom:2px solid #7cff55;
+}
+
+/* SCREENS */
+.screen { display:none; padding:16px; }
+.screen.active { display:block; }
+
+/* CARDS */
+.card {
+  background:#101010;
+  border:1px solid #1f1f1f;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:12px;
+}
+.big {
+  font-size:34px;
+  font-weight:800;
+}
+.small { color:#999; }
+
+/* SIGNAL */
+.decision {
+  font-size:42px;
+  font-weight:900;
+}
+.buy { color:#7cff55; }
+.sell { color:#ff4d5d; }
+.hold { color:#ffd60a; }
+
+.bar {
+  height:6px;
+  background:#222;
+  border-radius:10px;
+  overflow:hidden;
+}
+.fill {
+  height:100%;
+  background:#7cff55;
+}
+
+iframe { border-radius:12px; }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <img src="logo.PNG" class="logo">
+  <div>
+    <div class="title">BULLY</div>
+    <div class="sub">CRYPTO</div>
+  </div>
+</div>
+
+<input id="ticker" placeholder="BTC, ETH, SOL">
+
+<div class="quick">
+  <button onclick="selectCoin('BTC')">BTC</button>
+  <button onclick="selectCoin('ETH')">ETH</button>
+  <button onclick="selectCoin('SOL')">SOL</button>
+  <button onclick="selectCoin('XRP')">XRP</button>
+  <button onclick="selectCoin('ZEC')">ZEC</button>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">Overview</div>
+  <div class="tab" onclick="switchTab(1); loadChart()">Chart</div>
+  <div class="tab" onclick="switchTab(2)">Decision</div>
+</div>
+
+<div class="screen active">
+  <div class="card">
+    <div class="big" id="price">—</div>
+    <div class="small" id="move">—</div>
+  </div>
+
+  <div class="card">
+    <div class="small">SETUP STRENGTH</div>
+    <div class="bar"><div id="strengthBar" class="fill"></div></div>
+    <div class="small" id="strengthText">—</div>
+  </div>
+</div>
+
+<div class="screen">
+  <div id="chart"></div>
+</div>
+
+<div class="screen">
+  <div class="card">
+    <div id="decision" class="decision">WAIT</div>
+    <div class="small" id="reason"></div>
+  </div>
+</div>
+
 <script>
 let currentSymbol = "";
 let chartLoaded = "";
@@ -92,123 +260,10 @@ function loadChart(){
 
   chart.innerHTML = `
     <iframe width="100%" height="400"
-      src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:${currentSymbol}USDT&theme=dark"
-      frameborder="0">
+      src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:${currentSymbol}USDT&theme=dark">
     </iframe>`;
 }
 </script>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bully Crypto</title>
 
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="logo.PNG">
-
-<style>
-body {
-  margin:0;
-  background:#050606;
-  color:#fff;
-  font-family:-apple-system;
-}
-
-/* HEADER */
-.header {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:18px;
-  border-bottom:1px solid #1f1f1f;
-}
-.logo {
-  width:42px;
-  height:42px;
-  border-radius:10px;
-}
-.title {
-  font-weight:800;
-}
-.sub {
-  font-size:12px;
-  color:#888;
-}
-
-/* INPUT */
-input {
-  width:100%;
-  padding:14px;
-  border:none;
-  border-bottom:1px solid #1f1f1f;
-  background:#050606;
-  color:white;
-}
-
-/* COINS */
-.quick {
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  padding:12px;
-}
-.quick button {
-  flex:1 1 28%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #222;
-  background:#101010;
-  color:white;
-  font-weight:700;
-}
-
-/* TABS */
-.tabs {
-  display:flex;
-  border-bottom:1px solid #1f1f1f;
-}
-.tab {
-  flex:1;
-  text-align:center;
-  padding:12px;
-  color:#777;
-}
-.tab.active {
-  color:#7cff55;
-  border-bottom:2px solid #7cff55;
-}
-
-/* SCREENS */
-.screen { display:none; padding:16px; }
-.screen.active { display:block; }
-
-/* CARDS */
-.card {
-  background:#101010;
-  border:1px solid #1f1f1f;
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:12px;
-}
-.big {
-  font-size:34px;
-  font-weight:800;
-}
-.small { color:#999; }
-
-/* SIGNAL */
-.decision {
-  font-size:42px;
-  font-weight:900;
-}
-.buy { color:#7cff55; }
-.sell { color:#ff4d5d; }
-.hold { color:#ffd60a; }
-
-.bar {
-  height:6px;
-  background:#222;
-  border-radius:10px;
-  overflow:hidden;
-}
-.fill {
-  height:100%;
-  background
+</body>
+</html>
