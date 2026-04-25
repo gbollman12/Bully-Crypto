@@ -3,6 +3,7 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bully Crypto</title>
+
 <link rel="apple-touch-icon" href="logo.PNG">
 <link rel="icon" href="logo.PNG">
 
@@ -105,7 +106,7 @@ function pick(sym){
 
   liveTimer=setInterval(()=>{
     run(true);
-  },2500);
+  },3000);
 }
 
 document.getElementById("ticker").addEventListener("input",()=>{
@@ -113,8 +114,8 @@ document.getElementById("ticker").addEventListener("input",()=>{
   window.typingTimer=setTimeout(()=>{
     if(liveTimer) clearInterval(liveTimer);
     run(false);
-    liveTimer=setInterval(()=>run(true),2500);
-  },500);
+    liveTimer=setInterval(()=>run(true),3000);
+  },600);
 });
 
 function ema(values,period){
@@ -149,28 +150,22 @@ function rsi(values,period=14){
 }
 
 async function fetchData(pair){
+  const proxy="https://api.allorigins.win/raw?url=";
 
-const base = "https://api.binance.com";
+  const tickerUrl=proxy+encodeURIComponent(
+    "https://api.binance.com/api/v3/ticker/24hr?symbol="+pair
+  );
 
-const proxy = "https://api.allorigins.win/raw?url=";
+  const klineUrl=proxy+encodeURIComponent(
+    "https://api.binance.com/api/v3/klines?symbol="+pair+"&interval=15m&limit=50"
+  );
 
-const tickerUrl = proxy + encodeURIComponent(base + "/api/v3/ticker/24hr?symbol=" + pair);
-const klineUrl = proxy + encodeURIComponent(base + "/api/v3/klines?symbol=" + pair + "&interval=15m&limit=50");
+  const tickerRes=await fetch(tickerUrl);
+  const klineRes=await fetch(klineUrl);
 
-const [tickerRes, klineRes] = await Promise.all([
-fetch(tickerUrl),
-fetch(klineUrl)
-]);
-
-if(!tickerRes.ok || !klineRes.ok){
-throw new Error("Bad response");
-}
-
-const ticker = await tickerRes.json();
-const klines = await klineRes.json();
-
-return { ticker, klines };
-}
+  if(!tickerRes.ok || !klineRes.ok){
+    throw new Error("Bad response");
+  }
 
   const ticker=await tickerRes.json();
   const klines=await klineRes.json();
@@ -190,6 +185,7 @@ async function run(isLive=false){
     document.getElementById("price").textContent="Loading...";
     document.getElementById("move").textContent="";
     setSignal("WAIT");
+    document.getElementById("reason").textContent="Checking market data...";
   }
 
   try{
@@ -225,6 +221,7 @@ async function run(isLive=false){
     if(score>=70) decision="BUY";
     else if(score<=35) decision="SELL";
 
+    document.getElementById("coin").textContent=sym;
     document.getElementById("price").textContent=money(price);
 
     const moveEl=document.getElementById("move");
@@ -252,10 +249,15 @@ async function run(isLive=false){
       "No clean edge. Hold and wait.";
 
   }catch(e){
+    document.getElementById("coin").textContent=sym;
     document.getElementById("price").textContent="Error";
     document.getElementById("move").textContent="";
     setSignal("WAIT");
-    document.getElementById("reason").textContent="Connection issue. Refresh or try again.";
+    document.getElementById("trend").textContent="—";
+    document.getElementById("setup").textContent="—";
+    document.getElementById("rsiOut").textContent="—";
+    document.getElementById("confidence").textContent="—";
+    document.getElementById("reason").textContent="Connection issue. Try again.";
   }
 }
 </script>
