@@ -88,6 +88,8 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 <div class="row"><span>Target</span><span id="target">—</span></div>
 <div class="row"><span>Risk / Reward</span><span id="riskReward">—</span></div>
 <div class="row"><span>Trade Quality</span><span id="tradeQuality">—</span></div>
+<div class="row"><span>Position Size</span><span id="positionSize">—</span></div>
+<div class="row"><span>Estimated Units</span><span id="estimatedUnits">—</span></div>
 <div class="row"><span>Entry Timing</span><span id="entryTiming">—</span></div>
 </div>
 
@@ -268,7 +270,9 @@ function run(){
 
   let reward = Math.abs(target - entryMid);
   let rr = risk > 0 ? (reward / risk) : 0;
-
+let riskDollars = Number(document.getElementById("riskDollars").value) || 25;
+let estimatedUnits = risk > 0 ? riskDollars / risk : 0;
+let positionSize = estimatedUnits * entryMid;
   let quality = "NO EDGE";
   let invalidTrade = false;
 
