@@ -87,6 +87,11 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
     <div class="row"><span>Risk / Reward</span><span id="riskReward">—</span></div>
     <div class="row"><span>Trade Quality</span><span id="tradeQuality">—</span></div>
   </div>
+
+  <div class="card">
+    <div class="row"><span>Trade Style</span><span id="tradeStyle">—</span></div>
+    <div class="row"><span>Action</span><span id="tradeAction">—</span></div>
+  </div>
 </div>
 
 <!-- POSITION -->
@@ -229,6 +234,34 @@ document.getElementById("planCoin").textContent = selectedCoin || "—";
 document.getElementById("entry").textContent=money(entryLow)+" - "+money(entryHigh);
 document.getElementById("stop").textContent=money(stop);
 document.getElementById("target").textContent=money(target);
+document.getElementById("planCoin").textContent = selectedCoin || "—";
+document.getElementById("planSignal").textContent = lastDecision;
+
+let tradeStyle = "WAIT";
+let tradeAction = "Do nothing until the signal improves.";
+
+if(quality === "ELITE"){
+  tradeStyle = "AGGRESSIVE";
+  tradeAction = "Cleanest setup. Entry only inside zone.";
+} else if(quality === "GOOD"){
+  tradeStyle = "STANDARD";
+  tradeAction = "Valid setup. Keep stop tight.";
+} else if(quality === "WEAK R/R"){
+  tradeStyle = "CAUTION";
+  tradeAction = "Signal exists, but reward is weak.";
+} else if(quality === "WATCH BUY"){
+  tradeStyle = "WATCH";
+  tradeAction = "Wait for confirmation before buying.";
+} else if(quality === "EXIT NOW"){
+  tradeStyle = "DEFENSE";
+  tradeAction = "Protect capital. Exit/trim logic active.";
+} else if(quality === "TRIM / AVOID"){
+  tradeStyle = "DEFENSE";
+  tradeAction = "Avoid new buys. Consider trimming.";
+}
+
+document.getElementById("tradeStyle").textContent = tradeStyle;
+document.getElementById("tradeAction").textContent = tradeAction;
 document.getElementById("riskReward").textContent="1 : "+rr.toFixed(2);
 document.getElementById("tradeQuality").textContent=quality;
 
