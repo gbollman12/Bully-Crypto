@@ -189,10 +189,42 @@ document.getElementById("confidence").textContent=Math.round(avgScore)+"/100";
 
 document.getElementById("reason").textContent="Stable trend-based signal.";
 
-let entryLow=price*0.995;
-let entryHigh=price*1.005;
-let entryMid=(entryLow+entryHigh)/2;
-let stop=price*0.97;
+let entryLow;
+let entryHigh;
+let stop;
+let target;
+
+if(decision === "BUY"){
+  // don't chase — wait for a small pullback
+  entryLow = price * 0.992;
+  entryHigh = price * 0.998;
+  stop = price * 0.970;
+}
+
+else if(decision === "SELL"){
+  // avoid buying; if holding, trim/exit zone
+  entryLow = price * 0.995;
+  entryHigh = price * 1.005;
+  stop = price * 1.030;
+}
+
+else{
+  // HOLD = no entry, just a watch zone
+  entryLow = price * 0.985;
+  entryHigh = price * 0.995;
+  stop = price * 0.965;
+}
+
+let entryMid = (entryLow + entryHigh) / 2;
+let risk = Math.abs(entryMid - stop);
+
+// force minimum 1.5 R/R
+let minRR = 1.5;
+
+target = entryMid + (risk * minRR);
+
+let reward = Math.abs(target - entryMid);
+let rr = reward / risk;
 
 let target;
 
