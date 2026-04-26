@@ -3,8 +3,11 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bully Crypto</title>
+<link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="logo.PNG">
 <link rel="icon" href="logo.PNG">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 <style>
 body{margin:0;background:#050606;color:white;font-family:-apple-system}
@@ -159,7 +162,6 @@ function run(){
   drift = Math.max(-0.0005, Math.min(0.0005, drift));
 
   let move = noise + drift;
-
   price += price * move;
 
   priceHistory.push(price);
@@ -231,7 +233,6 @@ function run(){
     decision === "SELL" ? "Weakness has confirmed across multiple readings." :
     "No confirmed edge. Holding signal steady.";
 
-  // SMART PLAN
   let entryLow;
   let entryHigh;
   let stop;
@@ -269,18 +270,9 @@ function run(){
   let quality = "NO EDGE";
   let invalidTrade = false;
 
-// too flat
-if (Math.abs(trendMove) < 0.10 && avgScore > 42 && avgScore < 58){
-  invalidTrade = true;
-}
-
-if(Math.abs(trendMove) < 0.08){
-  invalidTrade = true;
-}
-
-if(avgScore > 45 && avgScore < 55){
-  invalidTrade = true;
-}
+  if(Math.abs(trendMove) < 0.10 && avgScore > 42 && avgScore < 58){
+    invalidTrade = true;
+  }
 
   if(decision === "BUY"){
     if(rr >= 2 && avgScore >= 75 && trendMove > 0.25){
@@ -334,6 +326,39 @@ if(avgScore > 45 && avgScore < 55){
     tradeAction = "Avoid new buys. Consider trimming.";
   }
 
+  if(invalidTrade){
+    quality = "INVALID";
+    tradeStyle = "NO TRADE";
+    tradeAction = "Signal is too weak. Do not force a trade.";
+  }
+
+  let timing = "WAIT";
+  let dist = ((price - entryMid) / entryMid) * 100;
+
+  if(quality === "INVALID"){
+    timing = "NO TRADE";
+  }
+  else if(decision === "BUY"){
+    if(price < entryLow){
+      timing = "BELOW ZONE";
+    }
+    else if(price >= entryLow && price <= entryHigh){
+      timing = "IN ZONE";
+    }
+    else if(dist > 0.25){
+      timing = "TOO EXTENDED";
+    }
+    else{
+      timing = "WAIT PULLBACK";
+    }
+  }
+  else if(decision === "SELL"){
+    timing = "EXIT / AVOID";
+  }
+  else{
+    timing = "WAIT";
+  }
+
   document.getElementById("planCoin").textContent = selectedCoin || "—";
   document.getElementById("planSignal").textContent = lastDecision;
   document.getElementById("entry").textContent = money(entryLow) + " - " + money(entryHigh);
@@ -341,43 +366,7 @@ if(avgScore > 45 && avgScore < 55){
   document.getElementById("target").textContent = money(target);
   document.getElementById("riskReward").textContent = "1 : " + rr.toFixed(2);
   document.getElementById("tradeQuality").textContent = quality;
-  let timing = "WAIT";
-
-let entryMid = (entryLow + entryHigh) / 2;
-
-// distance from entry zone (percent)
-let dist = ((price - entryMid) / entryMid) * 100;
-
-if(quality === "INVALID"){
-  timing = "NO TRADE";
-}
-else if(decision === "BUY"){
-  if(price < entryLow){
-    timing = "BELOW ZONE (EARLY)";
-  }
-  else if(price >= entryLow && price <= entryHigh){
-    timing = "IN ZONE (VALID)";
-  }
-  else if(dist > 0.25){
-    timing = "TOO EXTENDED";
-  }
-  else{
-    timing = "WAIT PULLBACK";
-  }
-}
-else if(decision === "SELL"){
-  timing = "EXIT / AVOID";
-}
-else{
-  timing = "WAIT";
-}
-
-document.getElementById("entryTiming").textContent = timing;
-  if(invalidTrade){
-  quality = "INVALID";
-  tradeStyle = "NO TRADE";
-  tradeAction = "Signal is too weak. Do not force a trade.";
-}
+  document.getElementById("entryTiming").textContent = timing;
   document.getElementById("tradeStyle").textContent = tradeStyle;
   document.getElementById("tradeAction").textContent = tradeAction;
 
