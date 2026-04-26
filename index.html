@@ -103,6 +103,8 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 </div>
 
 <script>
+let signalBuffer = [];
+let lastSignalTime = 0;
 let price=0;
 let selectedCoin="";
 let timer=null;
@@ -155,7 +157,6 @@ let decision=lastDecision;
 if(score>=75) decision="BUY";
 else if(score<=25) decision="SELL";
 else if(score>35 && score<65) decision="HOLD";
-
 setSignal(decision);
 
 document.getElementById("trend").textContent=
