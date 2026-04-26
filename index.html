@@ -106,9 +106,9 @@ let price = 0;
 let selectedCoin = "";
 let timer = null;
 let lastDecision = "WAIT";
-
 let priceHistory = [];
 let scoreHistory = [];
+let drift = 0;
 
 function money(n){
   return "$" + Number(n).toFixed(Number(n)>100?2:4);
@@ -126,9 +126,9 @@ function pick(sym,start){
   selectedCoin = sym;
   document.getElementById("coin").textContent = sym;
   price = start;
-
   priceHistory = [start];
   scoreHistory = [];
+  drift = 0;
   lastDecision = "HOLD";
 
   loadPosition();
@@ -136,22 +136,19 @@ function pick(sym,start){
   if(timer) clearInterval(timer);
 
   run();
-  timer = setInterval(run, 5000);
+  timer = setInterval(run, 8000);
 }
 
-function 
-  // --- REALISTIC PRICE MOVEMENT ---
-if(!window.drift) window.drift = 0;
+function run(){
 
-let noise = (Math.random() - 0.5) * 0.03;
+  let noise = (Math.random() - 0.5) * 0.0003;
 
-// drift slowly trends up or down over time
-window.drift += (Math.random() - 0.5) * 0.01;
-window.drift = Math.max(-0.05, Math.min(0.05, window.drift));
+  drift += (Math.random() - 0.5) * 0.0001;
+  drift = Math.max(-0.0005, Math.min(0.0005, drift));
 
-let move = noise + window.drift;
+  let move = noise + drift;
 
-price += price * move;
+  price += price * move;
 
   priceHistory.push(price);
   if(priceHistory.length > 12) priceHistory.shift();
@@ -165,19 +162,16 @@ price += price * move;
 
   let score = 50;
 
-  // trend strength
-  if(trendMove > 1.2) score += 25;
-  else if(trendMove > 0.45) score += 12;
-  else if(trendMove < -1.2) score -= 25;
-  else if(trendMove < -0.45) score -= 12;
+  if(trendMove > 0.35) score += 25;
+  else if(trendMove > 0.15) score += 12;
+  else if(trendMove < -0.35) score -= 25;
+  else if(trendMove < -0.15) score -= 12;
 
-  // price position
   if(aboveAvg) score += 8;
   else score -= 8;
 
-  // current move matters, but less
-  if(move > 0.6) score += 8;
-  else if(move < -0.6) score -= 8;
+  if(move > 0.00025) score += 8;
+  else if(move < -0.00025) score -= 8;
 
   score = Math.max(0, Math.min(100, Math.round(score)));
 
@@ -188,15 +182,14 @@ price += price * move;
 
   let decision = lastDecision;
 
-  // smarter signal rules
   if(scoreHistory.length >= 4){
-    if(avgScore >= 74 && trendMove > 0.6){
+    if(avgScore >= 74 && trendMove > 0.20){
       decision = "BUY";
     }
-    else if(avgScore <= 26 && trendMove < -0.6){
+    else if(avgScore <= 26 && trendMove < -0.20){
       decision = "SELL";
     }
-    else if(avgScore > 38 && avgScore < 62){
+    else if(avgScore > 40 && avgScore < 60){
       decision = "HOLD";
     }
   }
