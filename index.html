@@ -28,6 +28,11 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 .hold{color:#ffd60a;border-color:#ffd60a}
 
 .row{display:flex;justify-content:space-between;margin-top:10px;color:#aaa}
+
+/* TABS */
+.tabs{display:flex;gap:8px;padding:0 14px 8px}
+.tab{flex:1;padding:12px;border-radius:12px;border:1px solid #2a2a2a;background:#101010;color:#888;font-weight:900}
+.tab.active{color:#7cff55;border-color:#7cff55}
 </style>
 </head>
 
@@ -51,6 +56,16 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 <button onclick="pick('ADA',0.50)">ADA</button>
 </div>
 
+<!-- TABS -->
+<div class="tabs">
+<button class="tab active" onclick="showTab('overview', this)">Overview</button>
+<button class="tab" onclick="showTab('plan', this)">Plan</button>
+<button class="tab" onclick="showTab('funds', this)">Funds</button>
+</div>
+
+<!-- OVERVIEW -->
+<div id="overview" class="tabPage">
+
 <div class="card">
 <div id="coin">SELECT COIN</div>
 <div id="price" class="price">—</div>
@@ -66,6 +81,25 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 
 <div class="card">
 <div id="reason">Waiting.</div>
+</div>
+
+</div>
+
+<!-- PLAN -->
+<div id="plan" class="tabPage" style="display:none">
+<div class="card">
+<div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
+<div class="row"><span>Stop Loss</span><span id="stop">—</span></div>
+<div class="row"><span>Target</span><span id="target">—</span></div>
+</div>
+</div>
+
+<!-- FUNDS -->
+<div id="funds" class="tabPage" style="display:none">
+<div class="card">
+<div class="row"><span>Account Funds</span><span>Coming soon</span></div>
+<div class="row"><span>Risk %</span><span>Coming soon</span></div>
+</div>
 </div>
 
 </div>
@@ -98,18 +132,16 @@ function run(){
 let move=(Math.random()-0.5)*2;
 price += price*(move/100);
 
-let percent=move;
-
 document.getElementById("price").textContent=money(price);
 
 const moveEl=document.getElementById("move");
-moveEl.textContent=percent.toFixed(2)+"%";
-moveEl.style.color=percent>0?"#7cff55":"#ff4d5d";
+moveEl.textContent=move.toFixed(2)+"%";
+moveEl.style.color=move>0?"#7cff55":"#ff4d5d";
 
 let score=50;
 
-if(percent>0.5) score+=15;
-if(percent<-0.5) score-=15;
+if(move>0.5) score+=15;
+if(move<-0.5) score-=15;
 
 score+=Math.random()*10-5;
 
@@ -135,6 +167,14 @@ document.getElementById("reason").textContent=
 decision==="BUY"?"Momentum building upward":
 decision==="SELL"?"Weak price action downward":
 "No clear setup. Wait.";
+}
+
+function showTab(id, btn){
+document.querySelectorAll(".tabPage").forEach(p=>p.style.display="none");
+document.getElementById(id).style.display="block";
+
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+btn.classList.add("active");
 }
 </script>
 
