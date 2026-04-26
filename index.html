@@ -266,6 +266,15 @@ function run(){
   let rr = reward / risk;
 
   let quality = "NO EDGE";
+  let invalidTrade = false;
+
+if(Math.abs(trendMove) < 0.08){
+  invalidTrade = true;
+}
+
+if(avgScore > 45 && avgScore < 55){
+  invalidTrade = true;
+}
 
   if(decision === "BUY"){
     if(rr >= 2 && avgScore >= 75 && trendMove > 0.25){
@@ -326,6 +335,11 @@ function run(){
   document.getElementById("target").textContent = money(target);
   document.getElementById("riskReward").textContent = "1 : " + rr.toFixed(2);
   document.getElementById("tradeQuality").textContent = quality;
+  if(invalidTrade){
+  quality = "INVALID";
+  tradeStyle = "NO TRADE";
+  tradeAction = "Signal is too weak. Do not force a trade.";
+}
   document.getElementById("tradeStyle").textContent = tradeStyle;
   document.getElementById("tradeAction").textContent = tradeAction;
 
