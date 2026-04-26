@@ -150,9 +150,11 @@ else if(move >= 0.35) score = 62;
 else if(move <= -0.75) score = 22;
 else if(move <= -0.35) score = 38;
 
-let decision="HOLD";
-if(score>=70) decision="BUY";
-else if(score<=30) decision="SELL";
+let decision=lastDecision;
+
+if(score>=75) decision="BUY";
+else if(score<=25) decision="SELL";
+else if(score>35 && score<65) decision="HOLD";
 
 setSignal(decision);
 
