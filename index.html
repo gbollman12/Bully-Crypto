@@ -3,7 +3,6 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bully Crypto</title>
-
 <link rel="apple-touch-icon" href="logo.PNG">
 <link rel="icon" href="logo.PNG">
 
@@ -65,7 +64,6 @@ input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;backgr
 <div class="card">
   <div class="row"><span>Trend</span><span id="trend">—</span></div>
   <div class="row"><span>Setup</span><span id="setup">—</span></div>
-  <div class="row"><span>RSI</span><span id="rsiOut">—</span></div>
   <div class="row"><span>Confidence</span><span id="confidence">—</span></div>
 </div>
 
@@ -76,19 +74,20 @@ input{width:100%;padding:14px;border:none;border-bottom:1px solid #1f1f1f;backgr
 </div>
 
 <script>
-const PAIRS={
-  BTC:"BTCUSDT",
-  ETH:"ETHUSDT",
-  SOL:"SOLUSDT",
-  XRP:"XRPUSDT",
-  DOGE:"DOGEUSDT",
-  ADA:"ADAUSDT"
+const ASSETS={
+  BTC:"bitcoin",
+  ETH:"ethereum",
+  SOL:"solana",
+  XRP:"xrp",
+  DOGE:"dogecoin",
+  ADA:"cardano"
 };
 
 let liveTimer=null;
+let cache={};
 
 function money(n){
-  return "$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+  return "$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:Number(n)>100?2:4});
 }
 
 function setSignal(decision){
@@ -106,7 +105,7 @@ function pick(sym){
 
   liveTimer=setInterval(()=>{
     run(true);
-  },3000);
+  },5000);
 }
 
 document.getElementById("ticker").addEventListener("input",()=>{
@@ -114,71 +113,33 @@ document.getElementById("ticker").addEventListener("input",()=>{
   window.typingTimer=setTimeout(()=>{
     if(liveTimer) clearInterval(liveTimer);
     run(false);
-    liveTimer=setInterval(()=>run(true),3000);
-  },600);
+    liveTimer=setInterval(()=>run(true),5000);
+  },700);
 });
 
-function ema(values,period){
-  if(values.length===0) return 0;
-  let k=2/(period+1);
-  let e=values[0];
+async function fetchAsset(sym){
+  const id=ASSETS[sym];
+  const now=Date.now();
 
-  for(let i=1;i<values.length;i++){
-    e=values[i]*k+e*(1-k);
+  if(cache[sym] && now-cache[sym].time<30000){
+    return cache[sym].data;
   }
 
-  return e;
-}
+  const res=await fetch("https://api.coincap.io/v2/assets/"+id);
 
-function rsi(values,period=14){
-  if(values.length<=period) return 50;
-
-  let gains=0;
-  let losses=0;
-
-  for(let i=values.length-period;i<values.length;i++){
-    let diff=values[i]-values[i-1];
-
-    if(diff>=0) gains+=diff;
-    else losses-=diff;
-  }
-
-  if(losses===0) return 100;
-
-  let rs=gains/losses;
-  return 100-(100/(1+rs));
-}
-
-async function fetchData(pair){
-  const proxy="https://api.allorigins.win/raw?url=";
-
-  const tickerUrl=proxy+encodeURIComponent(
-    "https://api.binance.com/api/v3/ticker/24hr?symbol="+pair
-  );
-
-  const klineUrl=proxy+encodeURIComponent(
-    "https://api.binance.com/api/v3/klines?symbol="+pair+"&interval=15m&limit=50"
-  );
-
-  const tickerRes=await fetch(tickerUrl);
-  const klineRes=await fetch(klineUrl);
-
-  if(!tickerRes.ok || !klineRes.ok){
+  if(!res.ok){
     throw new Error("Bad response");
   }
 
-  const ticker=await tickerRes.json();
-  const klines=await klineRes.json();
-
-  return {ticker,klines};
+  const json=await res.json();
+  cache[sym]={time:now,data:json.data};
+  return json.data;
 }
 
 async function run(isLive=false){
   const sym=document.getElementById("ticker").value.toUpperCase().trim();
 
-  if(!PAIRS[sym]) return;
-
-  const pair=PAIRS[sym];
+  if(!ASSETS[sym]) return;
 
   if(!isLive){
     document.getElementById("coin").textContent=sym;
@@ -189,73 +150,63 @@ async function run(isLive=false){
   }
 
   try{
-    const data=await fetchData(pair);
+    const data=await fetchAsset(sym);
 
-    const price=Number(data.ticker.lastPrice);
-    const move=Number(data.ticker.priceChangePercent);
-    const closes=data.klines.map(k=>Number(k[4]));
-
-    const fast=ema(closes,12);
-    const slow=ema(closes,26);
-    const rsiVal=rsi(closes,14);
-
-    let score=50;
-
-    if(price>fast) score+=8;
-    else score-=8;
-
-    if(fast>slow) score+=12;
-    else score-=12;
-
-    if(move>2) score+=10;
-    else if(move<-2) score-=10;
-
-    if(rsiVal>45 && rsiVal<68) score+=8;
-    else if(rsiVal>=75) score-=10;
-    else if(rsiVal<35) score-=6;
-
-    score=Math.max(0,Math.min(100,Math.round(score)));
+    const price=Number(data.priceUsd);
+    const move=Number(data.changePercent24Hr);
 
     let decision="HOLD";
+    let trend="MIXED";
+    let setup="WAIT";
+    let confidence=45;
+    let reason="No clean edge. Hold and wait.";
 
-    if(score>=70) decision="BUY";
-    else if(score<=35) decision="SELL";
+    if(move>=3){
+      decision="BUY";
+      trend="BULL";
+      setup="MOMENTUM";
+      confidence=78;
+      reason="Strong 24h momentum. Watch for pullback before chasing.";
+    }else if(move>=1){
+      decision="HOLD";
+      trend="UP";
+      setup="BUILDING";
+      confidence=60;
+      reason="Strength building, but not clean enough for a full buy.";
+    }else if(move<=-3){
+      decision="SELL";
+      trend="BEAR";
+      setup="WEAK";
+      confidence=78;
+      reason="Heavy downside pressure. Avoid new longs.";
+    }else if(move<=-1){
+      decision="HOLD";
+      trend="DOWN";
+      setup="CAUTION";
+      confidence=55;
+      reason="Weakening, but not enough for a clean sell.";
+    }
 
     document.getElementById("coin").textContent=sym;
     document.getElementById("price").textContent=money(price);
 
     const moveEl=document.getElementById("move");
-    moveEl.textContent=move.toFixed(2)+"%";
+    moveEl.textContent=move.toFixed(2)+"% over 24h";
     moveEl.style.color=move>0?"#7cff55":move<0?"#ff4d5d":"#aaa";
 
     setSignal(decision);
 
-    document.getElementById("trend").textContent=
-      score>=70?"BULL":
-      score<=35?"BEAR":
-      "MIXED";
-
-    document.getElementById("setup").textContent=
-      decision==="BUY"?"MOMENTUM":
-      decision==="SELL"?"WEAK":
-      "WAIT";
-
-    document.getElementById("rsiOut").textContent=Math.round(rsiVal);
-    document.getElementById("confidence").textContent=score+"/100";
-
-    document.getElementById("reason").textContent=
-      decision==="BUY"?"Trend + momentum aligned with healthy RSI.":
-      decision==="SELL"?"Weak trend and downside pressure.":
-      "No clean edge. Hold and wait.";
+    document.getElementById("trend").textContent=trend;
+    document.getElementById("setup").textContent=setup;
+    document.getElementById("confidence").textContent=confidence+"/100";
+    document.getElementById("reason").textContent=reason;
 
   }catch(e){
-    document.getElementById("coin").textContent=sym;
     document.getElementById("price").textContent="Error";
     document.getElementById("move").textContent="";
     setSignal("WAIT");
     document.getElementById("trend").textContent="—";
     document.getElementById("setup").textContent="—";
-    document.getElementById("rsiOut").textContent="—";
     document.getElementById("confidence").textContent="—";
     document.getElementById("reason").textContent="Connection issue. Try again.";
   }
