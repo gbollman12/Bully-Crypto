@@ -341,6 +341,38 @@ if(avgScore > 45 && avgScore < 55){
   document.getElementById("target").textContent = money(target);
   document.getElementById("riskReward").textContent = "1 : " + rr.toFixed(2);
   document.getElementById("tradeQuality").textContent = quality;
+  let timing = "WAIT";
+
+let entryMid = (entryLow + entryHigh) / 2;
+
+// distance from entry zone (percent)
+let dist = ((price - entryMid) / entryMid) * 100;
+
+if(quality === "INVALID"){
+  timing = "NO TRADE";
+}
+else if(decision === "BUY"){
+  if(price < entryLow){
+    timing = "BELOW ZONE (EARLY)";
+  }
+  else if(price >= entryLow && price <= entryHigh){
+    timing = "IN ZONE (VALID)";
+  }
+  else if(dist > 0.25){
+    timing = "TOO EXTENDED";
+  }
+  else{
+    timing = "WAIT PULLBACK";
+  }
+}
+else if(decision === "SELL"){
+  timing = "EXIT / AVOID";
+}
+else{
+  timing = "WAIT";
+}
+
+document.getElementById("entryTiming").textContent = timing;
   if(invalidTrade){
   quality = "INVALID";
   tradeStyle = "NO TRADE";
