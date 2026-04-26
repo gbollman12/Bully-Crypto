@@ -139,10 +139,19 @@ function pick(sym,start){
   timer = setInterval(run, 5000);
 }
 
-function run(){
-  // smoother fake market movement
-  let move = (Math.random() - 0.48) * 1.1;
-  price += price * (move / 100);
+function 
+  // --- REALISTIC PRICE MOVEMENT ---
+if(!window.drift) window.drift = 0;
+
+let noise = (Math.random() - 0.5) * 0.03;
+
+// drift slowly trends up or down over time
+window.drift += (Math.random() - 0.5) * 0.01;
+window.drift = Math.max(-0.05, Math.min(0.05, window.drift));
+
+let move = noise + window.drift;
+
+price += price * move;
 
   priceHistory.push(price);
   if(priceHistory.length > 12) priceHistory.shift();
