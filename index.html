@@ -10,29 +10,24 @@
 <style>
 body{margin:0;background:#050606;color:white;font-family:-apple-system}
 .app{max-width:520px;margin:auto}
-
 .header{display:flex;align-items:center;gap:12px;padding:18px;border-bottom:1px solid #1f1f1f}
 .logo{width:50px;height:50px;border-radius:10px}
 .title{font-size:24px;font-weight:900}
 .sub{color:#7cff55;font-size:12px}
-
 .quick{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
 .quick button{flex:1 1 28%;padding:12px;border-radius:10px;background:#111;border:1px solid #2a2a2a;color:white;font-weight:800}
-
 .card{background:#101010;border:1px solid #242a25;border-radius:18px;padding:18px;margin:14px}
 .price{font-size:46px;font-weight:950}
-
 .badge{padding:12px 18px;border-radius:999px;font-weight:900;border:1px solid}
 .buy{color:#7cff55;border-color:#7cff55}
 .sell{color:#ff4d5d;border-color:#ff4d5d}
 .hold{color:#ffd60a;border-color:#ffd60a}
-
 .row{display:flex;justify-content:space-between;margin-top:10px;color:#aaa}
-
-/* TABS */
 .tabs{display:flex;gap:8px;padding:0 14px 8px}
 .tab{flex:1;padding:12px;border-radius:12px;border:1px solid #2a2a2a;background:#101010;color:#888;font-weight:900}
 .tab.active{color:#7cff55;border-color:#7cff55}
+.field{width:100%;box-sizing:border-box;margin-top:10px;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#080808;color:white}
+.saveBtn{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:1px solid #7cff55;background:#101010;color:#7cff55;font-weight:900}
 </style>
 </head>
 
@@ -56,16 +51,13 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 <button onclick="pick('ADA',0.50)">ADA</button>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
 <button class="tab active" onclick="showTab('overview', this)">Overview</button>
 <button class="tab" onclick="showTab('plan', this)">Plan</button>
-<button class="tab" onclick="showTab('funds', this)">Funds</button>
+<button class="tab" onclick="showTab('position', this)">Position</button>
 </div>
 
-<!-- OVERVIEW -->
 <div id="overview" class="tabPage">
-
 <div class="card">
 <div id="coin">SELECT COIN</div>
 <div id="price" class="price">—</div>
@@ -82,10 +74,8 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 <div class="card">
 <div id="reason">Waiting.</div>
 </div>
-
 </div>
 
-<!-- PLAN -->
 <div id="plan" class="tabPage" style="display:none">
 <div class="card">
 <div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
@@ -94,11 +84,19 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 </div>
 </div>
 
-<!-- FUNDS -->
-<div id="funds" class="tabPage" style="display:none">
+<div id="position" class="tabPage" style="display:none">
 <div class="card">
-<div class="row"><span>Account Funds</span><span>Coming soon</span></div>
-<div class="row"><span>Risk %</span><span>Coming soon</span></div>
+<div>Amount owned</div>
+<input id="ownedAmount" class="field" inputmode="decimal" placeholder="Example: 0.25">
+<div style="margin-top:12px">Average buy price</div>
+<input id="avgBuy" class="field" inputmode="decimal" placeholder="Example: 62000">
+<button class="saveBtn" onclick="savePosition()">SAVE POSITION</button>
+</div>
+
+<div class="card">
+<div class="row"><span>Current Value</span><span id="currentValue">—</span></div>
+<div class="row"><span>Profit / Loss</span><span id="profitLoss">—</span></div>
+<div class="row"><span>Position Verdict</span><span id="positionVerdict">—</span></div>
 </div>
 </div>
 
@@ -106,21 +104,28 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 
 <script>
 let price=0;
+let selectedCoin="";
 let timer=null;
+let lastDecision="WAIT";
 
 function money(n){
-return "$"+n.toFixed(n>100?2:4);
+return "$"+Number(n).toFixed(Number(n)>100?2:4);
 }
 
 function setSignal(d){
+lastDecision=d;
 const el=document.getElementById("signal");
 el.textContent=d;
 el.className="badge "+(d==="BUY"?"buy":d==="SELL"?"sell":"hold");
+updatePosition();
 }
 
 function pick(sym,start){
+selectedCoin=sym;
 document.getElementById("coin").textContent=sym;
 price=start;
+
+loadPosition();
 
 if(timer) clearInterval(timer);
 
@@ -140,16 +145,14 @@ moveEl.style.color=move>0?"#7cff55":"#ff4d5d";
 
 let score=50;
 
-if(move>0.5) score+=15;
-if(move<-0.5) score-=15;
-
-score+=Math.random()*10-5;
-
-score=Math.max(0,Math.min(100,score));
+if(move >= 0.75) score = 78;
+else if(move >= 0.35) score = 62;
+else if(move <= -0.75) score = 22;
+else if(move <= -0.35) score = 38;
 
 let decision="HOLD";
 if(score>=70) decision="BUY";
-if(score<=30) decision="SELL";
+else if(score<=30) decision="SELL";
 
 setSignal(decision);
 
@@ -167,12 +170,72 @@ document.getElementById("reason").textContent=
 decision==="BUY"?"Momentum building upward":
 decision==="SELL"?"Weak price action downward":
 "No clear setup. Wait.";
+
+document.getElementById("entry").textContent=money(price*.99)+" - "+money(price*1.01);
+document.getElementById("stop").textContent=money(price*.96);
+document.getElementById("target").textContent=money(price*1.06);
+
+updatePosition();
+}
+
+function savePosition(){
+if(!selectedCoin){
+alert("Pick a coin first.");
+return;
+}
+localStorage.setItem(selectedCoin+"_amount",document.getElementById("ownedAmount").value||"");
+localStorage.setItem(selectedCoin+"_avg",document.getElementById("avgBuy").value||"");
+updatePosition();
+}
+
+function loadPosition(){
+if(!selectedCoin) return;
+document.getElementById("ownedAmount").value=localStorage.getItem(selectedCoin+"_amount")||"";
+document.getElementById("avgBuy").value=localStorage.getItem(selectedCoin+"_avg")||"";
+updatePosition();
+}
+
+function updatePosition(){
+const amount=Number(document.getElementById("ownedAmount").value)||0;
+const avg=Number(document.getElementById("avgBuy").value)||0;
+
+if(!price || amount<=0){
+document.getElementById("currentValue").textContent="—";
+document.getElementById("profitLoss").textContent="—";
+
+document.getElementById("positionVerdict").textContent=
+lastDecision==="BUY"?"Good buy candidate":
+lastDecision==="SELL"?"Avoid":
+"Wait";
+
+return;
+}
+
+const value=amount*price;
+const cost=amount*avg;
+const pnl=value-cost;
+const pnlPct=cost>0?(pnl/cost)*100:0;
+
+document.getElementById("currentValue").textContent=money(value);
+
+const pnlEl=document.getElementById("profitLoss");
+pnlEl.textContent=money(pnl)+" ("+pnlPct.toFixed(2)+"%)";
+pnlEl.style.color=pnl>=0?"#7cff55":"#ff4d5d";
+
+let verdict="HOLD";
+
+if(lastDecision==="BUY" && pnlPct<10) verdict="ADD / HOLD";
+else if(lastDecision==="BUY") verdict="HOLD WINNER";
+else if(lastDecision==="SELL" && pnlPct>0) verdict="TRIM PROFIT";
+else if(lastDecision==="SELL") verdict="EXIT / PROTECT";
+else verdict="HOLD";
+
+document.getElementById("positionVerdict").textContent=verdict;
 }
 
 function showTab(id, btn){
 document.querySelectorAll(".tabPage").forEach(p=>p.style.display="none");
 document.getElementById(id).style.display="block";
-
 document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
 btn.classList.add("active");
 }
