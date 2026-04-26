@@ -118,18 +118,35 @@ document.getElementById("ticker").addEventListener("input",()=>{
 });
 
 async function fetchAsset(sym){
-  const id=ASSETS[sym];
-  const now=Date.now();
 
-  if(cache[sym] && now-cache[sym].time<30000){
-    return cache[sym].data;
-  }
+const map={
+BTC:"bitcoin",
+ETH:"ethereum",
+SOL:"solana",
+XRP:"ripple",
+DOGE:"dogecoin",
+ADA:"cardano"
+};
 
-  const res=await fetch("https://api.coincap.io/v2/assets/"+id);
+const id=map[sym];
 
-  if(!res.ok){
-    throw new Error("Bad response");
-  }
+const url = "https://api.allorigins.win/raw?url=" + encodeURIComponent(
+  `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`
+);
+
+const res = await fetch(url);
+
+if(!res.ok){
+  throw new Error("Bad response");
+}
+
+const data = await res.json();
+
+return {
+  priceUsd: data[id].usd,
+  changePercent24Hr: data[id].usd_24h_change
+};
+}
 
   const json=await res.json();
   cache[sym]={time:now,data:json.data};
