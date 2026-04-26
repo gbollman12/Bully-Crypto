@@ -238,7 +238,34 @@ if(trendMove > 0.25){
 document.getElementById("entry").textContent = money(entryLow) + " - " + money(entryHigh);
 document.getElementById("stop").textContent = money(stop);
 document.getElementById("target").textContent = money(target);}
+let entryLow = price * 0.995;
+let entryHigh = price * 1.005;
+let entryMid = (entryLow + entryHigh) / 2;
 
+let stop = price * 0.97;
+
+let target;
+if(trendMove > 0.25){
+  target = price * 1.05;
+} else if(trendMove > 0){
+  target = price * 1.03;
+} else {
+  target = price * 1.02;
+}
+
+let risk = Math.abs(entryMid - stop);
+let reward = Math.abs(target - entryMid);
+let rr = reward / risk;
+
+let quality = "WAIT";
+
+if(lastDecision === "BUY" && rr >= 1.5) quality = "GOOD";
+else if(lastDecision === "BUY") quality = "WEAK R/R";
+else if(lastDecision === "SELL") quality = "AVOID LONG";
+else quality = "NO EDGE";
+
+document.getElementById("riskReward").textContent = "1 : " + rr.toFixed(2);
+document.getElementById("tradeQuality").textContent = quality;
 function savePosition(){
   if(!selectedCoin){
     alert("Pick a coin first.");
