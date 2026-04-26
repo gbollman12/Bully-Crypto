@@ -265,7 +265,7 @@ function run(){
   }
 
   let reward = Math.abs(target - entryMid);
-  let rr = reward / risk;
+  let rr = risk > 0 ? (reward / risk) : 0;
 
   let quality = "NO EDGE";
   let invalidTrade = false;
