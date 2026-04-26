@@ -375,6 +375,8 @@ let positionSize = estimatedUnits * entryMid;
   document.getElementById("entryTiming").textContent = timing;
   document.getElementById("tradeStyle").textContent = tradeStyle;
   document.getElementById("tradeAction").textContent = tradeAction;
+  document.getElementById("positionSize").textContent = money(positionSize);
+document.getElementById("estimatedUnits").textContent = estimatedUnits.toFixed(4);
 
   updatePosition();
 }
