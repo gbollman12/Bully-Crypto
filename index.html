@@ -268,6 +268,11 @@ function run(){
   let quality = "NO EDGE";
   let invalidTrade = false;
 
+// too flat
+if (Math.abs(trendMove) < 0.10 && avgScore > 42 && avgScore < 58){
+  invalidTrade = true;
+}
+
 if(Math.abs(trendMove) < 0.08){
   invalidTrade = true;
 }
