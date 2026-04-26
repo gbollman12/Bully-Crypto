@@ -193,11 +193,35 @@ let risk=Math.abs(entryMid-stop);
 let reward=Math.abs(target-entryMid);
 let rr=reward/risk;
 
-let quality="NO EDGE";
-if(decision==="BUY" && rr>=1.5) quality="GOOD";
-else if(decision==="BUY") quality="WEAK";
-else if(decision==="SELL") quality="AVOID";
+let quality = "NO EDGE";
 
+if(decision === "BUY"){
+  if(rr >= 2 && avgScore >= 75 && trendMove > 0.25){
+    quality = "ELITE";
+  } else if(rr >= 1.5 && avgScore >= 68){
+    quality = "GOOD";
+  } else {
+    quality = "WEAK R/R";
+  }
+}
+
+else if(decision === "SELL"){
+  if(avgScore < 25 && trendMove < -0.25){
+    quality = "EXIT NOW";
+  } else {
+    quality = "TRIM / AVOID";
+  }
+}
+
+else {
+  if(avgScore >= 60 && trendMove > 0){
+    quality = "WATCH BUY";
+  } else if(avgScore <= 40 && trendMove < 0){
+    quality = "WATCH SELL";
+  } else {
+    quality = "WAIT";
+  }
+}
 document.getElementById("entry").textContent=money(entryLow)+" - "+money(entryHigh);
 document.getElementById("stop").textContent=money(stop);
 document.getElementById("target").textContent=money(target);
