@@ -194,7 +194,27 @@ let entryHigh=price*1.005;
 let entryMid=(entryLow+entryHigh)/2;
 let stop=price*0.97;
 
-let target=trendMove>0?price*1.04:price*1.02;
+let target;
+
+// force minimum 1.5 R/R
+let minRR = 1.5;
+let entryMid = (entryLow + entryHigh) / 2;
+let risk = Math.abs(entryMid - stop);
+
+// base target from trend
+if(trendMove > 0.2){
+  target = price * 1.04;
+} else {
+  target = price * 1.02;
+}
+
+// adjust target upward if R/R is too weak
+let reward = Math.abs(target - entryMid);
+let rr = reward / risk;
+
+if(rr < minRR){
+  target = entryMid + (risk * minRR);
+}
 
 let risk=Math.abs(entryMid-stop);
 let reward=Math.abs(target-entryMid);
