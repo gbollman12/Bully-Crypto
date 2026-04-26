@@ -21,11 +21,12 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 .buy{color:#7cff55;border-color:#7cff55}
 .sell{color:#ff4d5d;border-color:#ff4d5d}
 .hold{color:#ffd60a;border-color:#ffd60a}
-.row{display:flex;justify-content:space-between;margin-top:10px;color:#aaa}
+.row{display:flex;justify-content:space-between;margin-top:10px;color:#aaa;gap:12px}
+.row span:last-child{text-align:right}
 .tabs{display:flex;gap:8px;padding:0 14px 8px}
 .tab{flex:1;padding:12px;border-radius:12px;border:1px solid #2a2a2a;background:#101010;color:#888;font-weight:900}
 .tab.active{color:#7cff55;border-color:#7cff55}
-.field{width:100%;margin-top:10px;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#080808;color:white}
+.field{width:100%;box-sizing:border-box;margin-top:10px;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#080808;color:white}
 .saveBtn{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:1px solid #7cff55;background:#101010;color:#7cff55;font-weight:900}
 </style>
 </head>
@@ -56,7 +57,6 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 <button class="tab" onclick="showTab('position', this)">Position</button>
 </div>
 
-<!-- OVERVIEW -->
 <div id="overview" class="tabPage">
 <div class="card">
 <div id="coin">SELECT COIN</div>
@@ -76,279 +76,320 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 </div>
 </div>
 
-<!-- PLAN -->
 <div id="plan" class="tabPage" style="display:none">
-  <div class="card">
-    <div class="row"><span>Coin</span><span id="planCoin">—</span></div>
-    <div class="row"><span>Signal</span><span id="planSignal">—</span></div>
-    <div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
-    <div class="row"><span>Stop Loss</span><span id="stop">—</span></div>
-    <div class="row"><span>Target</span><span id="target">—</span></div>
-    <div class="row"><span>Risk / Reward</span><span id="riskReward">—</span></div>
-    <div class="row"><span>Trade Quality</span><span id="tradeQuality">—</span></div>
-  </div>
-
-  <div class="card">
-    <div class="row"><span>Trade Style</span><span id="tradeStyle">—</span></div>
-    <div class="row"><span>Action</span><span id="tradeAction">—</span></div>
-  </div>
+<div class="card">
+<div class="row"><span>Coin</span><span id="planCoin">—</span></div>
+<div class="row"><span>Signal</span><span id="planSignal">—</span></div>
+<div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
+<div class="row"><span>Stop Loss</span><span id="stop">—</span></div>
+<div class="row"><span>Target</span><span id="target">—</span></div>
+<div class="row"><span>Risk / Reward</span><span id="riskReward">—</span></div>
+<div class="row"><span>Trade Quality</span><span id="tradeQuality">—</span></div>
 </div>
 
-<!-- POSITION -->
+<div class="card">
+<div class="row"><span>Trade Style</span><span id="tradeStyle">—</span></div>
+<div class="row"><span>Action</span><span id="tradeAction">—</span></div>
+</div>
+</div>
+
 <div id="position" class="tabPage" style="display:none">
 <div class="card">
 <div>Amount owned</div>
-<input id="ownedAmount" class="field" placeholder="0.25">
-<div>Average buy price</div>
-<input id="avgBuy" class="field" placeholder="62000">
-<button class="saveBtn" onclick="savePosition()">SAVE</button>
+<input id="ownedAmount" class="field" inputmode="decimal" placeholder="Example: 0.25">
+<div style="margin-top:12px">Average buy price</div>
+<input id="avgBuy" class="field" inputmode="decimal" placeholder="Example: 62000">
+<button class="saveBtn" onclick="savePosition()">SAVE POSITION</button>
 </div>
 
 <div class="card">
-<div class="row"><span>Value</span><span id="currentValue">—</span></div>
-<div class="row"><span>PnL</span><span id="profitLoss">—</span></div>
-<div class="row"><span>Verdict</span><span id="positionVerdict">—</span></div>
+<div class="row"><span>Current Value</span><span id="currentValue">—</span></div>
+<div class="row"><span>Profit / Loss</span><span id="profitLoss">—</span></div>
+<div class="row"><span>Position Verdict</span><span id="positionVerdict">—</span></div>
 </div>
 </div>
 
 </div>
 
 <script>
-let price=0;
-let selectedCoin="";
-let timer=null;
-let lastDecision="WAIT";
-let priceHistory=[];
-let scoreHistory=[];
-let drift=0;
+let price = 0;
+let selectedCoin = "";
+let timer = null;
+let lastDecision = "WAIT";
+let priceHistory = [];
+let scoreHistory = [];
+let drift = 0;
 
-function money(n){return "$"+Number(n).toFixed(Number(n)>100?2:4);}
+function money(n){
+  return "$" + Number(n).toFixed(Number(n)>100?2:4);
+}
 
 function setSignal(d){
-lastDecision=d;
-document.getElementById("signal").textContent=d;
-document.getElementById("signal").className="badge "+(d==="BUY"?"buy":d==="SELL"?"sell":"hold");
-updatePosition();
+  lastDecision = d;
+  const el = document.getElementById("signal");
+  el.textContent = d;
+  el.className = "badge " + (d==="BUY"?"buy":d==="SELL"?"sell":"hold");
+  updatePosition();
 }
 
 function pick(sym,start){
-selectedCoin=sym;
-price=start;
-priceHistory=[start];
-scoreHistory=[];
-drift=0;
-lastDecision="HOLD";
-document.getElementById("coin").textContent=sym;
-if(timer) clearInterval(timer);
-run();
-timer=setInterval(run,8000);
+  selectedCoin = sym;
+  document.getElementById("coin").textContent = sym;
+  price = start;
+
+  priceHistory = [start];
+  scoreHistory = [];
+  drift = 0;
+  lastDecision = "HOLD";
+
+  loadPosition();
+
+  if(timer) clearInterval(timer);
+
+  run();
+  timer = setInterval(run, 8000);
 }
 
 function run(){
 
-let noise=(Math.random()-0.5)*0.0003;
-drift+=(Math.random()-0.5)*0.0001;
-drift=Math.max(-0.0005,Math.min(0.0005,drift));
-let move=noise+drift;
-price+=price*move;
+  let noise = (Math.random() - 0.5) * 0.0003;
 
-priceHistory.push(price);
-if(priceHistory.length>12) priceHistory.shift();
+  drift += (Math.random() - 0.5) * 0.0001;
+  drift = Math.max(-0.0005, Math.min(0.0005, drift));
 
-let first=priceHistory[0];
-let last=priceHistory[priceHistory.length-1];
-let trendMove=((last-first)/first)*100;
+  let move = noise + drift;
 
-let avg=priceHistory.reduce((a,b)=>a+b,0)/priceHistory.length;
-let above=price>avg;
+  price += price * move;
 
-let score=50;
-if(trendMove>0.3) score+=25;
-else if(trendMove<-0.3) score-=25;
-if(above) score+=8; else score-=8;
+  priceHistory.push(price);
+  if(priceHistory.length > 12) priceHistory.shift();
 
-score=Math.max(0,Math.min(100,score));
-scoreHistory.push(score);
-if(scoreHistory.length>6) scoreHistory.shift();
+  const first = priceHistory[0];
+  const last = priceHistory[priceHistory.length - 1];
+  const trendMove = ((last - first) / first) * 100;
 
-let avgScore=scoreHistory.reduce((a,b)=>a+b,0)/scoreHistory.length;
+  const avgPrice = priceHistory.reduce((a,b)=>a+b,0) / priceHistory.length;
+  const aboveAvg = price > avgPrice;
 
-let decision=lastDecision;
-if(avgScore>72) decision="BUY";
-else if(avgScore<28) decision="SELL";
-else decision="HOLD";
+  let score = 50;
 
-setSignal(decision);
+  if(trendMove > 0.35) score += 25;
+  else if(trendMove > 0.15) score += 12;
+  else if(trendMove < -0.35) score -= 25;
+  else if(trendMove < -0.15) score -= 12;
 
-document.getElementById("price").textContent=money(price);
-document.getElementById("move").textContent=trendMove.toFixed(2)+"% trend";
+  if(aboveAvg) score += 8;
+  else score -= 8;
 
-document.getElementById("trend").textContent=avgScore>65?"BULL":avgScore<35?"BEAR":"MIXED";
-document.getElementById("setup").textContent=decision;
-document.getElementById("confidence").textContent=Math.round(avgScore)+"/100";
+  if(move > 0.00025) score += 8;
+  else if(move < -0.00025) score -= 8;
 
-document.getElementById("reason").textContent="Stable trend-based signal.";
+  score = Math.max(0, Math.min(100, Math.round(score)));
 
-let entryLow;
-let entryHigh;
-let stop;
-let target;
+  scoreHistory.push(score);
+  if(scoreHistory.length > 6) scoreHistory.shift();
 
-if(decision === "BUY"){
-  // don't chase — wait for a small pullback
-  entryLow = price * 0.992;
-  entryHigh = price * 0.998;
-  stop = price * 0.970;
-}
+  const avgScore = scoreHistory.reduce((a,b)=>a+b,0) / scoreHistory.length;
 
-else if(decision === "SELL"){
-  // avoid buying; if holding, trim/exit zone
-  entryLow = price * 0.995;
-  entryHigh = price * 1.005;
-  stop = price * 1.030;
-}
+  let decision = lastDecision;
 
-else{
-  // HOLD = no entry, just a watch zone
-  entryLow = price * 0.985;
-  entryHigh = price * 0.995;
-  stop = price * 0.965;
-}
-
-let entryMid = (entryLow + entryHigh) / 2;
-let risk = Math.abs(entryMid - stop);
-
-// force minimum 1.5 R/R
-let minRR = 1.5;
-
-target = entryMid + (risk * minRR);
-
-let reward = Math.abs(target - entryMid);
-let rr = reward / risk;
-
-let target;
-
-// force minimum 1.5 R/R
-let minRR = 1.5;
-let entryMid = (entryLow + entryHigh) / 2;
-let risk = Math.abs(entryMid - stop);
-
-// base target from trend
-if(trendMove > 0.2){
-  target = price * 1.04;
-} else {
-  target = price * 1.02;
-}
-
-// adjust target upward if R/R is too weak
-let reward = Math.abs(target - entryMid);
-let rr = reward / risk;
-
-if(rr < minRR){
-  target = entryMid + (risk * minRR);
-}
-
-let risk=Math.abs(entryMid-stop);
-let reward=Math.abs(target-entryMid);
-let rr=reward/risk;
-
-let quality = "NO EDGE";
-
-if(decision === "BUY"){
-  if(rr >= 2 && avgScore >= 75 && trendMove > 0.25){
-    quality = "ELITE";
-  } else if(rr >= 1.5 && avgScore >= 68){
-    quality = "GOOD";
-  } else {
-    quality = "WEAK R/R";
+  if(scoreHistory.length >= 4){
+    if(avgScore >= 74 && trendMove > 0.20){
+      decision = "BUY";
+    }
+    else if(avgScore <= 26 && trendMove < -0.20){
+      decision = "SELL";
+    }
+    else if(avgScore > 40 && avgScore < 60){
+      decision = "HOLD";
+    }
   }
-}
 
-else if(decision === "SELL"){
-  if(avgScore < 25 && trendMove < -0.25){
-    quality = "EXIT NOW";
-  } else {
-    quality = "TRIM / AVOID";
+  setSignal(decision);
+
+  document.getElementById("price").textContent = money(price);
+
+  const moveEl = document.getElementById("move");
+  moveEl.textContent = trendMove.toFixed(2) + "% trend";
+  moveEl.style.color = trendMove > 0 ? "#7cff55" : trendMove < 0 ? "#ff4d5d" : "#aaa";
+
+  document.getElementById("trend").textContent =
+    avgScore > 68 ? "BULL" :
+    avgScore < 32 ? "BEAR" :
+    "MIXED";
+
+  document.getElementById("setup").textContent =
+    decision === "BUY" ? "CONFIRMED MOMENTUM" :
+    decision === "SELL" ? "CONFIRMED WEAKNESS" :
+    "WAIT";
+
+  document.getElementById("confidence").textContent = Math.round(avgScore) + "/100";
+
+  document.getElementById("reason").textContent =
+    decision === "BUY" ? "Trend has held strength across multiple readings." :
+    decision === "SELL" ? "Weakness has confirmed across multiple readings." :
+    "No confirmed edge. Holding signal steady.";
+
+  // SMART PLAN
+  let entryLow;
+  let entryHigh;
+  let stop;
+  let target;
+
+  if(decision === "BUY"){
+    entryLow = price * 0.992;
+    entryHigh = price * 0.998;
+    stop = price * 0.970;
   }
-}
-
-else {
-  if(avgScore >= 60 && trendMove > 0){
-    quality = "WATCH BUY";
-  } else if(avgScore <= 40 && trendMove < 0){
-    quality = "WATCH SELL";
-  } else {
-    quality = "WAIT";
+  else if(decision === "SELL"){
+    entryLow = price * 0.995;
+    entryHigh = price * 1.005;
+    stop = price * 1.030;
   }
-}
-document.getElementById("planSignal").textContent = lastDecision;
-document.getElementById("planCoin").textContent = selectedCoin || "—";
-document.getElementById("entry").textContent=money(entryLow)+" - "+money(entryHigh);
-document.getElementById("stop").textContent=money(stop);
-document.getElementById("target").textContent=money(target);
-document.getElementById("planCoin").textContent = selectedCoin || "—";
-document.getElementById("planSignal").textContent = lastDecision;
+  else{
+    entryLow = price * 0.985;
+    entryHigh = price * 0.995;
+    stop = price * 0.965;
+  }
 
-let tradeStyle = "WAIT";
-let tradeAction = "Do nothing until the signal improves.";
+  let entryMid = (entryLow + entryHigh) / 2;
+  let risk = Math.abs(entryMid - stop);
+  let minRR = 1.5;
 
-if(quality === "ELITE"){
-  tradeStyle = "AGGRESSIVE";
-  tradeAction = "Cleanest setup. Entry only inside zone.";
-} else if(quality === "GOOD"){
-  tradeStyle = "STANDARD";
-  tradeAction = "Valid setup. Keep stop tight.";
-} else if(quality === "WEAK R/R"){
-  tradeStyle = "CAUTION";
-  tradeAction = "Signal exists, but reward is weak.";
-} else if(quality === "WATCH BUY"){
-  tradeStyle = "WATCH";
-  tradeAction = "Wait for confirmation before buying.";
-} else if(quality === "EXIT NOW"){
-  tradeStyle = "DEFENSE";
-  tradeAction = "Protect capital. Exit/trim logic active.";
-} else if(quality === "TRIM / AVOID"){
-  tradeStyle = "DEFENSE";
-  tradeAction = "Avoid new buys. Consider trimming.";
-}
+  if(decision === "SELL"){
+    target = entryMid - (risk * minRR);
+  } else {
+    target = entryMid + (risk * minRR);
+  }
 
-document.getElementById("tradeStyle").textContent = tradeStyle;
-document.getElementById("tradeAction").textContent = tradeAction;
-document.getElementById("riskReward").textContent="1 : "+rr.toFixed(2);
-document.getElementById("tradeQuality").textContent=quality;
+  let reward = Math.abs(target - entryMid);
+  let rr = reward / risk;
 
-updatePosition();
+  let quality = "NO EDGE";
+
+  if(decision === "BUY"){
+    if(rr >= 2 && avgScore >= 75 && trendMove > 0.25){
+      quality = "ELITE";
+    } else if(rr >= 1.5 && avgScore >= 68){
+      quality = "GOOD";
+    } else {
+      quality = "WEAK R/R";
+    }
+  }
+  else if(decision === "SELL"){
+    if(avgScore < 25 && trendMove < -0.25){
+      quality = "EXIT NOW";
+    } else {
+      quality = "TRIM / AVOID";
+    }
+  }
+  else {
+    if(avgScore >= 60 && trendMove > 0){
+      quality = "WATCH BUY";
+    } else if(avgScore <= 40 && trendMove < 0){
+      quality = "WATCH SELL";
+    } else {
+      quality = "WAIT";
+    }
+  }
+
+  let tradeStyle = "WAIT";
+  let tradeAction = "Do nothing until the signal improves.";
+
+  if(quality === "ELITE"){
+    tradeStyle = "AGGRESSIVE";
+    tradeAction = "Cleanest setup. Entry only inside zone.";
+  } else if(quality === "GOOD"){
+    tradeStyle = "STANDARD";
+    tradeAction = "Valid setup. Keep stop tight.";
+  } else if(quality === "WEAK R/R"){
+    tradeStyle = "CAUTION";
+    tradeAction = "Signal exists, but reward is weak.";
+  } else if(quality === "WATCH BUY"){
+    tradeStyle = "WATCH";
+    tradeAction = "Wait for confirmation before buying.";
+  } else if(quality === "WATCH SELL"){
+    tradeStyle = "WATCH";
+    tradeAction = "Weakness forming. Do not chase.";
+  } else if(quality === "EXIT NOW"){
+    tradeStyle = "DEFENSE";
+    tradeAction = "Protect capital. Exit/trim logic active.";
+  } else if(quality === "TRIM / AVOID"){
+    tradeStyle = "DEFENSE";
+    tradeAction = "Avoid new buys. Consider trimming.";
+  }
+
+  document.getElementById("planCoin").textContent = selectedCoin || "—";
+  document.getElementById("planSignal").textContent = lastDecision;
+  document.getElementById("entry").textContent = money(entryLow) + " - " + money(entryHigh);
+  document.getElementById("stop").textContent = money(stop);
+  document.getElementById("target").textContent = money(target);
+  document.getElementById("riskReward").textContent = "1 : " + rr.toFixed(2);
+  document.getElementById("tradeQuality").textContent = quality;
+  document.getElementById("tradeStyle").textContent = tradeStyle;
+  document.getElementById("tradeAction").textContent = tradeAction;
+
+  updatePosition();
 }
 
 function savePosition(){
-localStorage.setItem(selectedCoin+"_amt",document.getElementById("ownedAmount").value);
-localStorage.setItem(selectedCoin+"_avg",document.getElementById("avgBuy").value);
+  if(!selectedCoin){
+    alert("Pick a coin first.");
+    return;
+  }
+  localStorage.setItem(selectedCoin+"_amount",document.getElementById("ownedAmount").value||"");
+  localStorage.setItem(selectedCoin+"_avg",document.getElementById("avgBuy").value||"");
+  updatePosition();
+}
+
+function loadPosition(){
+  if(!selectedCoin) return;
+  document.getElementById("ownedAmount").value = localStorage.getItem(selectedCoin+"_amount") || "";
+  document.getElementById("avgBuy").value = localStorage.getItem(selectedCoin+"_avg") || "";
+  updatePosition();
 }
 
 function updatePosition(){
-let amt=Number(document.getElementById("ownedAmount").value)||0;
-let avg=Number(document.getElementById("avgBuy").value)||0;
+  const amount = Number(document.getElementById("ownedAmount").value) || 0;
+  const avg = Number(document.getElementById("avgBuy").value) || 0;
 
-if(!amt){document.getElementById("currentValue").textContent="—";return;}
+  if(!price || amount <= 0){
+    document.getElementById("currentValue").textContent = "—";
+    document.getElementById("profitLoss").textContent = "—";
+    document.getElementById("positionVerdict").textContent =
+      lastDecision === "BUY" ? "GOOD BUY CANDIDATE" :
+      lastDecision === "SELL" ? "AVOID" :
+      "WAIT";
+    return;
+  }
 
-let val=amt*price;
-let pnl=val-(amt*avg);
-let pct=(pnl/(amt*avg))*100;
+  const value = amount * price;
+  const cost = amount * avg;
+  const pnl = value - cost;
+  const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
 
-document.getElementById("currentValue").textContent=money(val);
-document.getElementById("profitLoss").textContent=money(pnl)+" ("+pct.toFixed(1)+"%)";
+  document.getElementById("currentValue").textContent = money(value);
 
-document.getElementById("positionVerdict").textContent=
-lastDecision==="BUY"?"HOLD/ADD":
-lastDecision==="SELL"?"TRIM/EXIT":
-"HOLD";
+  const pnlEl = document.getElementById("profitLoss");
+  pnlEl.textContent = money(pnl) + " (" + pnlPct.toFixed(2) + "%)";
+  pnlEl.style.color = pnl >= 0 ? "#7cff55" : "#ff4d5d";
+
+  let verdict = "HOLD";
+
+  if(lastDecision === "BUY" && pnlPct < 10) verdict = "ADD / HOLD";
+  else if(lastDecision === "BUY") verdict = "HOLD WINNER";
+  else if(lastDecision === "SELL" && pnlPct > 0) verdict = "TRIM PROFIT";
+  else if(lastDecision === "SELL") verdict = "EXIT / PROTECT";
+  else verdict = "HOLD";
+
+  document.getElementById("positionVerdict").textContent = verdict;
 }
 
-function showTab(id,btn){
-document.querySelectorAll(".tabPage").forEach(p=>p.style.display="none");
-document.getElementById(id).style.display="block";
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-btn.classList.add("active");
+function showTab(id, btn){
+  document.querySelectorAll(".tabPage").forEach(p=>p.style.display="none");
+  document.getElementById(id).style.display="block";
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
 }
 </script>
 
