@@ -80,6 +80,7 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 <div id="plan" class="tabPage" style="display:none">
   <div class="card">
     <div class="row"><span>Coin</span><span id="planCoin">—</span></div>
+    <div class="row"><span>Signal</span><span id="planSignal">—</span></div>
     <div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
     <div class="row"><span>Stop Loss</span><span id="stop">—</span></div>
     <div class="row"><span>Target</span><span id="target">—</span></div>
@@ -223,6 +224,7 @@ else {
     quality = "WAIT";
   }
 }
+document.getElementById("planSignal").textContent = lastDecision;
 document.getElementById("planCoin").textContent = selectedCoin || "—";
 document.getElementById("entry").textContent=money(entryLow)+" - "+money(entryHigh);
 document.getElementById("stop").textContent=money(stop);
