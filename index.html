@@ -3,7 +3,6 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bully Crypto</title>
-
 <link rel="apple-touch-icon" href="logo.PNG">
 <link rel="icon" href="logo.PNG">
 
@@ -103,144 +102,186 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 </div>
 
 <script>
-let signalBuffer = [];
-let lastSignalTime = 0;
-let price=0;
-let selectedCoin="";
-let timer=null;
-let lastDecision="WAIT";
+let price = 0;
+let selectedCoin = "";
+let timer = null;
+let lastDecision = "WAIT";
+
+let priceHistory = [];
+let scoreHistory = [];
 
 function money(n){
-return "$"+Number(n).toFixed(Number(n)>100?2:4);
+  return "$" + Number(n).toFixed(Number(n)>100?2:4);
 }
 
 function setSignal(d){
-lastDecision=d;
-const el=document.getElementById("signal");
-el.textContent=d;
-el.className="badge "+(d==="BUY"?"buy":d==="SELL"?"sell":"hold");
-updatePosition();
+  lastDecision = d;
+  const el = document.getElementById("signal");
+  el.textContent = d;
+  el.className = "badge " + (d==="BUY"?"buy":d==="SELL"?"sell":"hold");
+  updatePosition();
 }
 
 function pick(sym,start){
-selectedCoin=sym;
-document.getElementById("coin").textContent=sym;
-price=start;
+  selectedCoin = sym;
+  document.getElementById("coin").textContent = sym;
+  price = start;
 
-loadPosition();
+  priceHistory = [start];
+  scoreHistory = [];
+  lastDecision = "HOLD";
 
-if(timer) clearInterval(timer);
+  loadPosition();
 
-run();
-timer=setInterval(run,1500);
+  if(timer) clearInterval(timer);
+
+  run();
+  timer = setInterval(run, 5000);
 }
 
 function run(){
-let move=(Math.random()-0.5)*2;
-price += price*(move/100);
+  // smoother fake market movement
+  let move = (Math.random() - 0.48) * 1.1;
+  price += price * (move / 100);
 
-document.getElementById("price").textContent=money(price);
+  priceHistory.push(price);
+  if(priceHistory.length > 12) priceHistory.shift();
 
-const moveEl=document.getElementById("move");
-moveEl.textContent=move.toFixed(2)+"%";
-moveEl.style.color=move>0?"#7cff55":"#ff4d5d";
+  const first = priceHistory[0];
+  const last = priceHistory[priceHistory.length - 1];
+  const trendMove = ((last - first) / first) * 100;
 
-let score=50;
+  const avgPrice = priceHistory.reduce((a,b)=>a+b,0) / priceHistory.length;
+  const aboveAvg = price > avgPrice;
 
-if(move >= 0.75) score = 78;
-else if(move >= 0.35) score = 62;
-else if(move <= -0.75) score = 22;
-else if(move <= -0.35) score = 38;
+  let score = 50;
 
-let decision=lastDecision;
+  // trend strength
+  if(trendMove > 1.2) score += 25;
+  else if(trendMove > 0.45) score += 12;
+  else if(trendMove < -1.2) score -= 25;
+  else if(trendMove < -0.45) score -= 12;
 
-if(score>=75) decision="BUY";
-else if(score<=25) decision="SELL";
-else if(score>35 && score<65) decision="HOLD";
-setSignal(decision);
+  // price position
+  if(aboveAvg) score += 8;
+  else score -= 8;
 
-document.getElementById("trend").textContent=
-score>70?"BULL":score<30?"BEAR":"MIXED";
+  // current move matters, but less
+  if(move > 0.6) score += 8;
+  else if(move < -0.6) score -= 8;
 
-document.getElementById("setup").textContent=
-decision==="BUY"?"MOMENTUM":
-decision==="SELL"?"WEAK":
-"WAIT";
+  score = Math.max(0, Math.min(100, Math.round(score)));
 
-document.getElementById("confidence").textContent=Math.round(score)+"/100";
+  scoreHistory.push(score);
+  if(scoreHistory.length > 6) scoreHistory.shift();
 
-document.getElementById("reason").textContent=
-decision==="BUY"?"Momentum building upward":
-decision==="SELL"?"Weak price action downward":
-"No clear setup. Wait.";
+  const avgScore = scoreHistory.reduce((a,b)=>a+b,0) / scoreHistory.length;
 
-document.getElementById("entry").textContent=money(price*.99)+" - "+money(price*1.01);
-document.getElementById("stop").textContent=money(price*.96);
-document.getElementById("target").textContent=money(price*1.06);
+  let decision = lastDecision;
 
-updatePosition();
+  // smarter signal rules
+  if(scoreHistory.length >= 4){
+    if(avgScore >= 74 && trendMove > 0.6){
+      decision = "BUY";
+    }
+    else if(avgScore <= 26 && trendMove < -0.6){
+      decision = "SELL";
+    }
+    else if(avgScore > 38 && avgScore < 62){
+      decision = "HOLD";
+    }
+  }
+
+  document.getElementById("price").textContent = money(price);
+
+  const moveEl = document.getElementById("move");
+  moveEl.textContent = trendMove.toFixed(2) + "% trend";
+  moveEl.style.color = trendMove > 0 ? "#7cff55" : trendMove < 0 ? "#ff4d5d" : "#aaa";
+
+  setSignal(decision);
+
+  document.getElementById("trend").textContent =
+    avgScore > 68 ? "BULL" :
+    avgScore < 32 ? "BEAR" :
+    "MIXED";
+
+  document.getElementById("setup").textContent =
+    decision === "BUY" ? "CONFIRMED MOMENTUM" :
+    decision === "SELL" ? "CONFIRMED WEAKNESS" :
+    "WAIT";
+
+  document.getElementById("confidence").textContent = Math.round(avgScore) + "/100";
+
+  document.getElementById("reason").textContent =
+    decision === "BUY" ? "Trend has held strength across multiple readings." :
+    decision === "SELL" ? "Weakness has confirmed across multiple readings." :
+    "No confirmed edge. Holding signal steady.";
+
+  document.getElementById("entry").textContent = money(price*.99) + " - " + money(price*1.01);
+  document.getElementById("stop").textContent = money(price*.96);
+  document.getElementById("target").textContent = money(price*1.06);
+
+  updatePosition();
 }
 
 function savePosition(){
-if(!selectedCoin){
-alert("Pick a coin first.");
-return;
-}
-localStorage.setItem(selectedCoin+"_amount",document.getElementById("ownedAmount").value||"");
-localStorage.setItem(selectedCoin+"_avg",document.getElementById("avgBuy").value||"");
-updatePosition();
+  if(!selectedCoin){
+    alert("Pick a coin first.");
+    return;
+  }
+  localStorage.setItem(selectedCoin+"_amount",document.getElementById("ownedAmount").value||"");
+  localStorage.setItem(selectedCoin+"_avg",document.getElementById("avgBuy").value||"");
+  updatePosition();
 }
 
 function loadPosition(){
-if(!selectedCoin) return;
-document.getElementById("ownedAmount").value=localStorage.getItem(selectedCoin+"_amount")||"";
-document.getElementById("avgBuy").value=localStorage.getItem(selectedCoin+"_avg")||"";
-updatePosition();
+  if(!selectedCoin) return;
+  document.getElementById("ownedAmount").value = localStorage.getItem(selectedCoin+"_amount") || "";
+  document.getElementById("avgBuy").value = localStorage.getItem(selectedCoin+"_avg") || "";
+  updatePosition();
 }
 
 function updatePosition(){
-const amount=Number(document.getElementById("ownedAmount").value)||0;
-const avg=Number(document.getElementById("avgBuy").value)||0;
+  const amount = Number(document.getElementById("ownedAmount").value) || 0;
+  const avg = Number(document.getElementById("avgBuy").value) || 0;
 
-if(!price || amount<=0){
-document.getElementById("currentValue").textContent="—";
-document.getElementById("profitLoss").textContent="—";
+  if(!price || amount <= 0){
+    document.getElementById("currentValue").textContent = "—";
+    document.getElementById("profitLoss").textContent = "—";
+    document.getElementById("positionVerdict").textContent =
+      lastDecision === "BUY" ? "GOOD BUY CANDIDATE" :
+      lastDecision === "SELL" ? "AVOID" :
+      "WAIT";
+    return;
+  }
 
-document.getElementById("positionVerdict").textContent=
-lastDecision==="BUY"?"Good buy candidate":
-lastDecision==="SELL"?"Avoid":
-"Wait";
+  const value = amount * price;
+  const cost = amount * avg;
+  const pnl = value - cost;
+  const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
 
-return;
-}
+  document.getElementById("currentValue").textContent = money(value);
 
-const value=amount*price;
-const cost=amount*avg;
-const pnl=value-cost;
-const pnlPct=cost>0?(pnl/cost)*100:0;
+  const pnlEl = document.getElementById("profitLoss");
+  pnlEl.textContent = money(pnl) + " (" + pnlPct.toFixed(2) + "%)";
+  pnlEl.style.color = pnl >= 0 ? "#7cff55" : "#ff4d5d";
 
-document.getElementById("currentValue").textContent=money(value);
+  let verdict = "HOLD";
 
-const pnlEl=document.getElementById("profitLoss");
-pnlEl.textContent=money(pnl)+" ("+pnlPct.toFixed(2)+"%)";
-pnlEl.style.color=pnl>=0?"#7cff55":"#ff4d5d";
+  if(lastDecision === "BUY" && pnlPct < 10) verdict = "ADD / HOLD";
+  else if(lastDecision === "BUY") verdict = "HOLD WINNER";
+  else if(lastDecision === "SELL" && pnlPct > 0) verdict = "TRIM PROFIT";
+  else if(lastDecision === "SELL") verdict = "EXIT / PROTECT";
+  else verdict = "HOLD";
 
-let verdict="HOLD";
-
-if(lastDecision==="BUY" && pnlPct<10) verdict="ADD / HOLD";
-else if(lastDecision==="BUY") verdict="HOLD WINNER";
-else if(lastDecision==="SELL" && pnlPct>0) verdict="TRIM PROFIT";
-else if(lastDecision==="SELL") verdict="EXIT / PROTECT";
-else verdict="HOLD";
-
-document.getElementById("positionVerdict").textContent=verdict;
+  document.getElementById("positionVerdict").textContent = verdict;
 }
 
 function showTab(id, btn){
-document.querySelectorAll(".tabPage").forEach(p=>p.style.display="none");
-document.getElementById(id).style.display="block";
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-btn.classList.add("active");
+  document.querySelectorAll(".tabPage").forEach(p=>p.style.display="none");
+  document.getElementById(id).style.display="block";
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
 }
 </script>
 
