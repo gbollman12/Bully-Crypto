@@ -219,12 +219,25 @@ function run(){
     decision === "SELL" ? "Weakness has confirmed across multiple readings." :
     "No confirmed edge. Holding signal steady.";
 
-  document.getElementById("entry").textContent = money(price*.99) + " - " + money(price*1.01);
-  document.getElementById("stop").textContent = money(price*.96);
-  document.getElementById("target").textContent = money(price*1.06);
+  let entryLow = price * 0.995;
+let entryHigh = price * 1.005;
 
-  updatePosition();
+let stop = price * 0.97;
+
+// target based on trend strength
+let target;
+
+if(trendMove > 0.25){
+  target = price * 1.05;
+} else if(trendMove > 0){
+  target = price * 1.03;
+} else {
+  target = price * 1.02;
 }
+
+document.getElementById("entry").textContent = money(entryLow) + " - " + money(entryHigh);
+document.getElementById("stop").textContent = money(stop);
+document.getElementById("target").textContent = money(target);}
 
 function savePosition(){
   if(!selectedCoin){
