@@ -6,33 +6,51 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#050606;color:white;font-family:-apple-system,BlinkMacSystemFont,Arial}
+body{margin:0;background:#050606;color:white;font-family:-apple-system,Arial}
 .app{max-width:520px;margin:auto;padding-bottom:90px}
 
+/* HEADER */
 .top{display:flex;justify-content:space-between;padding:16px}
 .title{font-size:20px;font-weight:900}
 .mode{font-size:10px;border:1px solid #333;padding:5px 8px;border-radius:999px;color:#aaa}
 
+/* TICKER */
+.tickerWrap{overflow:hidden;border-top:1px solid #111;border-bottom:1px solid #111}
+.ticker{display:flex;gap:26px;padding:10px 0;white-space:nowrap;animation:scroll 18s linear infinite;font-size:13px;font-weight:900}
+.tUp{color:#7cff55}.tDown{color:#ff4d5d}.tFlat{color:#aaa}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* COINS */
 .coinRail{display:flex;gap:8px;padding:12px;overflow-x:auto}
 .coinRail button{padding:10px 14px;border-radius:999px;background:#0b0e0c;border:1px solid #222;color:#ddd;font-weight:900}
 .coinRail button.active{background:#7cff55;color:#000}
 
+/* MAIN PANEL */
 .main{margin:12px;padding:18px;border-radius:26px;background:#0d120e;border:1px solid #243028}
 .signal{font-size:36px;font-weight:900}
 .price{font-size:40px;font-weight:900;margin-top:6px}
 .move{font-size:14px;margin-top:4px;color:#aaa}
 
-canvas{width:100%;height:160px;margin-top:12px}
+/* CHART */
+canvas{width:100%;height:90px;margin-top:12px}
 
+/* METRICS */
 .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px}
 .metric{background:#0b0e0c;border:1px solid #222;border-radius:16px;padding:12px}
 .metric div:first-child{font-size:10px;color:#777}
 .metric div:last-child{font-size:16px;font-weight:900}
 
+/* INSIGHT */
 .insight{margin:12px;padding:14px;border-radius:20px;background:#0f1511;border:1px solid #263029}
 .insightHeader{font-size:10px;color:#7cff55;font-weight:900;margin-bottom:6px}
 .insightText{font-size:14px}
 
+/* MARKET PULSE */
+.pulse{margin:12px;padding:14px;border-radius:20px;background:#0b0e0c;border:1px solid #222}
+.pulseRow{display:flex;justify-content:space-between;padding:6px 0;color:#aaa}
+.pulseRow span:last-child{color:#fff;font-weight:900}
+
+/* NAV */
 .nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;display:flex;padding:10px;background:#050606}
 .nav button{flex:1;padding:12px;border:1px solid #222;background:#0b0e0c;color:#777;border-radius:14px}
 .nav button.active{background:#7cff55;color:#000}
@@ -44,15 +62,18 @@ canvas{width:100%;height:160px;margin-top:12px}
 
 <div class="top">
   <div class="title">BULLY CRYPTO</div>
-  <div class="mode">LIVE</div>
+  <div class="mode">ANALYSIS</div>
+</div>
+
+<div class="tickerWrap">
+  <div id="ticker" class="ticker"></div>
 </div>
 
 <div class="coinRail">
-  <button onclick="pick('BTCUSDT', this)">BTC</button>
-  <button onclick="pick('ETHUSDT', this)">ETH</button>
-  <button onclick="pick('SOLUSDT', this)">SOL</button>
-  <button onclick="pick('XRPUSDT', this)">XRP</button>
-  <button onclick="pick('DOGEUSDT', this)">DOGE</button>
+  <button onclick="pick('BTC',65000,this)">BTC</button>
+  <button onclick="pick('ETH',3000,this)">ETH</button>
+  <button onclick="pick('SOL',150,this)">SOL</button>
+  <button onclick="pick('XRP',0.6,this)">XRP</button>
 </div>
 
 <div class="main">
@@ -73,6 +94,12 @@ canvas{width:100%;height:160px;margin-top:12px}
   <div id="reason" class="insightText">Waiting...</div>
 </div>
 
+<div class="pulse">
+  <div class="pulseRow"><span>Market Bias</span><span id="bias">—</span></div>
+  <div class="pulseRow"><span>Volatility</span><span id="vol">—</span></div>
+  <div class="pulseRow"><span>Pressure</span><span id="pressure">—</span></div>
+</div>
+
 <div class="nav">
   <button class="active">Overview</button>
   <button>Plan</button>
@@ -82,107 +109,109 @@ canvas{width:100%;height:160px;margin-top:12px}
 </div>
 
 <script>
+let price=0, selectedCoin="", timer=null;
+let priceHistory=[], marketData={BTC:65000,ETH:3000,SOL:150,XRP:0.6};
+let marketHistory={};
 
-// ✅ Worker (fixes data blocked)
-const REST = "https://bully-crypto-data.bollman-griffin.workers.dev";
-
-let selectedPair = "";
-let candles = [];
-let pollTimer = null;
-
-function pick(pair, btn){
-  selectedPair = pair;
-
+function pick(sym,start,btn){
+  selectedCoin=sym;
   document.querySelectorAll(".coinRail button").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 
-  loadCandles(pair);
-  startPolling(pair);
+  price=start;
+  priceHistory=[start];
+
+  if(timer) clearInterval(timer);
+  run();
+  timer=setInterval(run,3000);
 }
 
-async function loadCandles(pair){
-  const res = await fetch(`${REST}/klines?symbol=${pair}&interval=1m&limit=60`);
-  const data = await res.json();
-
-  candles = data.map(k=>({
-    o:+k[1],h:+k[2],l:+k[3],c:+k[4]
-  }));
+function run(){
+  price += price*(Math.random()-.5)*0.002;
+  priceHistory.push(price);
+  if(priceHistory.length>30) priceHistory.shift();
 
   drawChart();
-  analyze();
-}
+  updateMarket();
+  updateTicker();
 
-function startPolling(pair){
-  if(pollTimer) clearInterval(pollTimer);
+  let trendMove=((priceHistory.at(-1)-priceHistory[0])/priceHistory[0])*100;
 
-  pollTimer = setInterval(()=>{
-    loadCandles(pair);
-  },5000);
+  let decision="HOLD";
+  if(trendMove>0.2) decision="BUY";
+  else if(trendMove<-0.2) decision="SELL";
+
+  document.getElementById("signal").innerText=decision;
+  document.getElementById("price").innerText="$"+price.toFixed(2);
+  document.getElementById("move").innerText=trendMove.toFixed(2)+"%";
+
+  document.getElementById("trend").innerText=trendMove>0?"BULL":"BEAR";
+  document.getElementById("confidence").innerText=Math.abs(trendMove*3).toFixed(0)+"/100";
+  document.getElementById("setup").innerText=decision;
+
+  document.getElementById("reason").innerText=
+    decision==="BUY"?"Momentum building. Watch pullbacks.":
+    decision==="SELL"?"Weakness confirmed. Stay defensive.":
+    "No edge. Wait for clarity.";
+
+  updatePulse();
 }
 
 function drawChart(){
   const c=document.getElementById("chart");
   const ctx=c.getContext("2d");
-
   c.width=c.offsetWidth;
-  c.height=160;
+  c.height=90;
 
-  let highs=candles.map(c=>c.h);
-  let lows=candles.map(c=>c.l);
-
-  let max=Math.max(...highs);
-  let min=Math.min(...lows);
+  let min=Math.min(...priceHistory);
+  let max=Math.max(...priceHistory);
 
   ctx.clearRect(0,0,c.width,c.height);
+  ctx.beginPath();
 
-  let w=c.width/candles.length;
+  priceHistory.forEach((p,i)=>{
+    let x=i/(priceHistory.length-1)*c.width;
+    let y=c.height-((p-min)/(max-min||1))*c.height;
+    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+  });
 
-  candles.forEach((c,i)=>{
-    let x=i*w;
+  ctx.strokeStyle="#7cff55";
+  ctx.lineWidth=2;
+  ctx.stroke();
+}
 
-    let yH=c.height-(c.h-min)/(max-min)*c.height;
-    let yL=c.height-(c.l-min)/(max-min)*c.height;
-    let yO=c.height-(c.o-min)/(max-min)*c.height;
-    let yC=c.height-(c.c-min)/(max-min)*c.height;
+function updateMarket(){
+  Object.keys(marketData).forEach(c=>{
+    let val=marketData[c];
+    val+=val*(Math.random()-.5)*0.003;
+    marketData[c]=val;
 
-    let up=c.c>=c.o;
-
-    ctx.strokeStyle=up?"#7cff55":"#ff4d5d";
-    ctx.fillStyle=ctx.strokeStyle;
-
-    ctx.beginPath();
-    ctx.moveTo(x+w/2,yH);
-    ctx.lineTo(x+w/2,yL);
-    ctx.stroke();
-
-    ctx.fillRect(x+w*.2,Math.min(yO,yC),w*.6,Math.abs(yC-yO)||2);
+    if(!marketHistory[c]) marketHistory[c]=[val];
+    marketHistory[c].push(val);
+    if(marketHistory[c].length>20) marketHistory[c].shift();
   });
 }
 
-function analyze(){
-  let closes=candles.map(c=>c.c);
-  let price=closes.at(-1);
-
-  let change=((price-closes[0])/closes[0])*100;
-
-  let signal="HOLD";
-  if(change>0.2) signal="BUY";
-  if(change<-0.2) signal="SELL";
-
-  document.getElementById("signal").innerText=signal;
-  document.getElementById("price").innerText="$"+price.toFixed(2);
-  document.getElementById("move").innerText=change.toFixed(2)+"%";
-
-  document.getElementById("trend").innerText=change>0?"BULL":"BEAR";
-  document.getElementById("confidence").innerText=Math.abs(change*3).toFixed(0)+"/100";
-  document.getElementById("setup").innerText=signal;
-
-  document.getElementById("reason").innerText =
-    signal==="BUY"?"Momentum building. Watch entries.":
-    signal==="SELL"?"Weakness showing. Stay defensive.":
-    "No clear edge. Stay patient.";
+function updateTicker(){
+  let html="";
+  Object.keys(marketData).forEach(c=>{
+    let h=marketHistory[c];
+    if(!h) return;
+    let change=((h.at(-1)-h[0])/h[0])*100;
+    let cls=change>0?"tUp":change<0?"tDown":"tFlat";
+    html+=`<div class="${cls}">${c} ${change.toFixed(2)}%</div>`;
+  });
+  document.getElementById("ticker").innerHTML=html+html;
 }
 
+function updatePulse(){
+  let changes=Object.values(marketHistory).map(h=>((h.at(-1)-h[0])/h[0])*100);
+  let avg=changes.reduce((a,b)=>a+b,0)/changes.length;
+
+  document.getElementById("bias").innerText=avg>0?"BULLISH":"BEARISH";
+  document.getElementById("vol").innerText=(Math.max(...changes)-Math.min(...changes)).toFixed(2)+"%";
+  document.getElementById("pressure").innerText=avg.toFixed(2)+"%";
+}
 </script>
 
 </body>
