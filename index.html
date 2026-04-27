@@ -10,27 +10,152 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 <style>
-body{margin:0;background:#050606;color:white;font-family:-apple-system}
-.app{max-width:520px;margin:auto}
-.header{display:flex;align-items:center;gap:12px;padding:18px;border-bottom:1px solid #1f1f1f}
-.logo{width:50px;height:50px;border-radius:10px}
-.title{font-size:24px;font-weight:900}
-.sub{color:#7cff55;font-size:12px}
-.quick{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
-.quick button{flex:1 1 28%;padding:12px;border-radius:10px;background:#111;border:1px solid #2a2a2a;color:white;font-weight:800}
-.card{background:#101010;border:1px solid #242a25;border-radius:18px;padding:18px;margin:14px}
-.price{font-size:46px;font-weight:950}
-.badge{padding:12px 18px;border-radius:999px;font-weight:900;border:1px solid}
-.buy{color:#7cff55;border-color:#7cff55}
-.sell{color:#ff4d5d;border-color:#ff4d5d}
-.hold{color:#ffd60a;border-color:#ffd60a}
-.row{display:flex;justify-content:space-between;margin-top:10px;color:#aaa;gap:12px}
-.row span:last-child{text-align:right}
-.tabs{display:flex;gap:8px;padding:0 14px 8px}
-.tab{flex:1;padding:12px;border-radius:12px;border:1px solid #2a2a2a;background:#101010;color:#888;font-weight:900}
-.tab.active{color:#7cff55;border-color:#7cff55}
-.field{width:100%;box-sizing:border-box;margin-top:10px;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#080808;color:white}
-.saveBtn{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:1px solid #7cff55;background:#101010;color:#7cff55;font-weight:900}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#102015 0%,#050606 42%,#000 100%);
+  color:white;
+  font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+}
+.app{max-width:520px;margin:auto;padding-bottom:30px}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:20px 18px 16px;
+  border-bottom:1px solid #18201b;
+}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{width:54px;height:54px;border-radius:14px;object-fit:cover}
+.title{font-size:25px;font-weight:950;letter-spacing:1px}
+.sub{color:#7cff55;font-size:11px;font-weight:900;letter-spacing:2.5px}
+.status{
+  font-size:11px;
+  color:#8e978f;
+  border:1px solid #252d28;
+  padding:7px 10px;
+  border-radius:999px;
+  background:#0b0e0c;
+}
+
+.quick{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  padding:14px;
+}
+.quick button{
+  padding:13px 8px;
+  border-radius:14px;
+  background:linear-gradient(180deg,#151815,#090b09);
+  border:1px solid #252c27;
+  color:white;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+.quick button:active{transform:scale(.96)}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  padding:0 14px 10px;
+}
+.tab{
+  flex:1;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid #252c27;
+  background:#0c0f0d;
+  color:#858d87;
+  font-weight:900;
+}
+.tab.active{
+  color:#7cff55;
+  border-color:#7cff55;
+  box-shadow:0 0 18px rgba(124,255,85,.12);
+}
+
+.card{
+  background:linear-gradient(180deg,#121613,#080908);
+  border:1px solid #242c26;
+  border-radius:22px;
+  padding:18px;
+  margin:14px;
+  box-shadow:0 16px 35px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+}
+.heroTop{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.label{
+  color:#838c86;
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+.price{
+  font-size:48px;
+  font-weight:950;
+  letter-spacing:-1px;
+  margin-top:8px;
+}
+.move{color:#a9b0ab;margin-top:4px;font-size:15px}
+
+.badge{
+  padding:13px 18px;
+  border-radius:999px;
+  font-size:18px;
+  font-weight:950;
+  border:1px solid;
+  min-width:82px;
+  text-align:center;
+}
+.buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08)}
+.sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08)}
+.hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08)}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px}
+.stat{
+  background:#0d100e;
+  border:1px solid #242c26;
+  border-radius:18px;
+  padding:16px;
+}
+.statVal{font-size:24px;font-weight:950;margin-top:7px}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  padding:11px 0;
+  border-bottom:1px solid #202621;
+  color:#a9b0ab;
+}
+.row:last-child{border-bottom:0}
+.row span:first-child{color:#7f8882;font-weight:750}
+.row span:last-child{text-align:right;color:#f2f5f3;font-weight:850}
+
+.field{
+  width:100%;
+  margin-top:10px;
+  padding:13px;
+  border-radius:14px;
+  border:1px solid #252c27;
+  background:#080a09;
+  color:white;
+  font-size:16px;
+}
+.saveBtn{
+  width:100%;
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #7cff55;
+  background:rgba(124,255,85,.08);
+  color:#7cff55;
+  font-weight:950;
+}
+.note{color:#aeb5b0;line-height:1.45}
 </style>
 </head>
 
@@ -38,84 +163,101 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 <div class="app">
 
 <div class="header">
-<img src="logo.PNG" class="logo">
-<div>
-<div class="title">BULLY</div>
-<div class="sub">CRYPTO</div>
-</div>
+  <div class="brand">
+    <img src="logo.PNG" class="logo">
+    <div>
+      <div class="title">BULLY</div>
+      <div class="sub">CRYPTO</div>
+    </div>
+  </div>
+  <div class="status">SIM MODE</div>
 </div>
 
 <div class="quick">
-<button onclick="pick('BTC',65000)">BTC</button>
-<button onclick="pick('ETH',3000)">ETH</button>
-<button onclick="pick('SOL',150)">SOL</button>
-<button onclick="pick('XRP',0.60)">XRP</button>
-<button onclick="pick('DOGE',0.15)">DOGE</button>
-<button onclick="pick('ADA',0.50)">ADA</button>
+  <button onclick="pick('BTC',65000)">BTC</button>
+  <button onclick="pick('ETH',3000)">ETH</button>
+  <button onclick="pick('SOL',150)">SOL</button>
+  <button onclick="pick('XRP',0.60)">XRP</button>
+  <button onclick="pick('DOGE',0.15)">DOGE</button>
+  <button onclick="pick('ADA',0.50)">ADA</button>
 </div>
 
 <div class="tabs">
-<button class="tab active" onclick="showTab('overview', this)">Overview</button>
-<button class="tab" onclick="showTab('plan', this)">Plan</button>
-<button class="tab" onclick="showTab('position', this)">Position</button>
+  <button class="tab active" onclick="showTab('overview', this)">Overview</button>
+  <button class="tab" onclick="showTab('plan', this)">Plan</button>
+  <button class="tab" onclick="showTab('position', this)">Position</button>
 </div>
 
 <div id="overview" class="tabPage">
-<div class="card">
-<div id="coin">SELECT COIN</div>
-<div id="price" class="price">—</div>
-<div id="move">Tap a coin</div><br>
-<div id="signal" class="badge hold">WAIT</div>
-</div>
+  <div class="card">
+    <div class="heroTop">
+      <div>
+        <div id="coin" class="label">SELECT COIN</div>
+        <div id="price" class="price">—</div>
+        <div id="move" class="move">Tap a coin</div>
+      </div>
+      <div id="signal" class="badge hold">WAIT</div>
+    </div>
+  </div>
 
-<div class="card">
-<div class="row"><span>Trend</span><span id="trend">—</span></div>
-<div class="row"><span>Setup</span><span id="setup">—</span></div>
-<div class="row"><span>Confidence</span><span id="confidence">—</span></div>
-</div>
+  <div class="grid">
+    <div class="stat">
+      <div class="label">Trend</div>
+      <div id="trend" class="statVal">—</div>
+    </div>
+    <div class="stat">
+      <div class="label">Setup</div>
+      <div id="setup" class="statVal">—</div>
+    </div>
+  </div>
 
-<div class="card">
-<div id="reason">Waiting.</div>
-</div>
+  <div class="card">
+    <div class="row"><span>Confidence</span><span id="confidence">—</span></div>
+    <div class="row"><span>Read</span><span id="reason">Waiting.</span></div>
+  </div>
 </div>
 
 <div id="plan" class="tabPage" style="display:none">
-<div class="card">
-<div class="row"><span>Coin</span><span id="planCoin">—</span></div>
-<div class="row"><span>Signal</span><span id="planSignal">—</span></div>
-<div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
-<div class="row"><span>Stop Loss</span><span id="stop">—</span></div>
-<div class="row"><span>Target</span><span id="target">—</span></div>
-<div class="row"><span>Risk / Reward</span><span id="riskReward">—</span></div>
-<div class="row"><span>Trade Quality</span><span id="tradeQuality">—</span></div>
-<div class="row"><span>Position Size</span><span id="positionSize">—</span></div>
-<div class="row"><span>Estimated Units</span><span id="estimatedUnits">—</span></div>
-<div class="row"><span>Entry Timing</span><span id="entryTiming">—</span></div>
-<div class="row"><span>Range Position</span><span id="rangePos">—</span></div>
-</div>
+  <div class="card">
+    <div class="row"><span>Coin</span><span id="planCoin">—</span></div>
+    <div class="row"><span>Signal</span><span id="planSignal">—</span></div>
+    <div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
+    <div class="row"><span>Stop Loss</span><span id="stop">—</span></div>
+    <div class="row"><span>Target</span><span id="target">—</span></div>
+    <div class="row"><span>Risk / Reward</span><span id="riskReward">—</span></div>
+    <div class="row"><span>Trade Quality</span><span id="tradeQuality">—</span></div>
+    <div class="row"><span>Entry Timing</span><span id="entryTiming">—</span></div>
+    <div class="row"><span>Position Size</span><span id="positionSize">—</span></div>
+    <div class="row"><span>Estimated Units</span><span id="estimatedUnits">—</span></div>
+  </div>
 
-<div class="card">
-<div class="row"><span>Trade Style</span><span id="tradeStyle">—</span></div>
-<div class="row"><span>Action</span><span id="tradeAction">—</span></div>
-</div>
+  <div class="card">
+    <div class="row"><span>Trade Style</span><span id="tradeStyle">—</span></div>
+    <div class="row"><span>Action</span><span id="tradeAction">—</span></div>
+  </div>
 </div>
 
 <div id="position" class="tabPage" style="display:none">
-<div class="card">
-<div>Amount owned</div>
-<input id="ownedAmount" class="field" inputmode="decimal" placeholder="Example: 0.25">
-<div style="margin-top:12px">Average buy price</div>
-<div style="margin-top:12px">Risk per trade $</div>
-<input id="riskDollars" class="field" inputmode="decimal" placeholder="Example: 25">
-<input id="avgBuy" class="field" inputmode="decimal" placeholder="Example: 62000">
-<button class="saveBtn" onclick="savePosition()">SAVE POSITION</button>
-</div>
+  <div class="card">
+    <div class="label">Position Inputs</div>
 
-<div class="card">
-<div class="row"><span>Current Value</span><span id="currentValue">—</span></div>
-<div class="row"><span>Profit / Loss</span><span id="profitLoss">—</span></div>
-<div class="row"><span>Position Verdict</span><span id="positionVerdict">—</span></div>
-</div>
+    <div style="margin-top:14px">Amount owned</div>
+    <input id="ownedAmount" class="field" inputmode="decimal" placeholder="Example: 0.25">
+
+    <div style="margin-top:14px">Average buy price</div>
+    <input id="avgBuy" class="field" inputmode="decimal" placeholder="Example: 62000">
+
+    <div style="margin-top:14px">Risk per trade $</div>
+    <input id="riskDollars" class="field" inputmode="decimal" placeholder="Example: 25">
+
+    <button class="saveBtn" onclick="savePosition()">SAVE POSITION</button>
+  </div>
+
+  <div class="card">
+    <div class="row"><span>Current Value</span><span id="currentValue">—</span></div>
+    <div class="row"><span>Profit / Loss</span><span id="profitLoss">—</span></div>
+    <div class="row"><span>Position Verdict</span><span id="positionVerdict">—</span></div>
+  </div>
 </div>
 
 </div>
@@ -159,26 +301,7 @@ function pick(sym,start){
   timer = setInterval(run, 8000);
 }
 
-let high = Math.max(...priceHistory);
-let low = Math.min(...priceHistory);
-
-let rangePos = "MID";
-
-let posPct = (price - low) / (high - low || 1);
-
-if(posPct > 0.75){
-  rangePos = "NEAR HIGH";
-}
-else if(posPct < 0.25){
-  rangePos = "NEAR LOW";
-}
-else{
-  rangePos = "MID RANGE";
-}
-
-document.getElementById("rangePos").textContent = rangePos;
 function run(){
-
   let noise = (Math.random() - 0.5) * 0.0003;
 
   drift += (Math.random() - 0.5) * 0.0001;
@@ -288,10 +411,8 @@ function run(){
   }
 
   let reward = Math.abs(target - entryMid);
-  let rr = risk > 0 ? (reward / risk) : 0;
-let riskDollars = Number(document.getElementById("riskDollars").value) || 25;
-let estimatedUnits = risk > 0 ? riskDollars / risk : 0;
-let positionSize = estimatedUnits * entryMid;
+  let rr = risk > 0 ? reward / risk : 0;
+
   let quality = "NO EDGE";
   let invalidTrade = false;
 
@@ -384,6 +505,10 @@ let positionSize = estimatedUnits * entryMid;
     timing = "WAIT";
   }
 
+  let riskDollars = Number(document.getElementById("riskDollars").value) || 25;
+  let estimatedUnits = risk > 0 ? riskDollars / risk : 0;
+  let positionSize = estimatedUnits * entryMid;
+
   document.getElementById("planCoin").textContent = selectedCoin || "—";
   document.getElementById("planSignal").textContent = lastDecision;
   document.getElementById("entry").textContent = money(entryLow) + " - " + money(entryHigh);
@@ -392,10 +517,10 @@ let positionSize = estimatedUnits * entryMid;
   document.getElementById("riskReward").textContent = "1 : " + rr.toFixed(2);
   document.getElementById("tradeQuality").textContent = quality;
   document.getElementById("entryTiming").textContent = timing;
+  document.getElementById("positionSize").textContent = money(positionSize);
+  document.getElementById("estimatedUnits").textContent = estimatedUnits.toFixed(4);
   document.getElementById("tradeStyle").textContent = tradeStyle;
   document.getElementById("tradeAction").textContent = tradeAction;
-  document.getElementById("positionSize").textContent = money(positionSize);
-document.getElementById("estimatedUnits").textContent = estimatedUnits.toFixed(4);
 
   updatePosition();
 }
@@ -407,6 +532,7 @@ function savePosition(){
   }
   localStorage.setItem(selectedCoin+"_amount",document.getElementById("ownedAmount").value||"");
   localStorage.setItem(selectedCoin+"_avg",document.getElementById("avgBuy").value||"");
+  localStorage.setItem(selectedCoin+"_risk",document.getElementById("riskDollars").value||"25");
   updatePosition();
 }
 
@@ -414,6 +540,7 @@ function loadPosition(){
   if(!selectedCoin) return;
   document.getElementById("ownedAmount").value = localStorage.getItem(selectedCoin+"_amount") || "";
   document.getElementById("avgBuy").value = localStorage.getItem(selectedCoin+"_avg") || "";
+  document.getElementById("riskDollars").value = localStorage.getItem(selectedCoin+"_risk") || "25";
   updatePosition();
 }
 
