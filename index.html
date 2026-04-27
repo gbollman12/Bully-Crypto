@@ -14,199 +14,47 @@
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:
-    radial-gradient(circle at top,#102015 0%,#050606 40%,#000 100%);
+  background:radial-gradient(circle at top,#102015 0%,#050606 40%,#000 100%);
   color:white;
   font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
 }
 .app{max-width:520px;margin:auto;padding-bottom:34px}
-
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:20px 18px 14px;
-}
+.header{display:flex;align-items:center;justify-content:space-between;padding:20px 18px 14px}
 .brand{display:flex;align-items:center;gap:13px}
 .logo{width:52px;height:52px;border-radius:15px;object-fit:cover}
-.title{font-size:25px;font-weight:950;letter-spacing:.5px}
+.title{font-size:25px;font-weight:950}
 .sub{color:#7cff55;font-size:10px;font-weight:900;letter-spacing:2.8px}
-.status{
-  font-size:10px;
-  color:#9aa39d;
-  border:1px solid #29322c;
-  padding:7px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.025);
-}
-
-.sectionTitle{
-  padding:4px 18px 8px;
-  color:#6f7973;
-  font-size:11px;
-  letter-spacing:1.8px;
-  font-weight:950;
-  text-transform:uppercase;
-}
-
-.quick{
-  display:flex;
-  overflow-x:auto;
-  gap:8px;
-  padding:0 14px 14px;
-}
-.quick button{
-  min-width:72px;
-  padding:11px 14px;
-  border-radius:999px;
-  background:#0c0f0d;
-  border:1px solid #252c27;
-  color:#dfe7e2;
-  font-weight:900;
-}
+.status{font-size:10px;color:#9aa39d;border:1px solid #29322c;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.025)}
+.sectionTitle{padding:4px 18px 8px;color:#6f7973;font-size:11px;letter-spacing:1.8px;font-weight:950;text-transform:uppercase}
+.quick{display:flex;overflow-x:auto;gap:8px;padding:0 14px 14px}
+.quick button{min-width:72px;padding:11px 14px;border-radius:999px;background:#0c0f0d;border:1px solid #252c27;color:#dfe7e2;font-weight:900}
 .quick button:active{transform:scale(.96)}
-
-.tabs{
-  display:flex;
-  gap:8px;
-  padding:0 14px 12px;
-}
-.tab{
-  flex:1;
-  padding:12px;
-  border-radius:999px;
-  border:1px solid #252c27;
-  background:#0c0f0d;
-  color:#858d87;
-  font-weight:900;
-}
-.tab.active{
-  color:#050606;
-  background:#7cff55;
-  border-color:#7cff55;
-}
-
-.card{
-  background:linear-gradient(180deg,#121613,#070807);
-  border:1px solid #242c26;
-  border-radius:24px;
-  padding:18px;
-  margin:14px;
-  box-shadow:0 18px 40px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.04);
-}
-
-.marketCard{
-  padding:20px;
-  border-color:#2c372f;
-}
-
-.heroTop{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:14px;
-}
-
-.label{
-  color:#7d8781;
-  font-size:11px;
-  font-weight:950;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-}
-
-.price{
-  font-size:46px;
-  line-height:1;
-  font-weight:950;
-  letter-spacing:-1px;
-  margin-top:8px;
-  font-variant-numeric:tabular-nums;
-}
-
-.move{
-  color:#a9b0ab;
-  margin-top:4px;
-  font-size:14px;
-  font-weight:800;
-}
-
-.badge{
-  padding:12px 17px;
-  border-radius:999px;
-  font-size:16px;
-  font-weight:950;
-  border:1px solid;
-  min-width:82px;
-  text-align:center;
-  letter-spacing:.5px;
-}
+.tabs{display:flex;gap:8px;padding:0 14px 12px}
+.tab{flex:1;padding:12px;border-radius:999px;border:1px solid #252c27;background:#0c0f0d;color:#858d87;font-weight:900}
+.tab.active{color:#050606;background:#7cff55;border-color:#7cff55}
+.card{background:linear-gradient(180deg,#121613,#070807);border:1px solid #242c26;border-radius:24px;padding:18px;margin:14px;box-shadow:0 18px 40px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.04)}
+.marketCard{padding:20px;border-color:#2c372f}
+.heroTop{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.label{color:#7d8781;font-size:11px;font-weight:950;letter-spacing:1.5px;text-transform:uppercase}
+.price{font-size:46px;line-height:1;font-weight:950;letter-spacing:-1px;margin-top:8px;font-variant-numeric:tabular-nums}
+.move{color:#a9b0ab;margin-top:4px;font-size:14px;font-weight:800}
+.badge{padding:12px 17px;border-radius:999px;font-size:16px;font-weight:950;border:1px solid;min-width:82px;text-align:center;letter-spacing:.5px}
 .buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08);box-shadow:0 0 20px rgba(124,255,85,.18)}
 .sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08);box-shadow:0 0 20px rgba(255,77,93,.18)}
 .hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08);box-shadow:0 0 16px rgba(255,214,10,.12)}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin:0 14px;
-}
-.stat{
-  background:#0d100e;
-  border:1px solid #242c26;
-  border-radius:20px;
-  padding:16px;
-}
-.statVal{
-  font-size:23px;
-  font-weight:950;
-  margin-top:7px;
-}
-
-.row{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:14px;
-  padding:12px 0;
-  border-bottom:1px solid #202621;
-  color:#a9b0ab;
-}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px}
+.stat{background:#0d100e;border:1px solid #242c26;border-radius:20px;padding:16px}
+.statVal{font-size:23px;font-weight:950;margin-top:7px}
+.row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #202621;color:#a9b0ab}
 .row:last-child{border-bottom:0}
 .row span:first-child{color:#7f8882;font-weight:800}
 .row span:last-child{text-align:right;color:#f2f5f3;font-weight:900}
-
-.field{
-  width:100%;
-  margin-top:10px;
-  padding:14px;
-  border-radius:16px;
-  border:1px solid #252c27;
-  background:#080a09;
-  color:white;
-  font-size:16px;
-}
-.saveBtn{
-  width:100%;
-  margin-top:14px;
-  padding:14px;
-  border-radius:16px;
-  border:1px solid #7cff55;
-  background:rgba(124,255,85,.08);
-  color:#7cff55;
-  font-weight:950;
-}
-
-.card,.quick button,.tab,.badge{
-  transition:all .18s ease;
-}
-
+.field{width:100%;margin-top:10px;padding:14px;border-radius:16px;border:1px solid #252c27;background:#080a09;color:white;font-size:16px}
+.saveBtn{width:100%;margin-top:14px;padding:14px;border-radius:16px;border:1px solid #7cff55;background:rgba(124,255,85,.08);color:#7cff55;font-weight:950}
+.card,.quick button,.tab,.badge{transition:all .18s ease}
 .priceFlash{animation:pricePulse .55s ease}
-@keyframes pricePulse{
-  0%{transform:scale(1);opacity:1}
-  35%{transform:scale(1.04);opacity:.9}
-  100%{transform:scale(1);opacity:1}
-}
+@keyframes pricePulse{0%{transform:scale(1);opacity:1}35%{transform:scale(1.04);opacity:.9}100%{transform:scale(1);opacity:1}}
+#miniChart{width:100%;height:120px;display:block;margin-top:10px}
 </style>
 </head>
 
@@ -253,15 +101,14 @@ body{
     </div>
   </div>
 
+  <div class="card">
+    <div class="label">Price Path</div>
+    <canvas id="miniChart" height="120"></canvas>
+  </div>
+
   <div class="grid">
-    <div class="stat">
-      <div class="label">Trend</div>
-      <div id="trend" class="statVal">—</div>
-    </div>
-    <div class="stat">
-      <div class="label">Setup</div>
-      <div id="setup" class="statVal">—</div>
-    </div>
+    <div class="stat"><div class="label">Trend</div><div id="trend" class="statVal">—</div></div>
+    <div class="stat"><div class="label">Setup</div><div id="setup" class="statVal">—</div></div>
   </div>
 
   <div class="card">
@@ -293,16 +140,12 @@ body{
 <div id="position" class="tabPage" style="display:none">
   <div class="card">
     <div class="label">Position Inputs</div>
-
     <div style="margin-top:14px">Amount owned</div>
     <input id="ownedAmount" class="field" inputmode="decimal" placeholder="Example: 0.25">
-
     <div style="margin-top:14px">Average buy price</div>
     <input id="avgBuy" class="field" inputmode="decimal" placeholder="Example: 62000">
-
     <div style="margin-top:14px">Risk per trade $</div>
     <input id="riskDollars" class="field" inputmode="decimal" placeholder="Example: 25">
-
     <button class="saveBtn" onclick="savePosition()">SAVE POSITION</button>
   </div>
 
@@ -324,9 +167,7 @@ let priceHistory = [];
 let scoreHistory = [];
 let drift = 0;
 
-function money(n){
-  return "$" + Number(n).toFixed(Number(n)>100?2:4);
-}
+function money(n){return "$" + Number(n).toFixed(Number(n)>100?2:4);}
 
 function setSignal(d){
   lastDecision = d;
@@ -340,71 +181,53 @@ function pick(sym,start){
   selectedCoin = sym;
   document.getElementById("coin").textContent = sym;
   price = start;
-
   priceHistory = [start];
   scoreHistory = [];
   drift = 0;
   lastDecision = "HOLD";
-
   loadPosition();
-
   if(timer) clearInterval(timer);
-
   run();
-  timer = setInterval(run, 8000);
+  timer = setInterval(run,8000);
 }
 
 function run(){
   let noise = (Math.random() - 0.5) * 0.0003;
-
   drift += (Math.random() - 0.5) * 0.0001;
   drift = Math.max(-0.0005, Math.min(0.0005, drift));
-
   let move = noise + drift;
   price += price * move;
 
   priceHistory.push(price);
-  if(priceHistory.length > 12) priceHistory.shift();
+  if(priceHistory.length > 24) priceHistory.shift();
+  drawChart();
 
   const first = priceHistory[0];
   const last = priceHistory[priceHistory.length - 1];
   const trendMove = ((last - first) / first) * 100;
-
   const avgPrice = priceHistory.reduce((a,b)=>a+b,0) / priceHistory.length;
   const aboveAvg = price > avgPrice;
 
   let score = 50;
-
   if(trendMove > 0.35) score += 25;
   else if(trendMove > 0.15) score += 12;
   else if(trendMove < -0.35) score -= 25;
   else if(trendMove < -0.15) score -= 12;
-
-  if(aboveAvg) score += 8;
-  else score -= 8;
-
+  if(aboveAvg) score += 8; else score -= 8;
   if(move > 0.00025) score += 8;
   else if(move < -0.00025) score -= 8;
-
   score = Math.max(0, Math.min(100, Math.round(score)));
 
   scoreHistory.push(score);
   if(scoreHistory.length > 6) scoreHistory.shift();
 
   const avgScore = scoreHistory.reduce((a,b)=>a+b,0) / scoreHistory.length;
-
   let decision = lastDecision;
 
   if(scoreHistory.length >= 4){
-    if(avgScore >= 74 && trendMove > 0.20){
-      decision = "BUY";
-    }
-    else if(avgScore <= 26 && trendMove < -0.20){
-      decision = "SELL";
-    }
-    else if(avgScore > 40 && avgScore < 60){
-      decision = "HOLD";
-    }
+    if(avgScore >= 74 && trendMove > 0.20) decision = "BUY";
+    else if(avgScore <= 26 && trendMove < -0.20) decision = "SELL";
+    else if(avgScore > 40 && avgScore < 60) decision = "HOLD";
   }
 
   setSignal(decision);
@@ -419,148 +242,66 @@ function run(){
   moveEl.textContent = trendMove.toFixed(2) + "% trend";
   moveEl.style.color = trendMove > 0 ? "#7cff55" : trendMove < 0 ? "#ff4d5d" : "#aaa";
 
-  document.getElementById("trend").textContent =
-    avgScore > 68 ? "BULL" :
-    avgScore < 32 ? "BEAR" :
-    "MIXED";
-
-  document.getElementById("setup").textContent =
-    decision === "BUY" ? "CONFIRMED MOMENTUM" :
-    decision === "SELL" ? "CONFIRMED WEAKNESS" :
-    "WAIT";
-
+  document.getElementById("trend").textContent = avgScore > 68 ? "BULL" : avgScore < 32 ? "BEAR" : "MIXED";
+  document.getElementById("setup").textContent = decision === "BUY" ? "CONFIRMED MOMENTUM" : decision === "SELL" ? "CONFIRMED WEAKNESS" : "WAIT";
   document.getElementById("confidence").textContent = Math.round(avgScore) + "/100";
-
   document.getElementById("reason").textContent =
     decision === "BUY" ? "Trend has held strength across multiple readings." :
     decision === "SELL" ? "Weakness has confirmed across multiple readings." :
     "No confirmed edge. Holding signal steady.";
 
-  let entryLow;
-  let entryHigh;
-  let stop;
-  let target;
-
+  let entryLow, entryHigh, stop, target;
   if(decision === "BUY"){
-    entryLow = price * 0.992;
-    entryHigh = price * 0.998;
-    stop = price * 0.970;
-  }
-  else if(decision === "SELL"){
-    entryLow = price * 0.995;
-    entryHigh = price * 1.005;
-    stop = price * 1.030;
-  }
-  else{
-    entryLow = price * 0.985;
-    entryHigh = price * 0.995;
-    stop = price * 0.965;
+    entryLow = price * 0.992; entryHigh = price * 0.998; stop = price * 0.970;
+  } else if(decision === "SELL"){
+    entryLow = price * 0.995; entryHigh = price * 1.005; stop = price * 1.030;
+  } else {
+    entryLow = price * 0.985; entryHigh = price * 0.995; stop = price * 0.965;
   }
 
   let entryMid = (entryLow + entryHigh) / 2;
   let risk = Math.abs(entryMid - stop);
   let minRR = 1.5;
-
-  if(decision === "SELL"){
-    target = entryMid - (risk * minRR);
-  } else {
-    target = entryMid + (risk * minRR);
-  }
-
+  target = decision === "SELL" ? entryMid - (risk * minRR) : entryMid + (risk * minRR);
   let reward = Math.abs(target - entryMid);
   let rr = risk > 0 ? reward / risk : 0;
 
   let quality = "NO EDGE";
-  let invalidTrade = false;
-
-  if(Math.abs(trendMove) < 0.10 && avgScore > 42 && avgScore < 58){
-    invalidTrade = true;
-  }
+  let invalidTrade = Math.abs(trendMove) < 0.10 && avgScore > 42 && avgScore < 58;
 
   if(decision === "BUY"){
-    if(rr >= 2 && avgScore >= 75 && trendMove > 0.25){
-      quality = "ELITE";
-    } else if(rr >= 1.5 && avgScore >= 68){
-      quality = "GOOD";
-    } else {
-      quality = "WEAK R/R";
-    }
-  }
-  else if(decision === "SELL"){
-    if(avgScore < 25 && trendMove < -0.25){
-      quality = "EXIT NOW";
-    } else {
-      quality = "TRIM / AVOID";
-    }
-  }
-  else {
-    if(avgScore >= 60 && trendMove > 0){
-      quality = "WATCH BUY";
-    } else if(avgScore <= 40 && trendMove < 0){
-      quality = "WATCH SELL";
-    } else {
-      quality = "WAIT";
-    }
+    if(rr >= 2 && avgScore >= 75 && trendMove > 0.25) quality = "ELITE";
+    else if(rr >= 1.5 && avgScore >= 68) quality = "GOOD";
+    else quality = "WEAK R/R";
+  } else if(decision === "SELL"){
+    quality = avgScore < 25 && trendMove < -0.25 ? "EXIT NOW" : "TRIM / AVOID";
+  } else {
+    if(avgScore >= 60 && trendMove > 0) quality = "WATCH BUY";
+    else if(avgScore <= 40 && trendMove < 0) quality = "WATCH SELL";
+    else quality = "WAIT";
   }
 
   let tradeStyle = "WAIT";
   let tradeAction = "Do nothing until the signal improves.";
+  if(quality === "ELITE"){tradeStyle="AGGRESSIVE";tradeAction="Cleanest setup. Entry only inside zone.";}
+  else if(quality === "GOOD"){tradeStyle="STANDARD";tradeAction="Valid setup. Keep stop tight.";}
+  else if(quality === "WEAK R/R"){tradeStyle="CAUTION";tradeAction="Signal exists, but reward is weak.";}
+  else if(quality === "WATCH BUY"){tradeStyle="WATCH";tradeAction="Wait for confirmation before buying.";}
+  else if(quality === "WATCH SELL"){tradeStyle="WATCH";tradeAction="Weakness forming. Do not chase.";}
+  else if(quality === "EXIT NOW"){tradeStyle="DEFENSE";tradeAction="Protect capital. Exit/trim logic active.";}
+  else if(quality === "TRIM / AVOID"){tradeStyle="DEFENSE";tradeAction="Avoid new buys. Consider trimming.";}
 
-  if(quality === "ELITE"){
-    tradeStyle = "AGGRESSIVE";
-    tradeAction = "Cleanest setup. Entry only inside zone.";
-  } else if(quality === "GOOD"){
-    tradeStyle = "STANDARD";
-    tradeAction = "Valid setup. Keep stop tight.";
-  } else if(quality === "WEAK R/R"){
-    tradeStyle = "CAUTION";
-    tradeAction = "Signal exists, but reward is weak.";
-  } else if(quality === "WATCH BUY"){
-    tradeStyle = "WATCH";
-    tradeAction = "Wait for confirmation before buying.";
-  } else if(quality === "WATCH SELL"){
-    tradeStyle = "WATCH";
-    tradeAction = "Weakness forming. Do not chase.";
-  } else if(quality === "EXIT NOW"){
-    tradeStyle = "DEFENSE";
-    tradeAction = "Protect capital. Exit/trim logic active.";
-  } else if(quality === "TRIM / AVOID"){
-    tradeStyle = "DEFENSE";
-    tradeAction = "Avoid new buys. Consider trimming.";
-  }
-
-  if(invalidTrade){
-    quality = "INVALID";
-    tradeStyle = "NO TRADE";
-    tradeAction = "Signal is too weak. Do not force a trade.";
-  }
+  if(invalidTrade){quality="INVALID";tradeStyle="NO TRADE";tradeAction="Signal is too weak. Do not force a trade.";}
 
   let timing = "WAIT";
   let dist = ((price - entryMid) / entryMid) * 100;
-
-  if(quality === "INVALID"){
-    timing = "NO TRADE";
-  }
+  if(quality === "INVALID") timing = "NO TRADE";
   else if(decision === "BUY"){
-    if(price < entryLow){
-      timing = "BELOW ZONE";
-    }
-    else if(price >= entryLow && price <= entryHigh){
-      timing = "IN ZONE";
-    }
-    else if(dist > 0.25){
-      timing = "TOO EXTENDED";
-    }
-    else{
-      timing = "WAIT PULLBACK";
-    }
-  }
-  else if(decision === "SELL"){
-    timing = "EXIT / AVOID";
-  }
-  else{
-    timing = "WAIT";
-  }
+    if(price < entryLow) timing = "BELOW ZONE";
+    else if(price >= entryLow && price <= entryHigh) timing = "IN ZONE";
+    else if(dist > 0.25) timing = "TOO EXTENDED";
+    else timing = "WAIT PULLBACK";
+  } else if(decision === "SELL") timing = "EXIT / AVOID";
 
   let riskDollars = Number(document.getElementById("riskDollars").value) || 25;
   let estimatedUnits = risk > 0 ? riskDollars / risk : 0;
@@ -582,11 +323,52 @@ function run(){
   updatePosition();
 }
 
-function savePosition(){
-  if(!selectedCoin){
-    alert("Pick a coin first.");
-    return;
+function drawChart(){
+  const canvas = document.getElementById("miniChart");
+  if(!canvas || priceHistory.length < 2) return;
+
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const width = canvas.offsetWidth;
+  const height = 120;
+
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,width,height);
+
+  const pad = 10;
+  const min = Math.min(...priceHistory);
+  const max = Math.max(...priceHistory);
+  const range = max - min || 1;
+
+  ctx.strokeStyle = "rgba(255,255,255,.08)";
+  ctx.lineWidth = 1;
+  for(let i=1;i<4;i++){
+    let y = (height/4)*i;
+    ctx.beginPath();
+    ctx.moveTo(0,y);
+    ctx.lineTo(width,y);
+    ctx.stroke();
   }
+
+  ctx.beginPath();
+  priceHistory.forEach((p,i)=>{
+    const x = pad + (i/(priceHistory.length-1))*(width-pad*2);
+    const y = height - pad - ((p-min)/range)*(height-pad*2);
+    if(i===0) ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
+  });
+
+  ctx.lineWidth = 3;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = priceHistory[priceHistory.length-1] >= priceHistory[0] ? "#7cff55" : "#ff4d5d";
+  ctx.stroke();
+}
+
+function savePosition(){
+  if(!selectedCoin){alert("Pick a coin first.");return;}
   localStorage.setItem(selectedCoin+"_amount",document.getElementById("ownedAmount").value||"");
   localStorage.setItem(selectedCoin+"_avg",document.getElementById("avgBuy").value||"");
   localStorage.setItem(selectedCoin+"_risk",document.getElementById("riskDollars").value||"25");
@@ -610,8 +392,7 @@ function updatePosition(){
     document.getElementById("profitLoss").textContent = "—";
     document.getElementById("positionVerdict").textContent =
       lastDecision === "BUY" ? "GOOD BUY CANDIDATE" :
-      lastDecision === "SELL" ? "AVOID" :
-      "WAIT";
+      lastDecision === "SELL" ? "AVOID" : "WAIT";
     return;
   }
 
@@ -621,18 +402,15 @@ function updatePosition(){
   const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
 
   document.getElementById("currentValue").textContent = money(value);
-
   const pnlEl = document.getElementById("profitLoss");
   pnlEl.textContent = money(pnl) + " (" + pnlPct.toFixed(2) + "%)";
   pnlEl.style.color = pnl >= 0 ? "#7cff55" : "#ff4d5d";
 
   let verdict = "HOLD";
-
   if(lastDecision === "BUY" && pnlPct < 10) verdict = "ADD / HOLD";
   else if(lastDecision === "BUY") verdict = "HOLD WINNER";
   else if(lastDecision === "SELL" && pnlPct > 0) verdict = "TRIM PROFIT";
   else if(lastDecision === "SELL") verdict = "EXIT / PROTECT";
-  else verdict = "HOLD";
 
   document.getElementById("positionVerdict").textContent = verdict;
 }
@@ -642,6 +420,7 @@ function showTab(id, btn){
   document.getElementById(id).style.display="block";
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   btn.classList.add("active");
+  if(id === "overview") setTimeout(drawChart,50);
 }
 </script>
 
