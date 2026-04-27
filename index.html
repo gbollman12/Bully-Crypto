@@ -6,34 +6,36 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#050606;color:white;font-family:-apple-system,Arial}
-.app{max-width:520px;margin:auto;padding-bottom:80px}
+body{margin:0;background:#050606;color:white;font-family:-apple-system,BlinkMacSystemFont,Arial}
+.app{max-width:520px;margin:auto;padding-bottom:90px}
 
-.top{display:flex;justify-content:space-between;align-items:center;padding:16px}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:40px;height:40px;border-radius:10px}
+.top{display:flex;justify-content:space-between;padding:16px}
 .title{font-size:20px;font-weight:900}
-.sub{font-size:10px;color:#7cff55;letter-spacing:2px}
+.mode{font-size:10px;border:1px solid #333;padding:5px 8px;border-radius:999px;color:#aaa}
 
 .coinRail{display:flex;gap:8px;padding:12px;overflow-x:auto}
 .coinRail button{padding:10px 14px;border-radius:999px;background:#0b0e0c;border:1px solid #222;color:#ddd;font-weight:900}
 .coinRail button.active{background:#7cff55;color:#000}
 
-.main{margin:12px;padding:18px;border-radius:24px;background:#0d120e;border:1px solid #243028}
-.signal{font-size:34px;font-weight:900}
-.price{font-size:38px;font-weight:900;margin-top:6px}
-.move{font-size:14px;margin-top:4px}
+.main{margin:12px;padding:18px;border-radius:26px;background:#0d120e;border:1px solid #243028}
+.signal{font-size:36px;font-weight:900}
+.price{font-size:40px;font-weight:900;margin-top:6px}
+.move{font-size:14px;margin-top:4px;color:#aaa}
 
-canvas{width:100%;height:140px;margin-top:12px}
+canvas{width:100%;height:160px;margin-top:12px}
 
 .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px}
 .metric{background:#0b0e0c;border:1px solid #222;border-radius:16px;padding:12px}
 .metric div:first-child{font-size:10px;color:#777}
 .metric div:last-child{font-size:16px;font-weight:900}
 
-.insight{margin:12px;padding:14px;border-radius:18px;background:#0f1511;border:1px solid #263029}
+.insight{margin:12px;padding:14px;border-radius:20px;background:#0f1511;border:1px solid #263029}
 .insightHeader{font-size:10px;color:#7cff55;font-weight:900;margin-bottom:6px}
 .insightText{font-size:14px}
+
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;display:flex;padding:10px;background:#050606}
+.nav button{flex:1;padding:12px;border:1px solid #222;background:#0b0e0c;color:#777;border-radius:14px}
+.nav button.active{background:#7cff55;color:#000}
 </style>
 </head>
 
@@ -41,13 +43,8 @@ canvas{width:100%;height:140px;margin-top:12px}
 <div class="app">
 
 <div class="top">
-  <div class="brand">
-    <img src="logo.PNG" class="logo">
-    <div>
-      <div class="title">BULLY</div>
-      <div class="sub">CRYPTO</div>
-    </div>
-  </div>
+  <div class="title">BULLY CRYPTO</div>
+  <div class="mode">LIVE</div>
 </div>
 
 <div class="coinRail">
@@ -76,11 +73,17 @@ canvas{width:100%;height:140px;margin-top:12px}
   <div id="reason" class="insightText">Waiting...</div>
 </div>
 
+<div class="nav">
+  <button class="active">Overview</button>
+  <button>Plan</button>
+  <button>Position</button>
+</div>
+
 </div>
 
 <script>
 
-// 🔥 YOUR WORKER URL
+// ✅ Worker (fixes data blocked)
 const REST = "https://bully-crypto-data.bollman-griffin.workers.dev";
 
 let selectedPair = "";
@@ -98,7 +101,7 @@ function pick(pair, btn){
 }
 
 async function loadCandles(pair){
-  const res = await fetch(`${REST}/klines?symbol=${pair}&interval=1m&limit=50`);
+  const res = await fetch(`${REST}/klines?symbol=${pair}&interval=1m&limit=60`);
   const data = await res.json();
 
   candles = data.map(k=>({
@@ -112,8 +115,8 @@ async function loadCandles(pair){
 function startPolling(pair){
   if(pollTimer) clearInterval(pollTimer);
 
-  pollTimer = setInterval(async ()=>{
-    await loadCandles(pair);
+  pollTimer = setInterval(()=>{
+    loadCandles(pair);
   },5000);
 }
 
@@ -122,7 +125,7 @@ function drawChart(){
   const ctx=c.getContext("2d");
 
   c.width=c.offsetWidth;
-  c.height=140;
+  c.height=160;
 
   let highs=candles.map(c=>c.h);
   let lows=candles.map(c=>c.l);
