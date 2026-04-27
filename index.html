@@ -18,175 +18,127 @@ body{
   color:white;
   font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
 }
-.app{max-width:520px;margin:auto;padding-bottom:30px}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:88px}
 
-.header{
+.top{
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding:18px 18px 12px;
-  border-bottom:1px solid #151a17;
+  align-items:center;
+  padding:18px 18px 8px;
 }
 .brand{display:flex;align-items:center;gap:12px}
-.logo{width:46px;height:46px;border-radius:12px;object-fit:cover}
-.title{font-size:22px;font-weight:950;letter-spacing:.4px}
-.sub{color:#7cff55;font-size:10px;font-weight:900;letter-spacing:2.4px}
-.status{
-  font-size:10px;
-  color:#858d87;
-  border:1px solid #242b27;
-  padding:6px 9px;
-  border-radius:999px;
-  background:#0a0d0b;
-  font-weight:800;
-}
+.logo{width:44px;height:44px;border-radius:12px;object-fit:cover}
+.title{font-size:21px;font-weight:950;letter-spacing:.5px}
+.sub{font-size:10px;color:#7cff55;font-weight:900;letter-spacing:2.4px}
+.mode{font-size:10px;color:#8b948e;border:1px solid #252b27;border-radius:999px;padding:6px 9px}
 
-.sectionTitle{
-  padding:12px 18px 6px;
-  color:#666f69;
+.coinRail{
+  display:flex;
+  overflow-x:auto;
+  gap:8px;
+  padding:10px 16px 14px;
+}
+.coinRail::-webkit-scrollbar{display:none}
+.coinRail button{
+  min-width:66px;
+  padding:10px 13px;
+  border-radius:999px;
+  border:1px solid #242b27;
+  background:#0b0e0c;
+  color:#dce4df;
+  font-weight:900;
+}
+.coinRail button:active{transform:scale(.96)}
+
+.mainPanel{
+  margin:0 14px;
+  padding:18px;
+  border-radius:28px;
+  background:
+    radial-gradient(circle at top right,rgba(124,255,85,.12),transparent 34%),
+    linear-gradient(180deg,#101611,#070807);
+  border:1px solid #263029;
+  box-shadow:0 18px 45px rgba(0,0,0,.38);
+}
+.signalLabel{
+  color:#707a74;
   font-size:10px;
   letter-spacing:1.8px;
   font-weight:950;
   text-transform:uppercase;
 }
-
-.quick{
-  display:flex;
-  overflow-x:auto;
-  gap:7px;
-  padding:0 14px 12px;
-}
-.quick::-webkit-scrollbar{display:none}
-.quick button{
-  min-width:64px;
-  padding:9px 12px;
-  border-radius:10px;
-  background:#0c0f0d;
-  border:1px solid #242b27;
-  color:#e5ebe7;
-  font-size:13px;
-  font-weight:900;
-}
-.quick button:active{transform:scale(.97)}
-
-.tabs{
-  display:flex;
-  padding:0 14px;
-  border-bottom:1px solid #171d19;
-}
-.tab{
-  flex:1;
-  padding:12px 4px;
-  border:0;
-  border-bottom:2px solid transparent;
-  background:transparent;
-  color:#7f8882;
-  font-weight:900;
-  font-size:14px;
-}
-.tab.active{
-  color:#7cff55;
-  border-bottom-color:#7cff55;
-}
-
-.card{
-  background:#0b0e0c;
-  border:1px solid #202722;
-  border-radius:18px;
-  padding:16px;
-  margin:12px 14px;
-  box-shadow:0 10px 28px rgba(0,0,0,.28);
-}
-.marketCard{
-  background:linear-gradient(180deg,#0e140f,#070807);
-  border-color:#263029;
-}
-.heroTop{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.label{
-  color:#6f7973;
-  font-size:10px;
-  font-weight:950;
-  letter-spacing:1.7px;
-  text-transform:uppercase;
-}
-.price{
+.signalBig{
+  margin-top:8px;
   font-size:42px;
   line-height:1;
   font-weight:950;
-  letter-spacing:-1.2px;
-  margin-top:7px;
-  font-variant-numeric:tabular-nums;
+  letter-spacing:-1px;
 }
-.move{
-  color:#a9b0ab;
-  margin-top:5px;
-  font-size:13px;
-  font-weight:800;
-}
+.buyText{color:#7cff55}
+.sellText{color:#ff4d5d}
+.holdText{color:#ffd60a}
 
-.badge{
-  padding:10px 15px;
-  border-radius:10px;
-  font-size:14px;
+.priceBlock{margin-top:20px}
+.coinName{color:#7d8781;font-size:11px;font-weight:950;letter-spacing:1.5px}
+.price{font-size:44px;font-weight:950;letter-spacing:-1.2px;margin-top:6px;font-variant-numeric:tabular-nums}
+.move{font-size:14px;font-weight:800;color:#a9b0ab;margin-top:4px}
+
+.chartBox{
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px solid #202822;
+}
+.chartHead{
+  display:flex;
+  justify-content:space-between;
+  color:#707a74;
+  font-size:10px;
   font-weight:950;
-  border:1px solid;
-  min-width:78px;
-  text-align:center;
-  letter-spacing:.5px;
-  width:max-content;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
 }
-.buy{color:#7cff55;border-color:#356d2c;background:rgba(124,255,85,.07)}
-.sell{color:#ff4d5d;border-color:#70313a;background:rgba(255,77,93,.07)}
-.hold{color:#ffd60a;border-color:#6f5d13;background:rgba(255,214,10,.06)}
+#miniChart{width:100%;height:100px;display:block;margin-top:8px}
 
-#miniChart{
-  width:100%;
-  height:96px;
-  display:block;
-  margin-top:8px;
-}
-
-.grid{
+.metrics{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin:0 14px;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin:12px 14px 0;
 }
-.stat{
+.metric{
   background:#0b0e0c;
   border:1px solid #202722;
-  border-radius:16px;
-  padding:15px;
+  border-radius:18px;
+  padding:13px 10px;
 }
-.statVal{
-  font-size:22px;
-  font-weight:950;
-  margin-top:6px;
-}
+.metricLabel{color:#707a74;font-size:10px;font-weight:950;letter-spacing:1.2px;text-transform:uppercase}
+.metricValue{font-size:17px;font-weight:950;margin-top:7px}
 
+.panel{
+  background:#0b0e0c;
+  border:1px solid #202722;
+  border-radius:22px;
+  padding:16px;
+  margin:14px;
+}
 .row{
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
   gap:14px;
-  padding:10px 0;
+  padding:11px 0;
   border-bottom:1px solid #1b211d;
   color:#a9b0ab;
   font-size:15px;
 }
 .row:last-child{border-bottom:0}
-.row span:first-child{color:#7d8680;font-weight:750}
-.row span:last-child{text-align:right;color:#f1f4f2;font-weight:850}
+.row span:first-child{color:#7d8680;font-weight:800}
+.row span:last-child{text-align:right;color:#f1f4f2;font-weight:900}
 
 .field{
   width:100%;
   margin-top:10px;
   padding:13px;
-  border-radius:12px;
+  border-radius:13px;
   border:1px solid #242b27;
   background:#070908;
   color:white;
@@ -196,13 +148,48 @@ body{
   width:100%;
   margin-top:14px;
   padding:13px;
-  border-radius:12px;
+  border-radius:13px;
   border:1px solid #7cff55;
   background:rgba(124,255,85,.07);
   color:#7cff55;
   font-weight:950;
 }
-.card,.quick button,.tab,.badge{transition:all .18s ease}
+.label{
+  color:#707a74;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.bottomNav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  max-width:520px;
+  margin:auto;
+  display:flex;
+  gap:6px;
+  padding:10px 14px 18px;
+  background:linear-gradient(180deg,rgba(5,6,6,.2),#050606 36%);
+}
+.navBtn{
+  flex:1;
+  border:1px solid #242b27;
+  background:#0b0e0c;
+  color:#7f8882;
+  border-radius:16px;
+  padding:13px 8px;
+  font-weight:950;
+}
+.navBtn.active{
+  color:#050606;
+  background:#7cff55;
+  border-color:#7cff55;
+}
+.tabPage{display:none}
+.tabPage.active{display:block}
 .priceFlash{animation:pricePulse .45s ease}
 @keyframes pricePulse{
   0%{transform:scale(1);opacity:1}
@@ -215,7 +202,7 @@ body{
 <body>
 <div class="app">
 
-<div class="header">
+<div class="top">
   <div class="brand">
     <img src="logo.PNG" class="logo">
     <div>
@@ -223,12 +210,10 @@ body{
       <div class="sub">CRYPTO</div>
     </div>
   </div>
-  <div class="status">ANALYSIS</div>
+  <div class="mode">ANALYSIS</div>
 </div>
 
-<div class="sectionTitle">Market Scan</div>
-
-<div class="quick">
+<div class="coinRail">
   <button onclick="pick('BTC',65000)">BTC</button>
   <button onclick="pick('ETH',3000)">ETH</button>
   <button onclick="pick('SOL',150)">SOL</button>
@@ -237,42 +222,48 @@ body{
   <button onclick="pick('ADA',0.50)">ADA</button>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="showTab('overview', this)">Overview</button>
-  <button class="tab" onclick="showTab('plan', this)">Plan</button>
-  <button class="tab" onclick="showTab('position', this)">Position</button>
-</div>
+<div id="overview" class="tabPage active">
+  <div class="mainPanel">
+    <div class="signalLabel">Signal</div>
+    <div id="signalText" class="signalBig holdText">WAIT</div>
 
-<div id="overview" class="tabPage">
-  <div class="card marketCard">
-    <div class="heroTop">
-      <div>
-        <div id="coin" class="label">SELECT COIN</div>
-        <div id="price" class="price">—</div>
-        <div id="move" class="move">Tap a coin</div>
+    <div class="priceBlock">
+      <div id="coin" class="coinName">SELECT COIN</div>
+      <div id="price" class="price">—</div>
+      <div id="move" class="move">Tap a coin</div>
+    </div>
+
+    <div class="chartBox">
+      <div class="chartHead">
+        <span>Price Path</span>
+        <span id="chartStatus">SIM</span>
       </div>
-      <div id="signal" class="badge hold">WAIT</div>
+      <canvas id="miniChart" height="100"></canvas>
     </div>
   </div>
 
-  <div class="card">
-    <div class="label">Price Path</div>
-    <canvas id="miniChart" height="96"></canvas>
+  <div class="metrics">
+    <div class="metric">
+      <div class="metricLabel">Trend</div>
+      <div id="trend" class="metricValue">—</div>
+    </div>
+    <div class="metric">
+      <div class="metricLabel">Confidence</div>
+      <div id="confidence" class="metricValue">—</div>
+    </div>
+    <div class="metric">
+      <div class="metricLabel">Setup</div>
+      <div id="setup" class="metricValue">—</div>
+    </div>
   </div>
 
-  <div class="grid">
-    <div class="stat"><div class="label">Trend</div><div id="trend" class="statVal">—</div></div>
-    <div class="stat"><div class="label">Setup</div><div id="setup" class="statVal">—</div></div>
-  </div>
-
-  <div class="card">
-    <div class="row"><span>Confidence</span><span id="confidence">—</span></div>
+  <div class="panel">
     <div class="row"><span>Read</span><span id="reason">Waiting.</span></div>
   </div>
 </div>
 
-<div id="plan" class="tabPage" style="display:none">
-  <div class="card">
+<div id="plan" class="tabPage">
+  <div class="panel">
     <div class="row"><span>Coin</span><span id="planCoin">—</span></div>
     <div class="row"><span>Signal</span><span id="planSignal">—</span></div>
     <div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
@@ -285,29 +276,39 @@ body{
     <div class="row"><span>Estimated Units</span><span id="estimatedUnits">—</span></div>
   </div>
 
-  <div class="card">
+  <div class="panel">
     <div class="row"><span>Trade Style</span><span id="tradeStyle">—</span></div>
     <div class="row"><span>Action</span><span id="tradeAction">—</span></div>
   </div>
 </div>
 
-<div id="position" class="tabPage" style="display:none">
-  <div class="card">
+<div id="position" class="tabPage">
+  <div class="panel">
     <div class="label">Position Inputs</div>
+
     <div style="margin-top:14px">Amount owned</div>
     <input id="ownedAmount" class="field" inputmode="decimal" placeholder="Example: 0.25">
+
     <div style="margin-top:14px">Average buy price</div>
     <input id="avgBuy" class="field" inputmode="decimal" placeholder="Example: 62000">
+
     <div style="margin-top:14px">Risk per trade $</div>
     <input id="riskDollars" class="field" inputmode="decimal" placeholder="Example: 25">
+
     <button class="saveBtn" onclick="savePosition()">SAVE POSITION</button>
   </div>
 
-  <div class="card">
+  <div class="panel">
     <div class="row"><span>Current Value</span><span id="currentValue">—</span></div>
     <div class="row"><span>Profit / Loss</span><span id="profitLoss">—</span></div>
     <div class="row"><span>Position Verdict</span><span id="positionVerdict">—</span></div>
   </div>
+</div>
+
+<div class="bottomNav">
+  <button class="navBtn active" onclick="showTab('overview', this)">Overview</button>
+  <button class="navBtn" onclick="showTab('plan', this)">Plan</button>
+  <button class="navBtn" onclick="showTab('position', this)">Position</button>
 </div>
 
 </div>
@@ -325,9 +326,9 @@ function money(n){return "$" + Number(n).toFixed(Number(n)>100?2:4);}
 
 function setSignal(d){
   lastDecision = d;
-  const el = document.getElementById("signal");
+  const el = document.getElementById("signalText");
   el.textContent = d;
-  el.className = "badge " + (d==="BUY"?"buy":d==="SELL"?"sell":"hold");
+  el.className = "signalBig " + (d==="BUY"?"buyText":d==="SELL"?"sellText":"holdText");
   updatePosition();
 }
 
@@ -397,7 +398,7 @@ function run(){
   moveEl.style.color = trendMove > 0 ? "#7cff55" : trendMove < 0 ? "#ff4d5d" : "#aaa";
 
   document.getElementById("trend").textContent = avgScore > 68 ? "BULL" : avgScore < 32 ? "BEAR" : "MIXED";
-  document.getElementById("setup").textContent = decision === "BUY" ? "CONFIRMED MOMENTUM" : decision === "SELL" ? "CONFIRMED WEAKNESS" : "WAIT";
+  document.getElementById("setup").textContent = decision === "BUY" ? "MOMENTUM" : decision === "SELL" ? "WEAKNESS" : "WAIT";
   document.getElementById("confidence").textContent = Math.round(avgScore) + "/100";
   document.getElementById("reason").textContent =
     decision === "BUY" ? "Trend has held strength across multiple readings." :
@@ -480,12 +481,10 @@ function run(){
 function drawChart(){
   const canvas = document.getElementById("miniChart");
   if(!canvas || priceHistory.length < 2) return;
-
   const ctx = canvas.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
   const width = canvas.offsetWidth;
-  const height = 96;
-
+  const height = 100;
   canvas.width = width * dpr;
   canvas.height = height * dpr;
   ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -513,7 +512,6 @@ function drawChart(){
     if(i===0) ctx.moveTo(x,y);
     else ctx.lineTo(x,y);
   });
-
   ctx.lineWidth = 2.5;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
@@ -554,7 +552,6 @@ function updatePosition(){
   const cost = amount * avg;
   const pnl = value - cost;
   const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
-
   document.getElementById("currentValue").textContent = money(value);
   const pnlEl = document.getElementById("profitLoss");
   pnlEl.textContent = money(pnl) + " (" + pnlPct.toFixed(2) + "%)";
@@ -565,14 +562,13 @@ function updatePosition(){
   else if(lastDecision === "BUY") verdict = "HOLD WINNER";
   else if(lastDecision === "SELL" && pnlPct > 0) verdict = "TRIM PROFIT";
   else if(lastDecision === "SELL") verdict = "EXIT / PROTECT";
-
   document.getElementById("positionVerdict").textContent = verdict;
 }
 
 function showTab(id, btn){
-  document.querySelectorAll(".tabPage").forEach(p=>p.style.display="none");
-  document.getElementById(id).style.display="block";
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tabPage").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".navBtn").forEach(t=>t.classList.remove("active"));
   btn.classList.add("active");
   if(id === "overview") setTimeout(drawChart,50);
 }
