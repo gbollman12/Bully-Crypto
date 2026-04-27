@@ -14,7 +14,8 @@
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:radial-gradient(circle at top,#102015 0%,#050606 42%,#000 100%);
+  background:
+    radial-gradient(circle at top,#102015 0%,#050606 40%,#000 100%);
   color:white;
   font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
 }
@@ -24,130 +25,162 @@ body{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:20px 18px 16px;
-  border-bottom:1px solid #18201b;
+  padding:20px 18px 14px;
 }
 .brand{display:flex;align-items:center;gap:13px}
-.logo{width:54px;height:54px;border-radius:14px;object-fit:cover}
-.title{font-size:25px;font-weight:950;letter-spacing:1px}
-.sub{color:#7cff55;font-size:11px;font-weight:900;letter-spacing:2.5px}
+.logo{width:52px;height:52px;border-radius:15px;object-fit:cover}
+.title{font-size:25px;font-weight:950;letter-spacing:.5px}
+.sub{color:#7cff55;font-size:10px;font-weight:900;letter-spacing:2.8px}
 .status{
-  font-size:11px;
-  color:#8e978f;
-  border:1px solid #252d28;
+  font-size:10px;
+  color:#9aa39d;
+  border:1px solid #29322c;
   padding:7px 10px;
   border-radius:999px;
-  background:#0b0e0c;
+  background:rgba(255,255,255,.025);
+}
+
+.sectionTitle{
+  padding:4px 18px 8px;
+  color:#6f7973;
+  font-size:11px;
+  letter-spacing:1.8px;
+  font-weight:950;
+  text-transform:uppercase;
 }
 
 .quick{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
+  display:flex;
+  overflow-x:auto;
   gap:8px;
-  padding:14px;
+  padding:0 14px 14px;
 }
 .quick button{
-  padding:13px 8px;
-  border-radius:14px;
-  background:linear-gradient(180deg,#151815,#090b09);
+  min-width:72px;
+  padding:11px 14px;
+  border-radius:999px;
+  background:#0c0f0d;
   border:1px solid #252c27;
-  color:white;
+  color:#dfe7e2;
   font-weight:900;
 }
 .quick button:active{transform:scale(.96)}
 
-.tabs{display:flex;gap:8px;padding:0 14px 10px}
+.tabs{
+  display:flex;
+  gap:8px;
+  padding:0 14px 12px;
+}
 .tab{
   flex:1;
   padding:12px;
-  border-radius:14px;
+  border-radius:999px;
   border:1px solid #252c27;
   background:#0c0f0d;
   color:#858d87;
   font-weight:900;
 }
 .tab.active{
-  color:#7cff55;
+  color:#050606;
+  background:#7cff55;
   border-color:#7cff55;
-  box-shadow:0 0 18px rgba(124,255,85,.12);
 }
 
 .card{
-  background:linear-gradient(180deg,#121613,#080908);
+  background:linear-gradient(180deg,#121613,#070807);
   border:1px solid #242c26;
-  border-radius:22px;
+  border-radius:24px;
   padding:18px;
   margin:14px;
-  box-shadow:0 16px 35px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+  box-shadow:0 18px 40px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.04);
 }
+
+.marketCard{
+  padding:20px;
+  border-color:#2c372f;
+}
+
 .heroTop{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
   gap:14px;
 }
+
 .label{
-  color:#838c86;
+  color:#7d8781;
   font-size:11px;
   font-weight:950;
   letter-spacing:1.5px;
   text-transform:uppercase;
 }
+
 .price{
-  font-size:44px;
+  font-size:46px;
   line-height:1;
   font-weight:950;
   letter-spacing:-1px;
   margin-top:8px;
-  max-width:100%;
-  transition:color .25s ease, transform .18s ease;
+  font-variant-numeric:tabular-nums;
 }
-.move{color:#a9b0ab;margin-top:2px;font-size:14px;opacity:.85}
+
+.move{
+  color:#a9b0ab;
+  margin-top:4px;
+  font-size:14px;
+  font-weight:800;
+}
 
 .badge{
-  padding:13px 18px;
+  padding:12px 17px;
   border-radius:999px;
-  font-size:18px;
+  font-size:16px;
   font-weight:950;
   border:1px solid;
   min-width:82px;
   text-align:center;
-  align-self:flex-start;
-  margin-top:4px;
-  transition:all .25s ease;
+  letter-spacing:.5px;
 }
-.buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08);box-shadow:0 0 18px rgba(124,255,85,.18)}
-.sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08);box-shadow:0 0 18px rgba(255,77,93,.18)}
-.hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08);box-shadow:0 0 14px rgba(255,214,10,.12)}
+.buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08);box-shadow:0 0 20px rgba(124,255,85,.18)}
+.sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08);box-shadow:0 0 20px rgba(255,77,93,.18)}
+.hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08);box-shadow:0 0 16px rgba(255,214,10,.12)}
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:0 14px;
+}
 .stat{
   background:#0d100e;
   border:1px solid #242c26;
-  border-radius:18px;
+  border-radius:20px;
   padding:16px;
-  transition:all .18s ease;
 }
-.statVal{font-size:24px;font-weight:950;margin-top:7px}
+.statVal{
+  font-size:23px;
+  font-weight:950;
+  margin-top:7px;
+}
 
 .row{
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
   gap:14px;
-  padding:11px 0;
+  padding:12px 0;
   border-bottom:1px solid #202621;
   color:#a9b0ab;
 }
 .row:last-child{border-bottom:0}
-.row span:first-child{color:#7f8882;font-weight:750}
-.row span:last-child{text-align:right;color:#f2f5f3;font-weight:850}
+.row span:first-child{color:#7f8882;font-weight:800}
+.row span:last-child{text-align:right;color:#f2f5f3;font-weight:900}
 
 .field{
   width:100%;
   margin-top:10px;
-  padding:13px;
-  border-radius:14px;
+  padding:14px;
+  border-radius:16px;
   border:1px solid #252c27;
   background:#080a09;
   color:white;
@@ -157,17 +190,21 @@ body{
   width:100%;
   margin-top:14px;
   padding:14px;
-  border-radius:14px;
+  border-radius:16px;
   border:1px solid #7cff55;
   background:rgba(124,255,85,.08);
   color:#7cff55;
   font-weight:950;
 }
-.card,.quick button,.tab{transition:all .18s ease}
+
+.card,.quick button,.tab,.badge{
+  transition:all .18s ease;
+}
+
 .priceFlash{animation:pricePulse .55s ease}
 @keyframes pricePulse{
   0%{transform:scale(1);opacity:1}
-  35%{transform:scale(1.05);opacity:.9}
+  35%{transform:scale(1.04);opacity:.9}
   100%{transform:scale(1);opacity:1}
 }
 </style>
@@ -184,8 +221,10 @@ body{
       <div class="sub">CRYPTO</div>
     </div>
   </div>
-  <div class="status">SIM MODE</div>
+  <div class="status">ANALYSIS MODE</div>
 </div>
+
+<div class="sectionTitle">Market Scan</div>
 
 <div class="quick">
   <button onclick="pick('BTC',65000)">BTC</button>
@@ -203,7 +242,7 @@ body{
 </div>
 
 <div id="overview" class="tabPage">
-  <div class="card">
+  <div class="card marketCard">
     <div class="heroTop">
       <div>
         <div id="coin" class="label">SELECT COIN</div>
