@@ -8,6 +8,7 @@
 <link rel="icon" href="logo.PNG">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#050606">
 
 <style>
 *{box-sizing:border-box}
@@ -17,7 +18,7 @@ body{
   color:white;
   font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
 }
-.app{max-width:520px;margin:auto;padding-bottom:30px}
+.app{max-width:520px;margin:auto;padding-bottom:34px}
 
 .header{
   display:flex;
@@ -52,15 +53,10 @@ body{
   border:1px solid #252c27;
   color:white;
   font-weight:900;
-  letter-spacing:.5px;
 }
 .quick button:active{transform:scale(.96)}
 
-.tabs{
-  display:flex;
-  gap:8px;
-  padding:0 14px 10px;
-}
+.tabs{display:flex;gap:8px;padding:0 14px 10px}
 .tab{
   flex:1;
   padding:12px;
@@ -90,19 +86,6 @@ body{
   align-items:flex-start;
   gap:14px;
 }
-
-.price{
-  font-size:44px;
-  line-height:1;
-  font-weight:950;
-  letter-spacing:-1px;
-  margin-top:8px;
-  max-width:100%;
-}
-
-.badge{
-  align-self:stretch;
-}
 .label{
   color:#838c86;
   font-size:11px;
@@ -111,14 +94,15 @@ body{
   text-transform:uppercase;
 }
 .price{
-  
-  font-size:48px;
+  font-size:44px;
+  line-height:1;
   font-weight:950;
   letter-spacing:-1px;
   margin-top:8px;
-  transition: transform .25s ease, opacity .25s ease;
+  max-width:100%;
+  transition:color .25s ease, transform .18s ease;
 }
-.move{color:#a9b0ab;margin-top:4px;font-size:15px}
+.move{color:#a9b0ab;margin-top:2px;font-size:14px;opacity:.85}
 
 .badge{
   padding:13px 18px;
@@ -128,10 +112,13 @@ body{
   border:1px solid;
   min-width:82px;
   text-align:center;
+  align-self:flex-start;
+  margin-top:4px;
+  transition:all .25s ease;
 }
-.buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08)}
-.sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08)}
-.hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08)}
+.buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08);box-shadow:0 0 18px rgba(124,255,85,.18)}
+.sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08);box-shadow:0 0 18px rgba(255,77,93,.18)}
+.hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08);box-shadow:0 0 14px rgba(255,214,10,.12)}
 
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px}
 .stat{
@@ -139,6 +126,7 @@ body{
   border:1px solid #242c26;
   border-radius:18px;
   padding:16px;
+  transition:all .18s ease;
 }
 .statVal{font-size:24px;font-weight:950;margin-top:7px}
 
@@ -175,51 +163,12 @@ body{
   color:#7cff55;
   font-weight:950;
 }
-.note{color:#aeb5b0;line-height:1.45}
-.card,.stat,.quick button,.tab{
-  transition:all .18s ease;
-}
-
-.quick button:active,.tab:active{
-  transform:scale(.96);
-}
-
-.badge{
-  transition:all .25s ease;
-}
-
-.buy{
-  box-shadow:0 0 18px rgba(124,255,85,.18);
-}
-
-.sell{
-  box-shadow:0 0 18px rgba(255,77,93,.18);
-}
-
-.hold{
-  box-shadow:0 0 14px rgba(255,214,10,.12);
-}
-
-.price{
-  transition:color .25s ease, transform .18s ease;
-}
-
-.priceFlash{
-  .priceFlash{
-  animation:pricePulse .55s ease;
-}
-
+.card,.quick button,.tab{transition:all .18s ease}
+.priceFlash{animation:pricePulse .55s ease}
 @keyframes pricePulse{
-  0%{transform:scale(1); opacity:1}
-  35%{transform:scale(1.08); opacity:.85}
-  100%{transform:scale(1); opacity:1}
-}
-}
-
-@keyframes pricePulse{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.025)}
-  100%{transform:scale(1)}
+  0%{transform:scale(1);opacity:1}
+  35%{transform:scale(1.05);opacity:.9}
+  100%{transform:scale(1);opacity:1}
 }
 </style>
 </head>
@@ -421,15 +370,11 @@ function run(){
 
   setSignal(decision);
 
-  document.getElementById("price").textContent = money(price);
-  const priceBox = document.getElementById("price");
-priceBox.style.transform = "scale(1.08)";
-priceBox.style.opacity = "0.8";
-
-setTimeout(()=>{
-  priceBox.style.transform = "scale(1)";
-  priceBox.style.opacity = "1";
-}, 220);
+  const priceEl = document.getElementById("price");
+  priceEl.textContent = money(price);
+  priceEl.classList.remove("priceFlash");
+  void priceEl.offsetWidth;
+  priceEl.classList.add("priceFlash");
 
   const moveEl = document.getElementById("move");
   moveEl.textContent = trendMove.toFixed(2) + "% trend";
