@@ -1,80 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bully Crypto</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#050606;color:white;font-family:-apple-system,Arial}
+.app{max-width:520px;margin:auto;padding-bottom:90px}
+
+/* HEADER */
+.top{display:flex;justify-content:space-between;padding:16px}
+.title{font-size:20px;font-weight:900}
+.mode{font-size:10px;border:1px solid #333;padding:5px 8px;border-radius:999px;color:#aaa}
+
+/* TICKER */
+.tickerWrap{overflow:hidden;border-top:1px solid #111;border-bottom:1px solid #111}
+.ticker{display:flex;gap:26px;padding:10px 0;white-space:nowrap;animation:scroll 18s linear infinite;font-size:13px;font-weight:900}
+.tUp{color:#7cff55}.tDown{color:#ff4d5d}.tFlat{color:#aaa}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* COINS */
+.coinRail{display:flex;gap:8px;padding:12px;overflow-x:auto}
+.coinRail button{padding:10px 14px;border-radius:999px;background:#0b0e0c;border:1px solid #222;color:#ddd;font-weight:900}
+.coinRail button.active{background:#7cff55;color:#000}
+
+/* MAIN */
+.main{margin:12px;padding:18px;border-radius:26px;background:#0d120e;border:1px solid #243028}
+.signal{font-size:36px;font-weight:900}
+.price{font-size:40px;font-weight:900;margin-top:6px}
+.move{font-size:14px;margin-top:4px;color:#aaa}
+
+canvas{width:100%;height:90px;margin-top:12px}
+
+/* METRICS */
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px}
+.metric{background:#0b0e0c;border:1px solid #222;border-radius:16px;padding:12px}
+.metric div:first-child{font-size:10px;color:#777}
+.metric div:last-child{font-size:16px;font-weight:900}
+
+/* INSIGHT */
+.insight{margin:12px;padding:14px;border-radius:20px;background:#0f1511;border:1px solid #263029}
+.insightHeader{font-size:10px;color:#7cff55;font-weight:900;margin-bottom:6px}
+.insightText{font-size:14px}
+
+/* PULSE */
+.pulse{margin:12px;padding:14px;border-radius:20px;background:#0b0e0c;border:1px solid #222}
+.pulseRow{display:flex;justify-content:space-between;padding:6px 0;color:#aaa}
+.pulseRow span:last-child{color:#fff;font-weight:900}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;display:flex;padding:10px;background:#050606}
+.nav button{flex:1;padding:12px;border:1px solid #222;background:#0b0e0c;color:#777;border-radius:14px}
+.nav button.active{background:#7cff55;color:#000}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<div class="top">
+  <div class="title">BULLY CRYPTO</div>
+  <div class="mode">LIVE</div>
+</div>
+
+<div class="tickerWrap">
+  <div id="ticker" class="ticker"></div>
+</div>
+
+<div class="coinRail">
+  <button onclick="pick('BTC/USD', this)">BTC</button>
+  <button onclick="pick('ETH/USD', this)">ETH</button>
+  <button onclick="pick('SOL/USD', this)">SOL</button>
+  <button onclick="pick('XRP/USD', this)">XRP</button>
+</div>
+
+<div class="main">
+  <div id="signal" class="signal">WAIT</div>
+  <div id="price" class="price">—</div>
+  <div id="move" class="move">Tap coin</div>
+  <canvas id="chart"></canvas>
+</div>
+
+<div class="grid">
+  <div class="metric"><div>Trend</div><div id="trend">—</div></div>
+  <div class="metric"><div>Confidence</div><div id="confidence">—</div></div>
+  <div class="metric"><div>Setup</div><div id="setup">—</div></div>
+</div>
+
+<div class="insight">
+  <div class="insightHeader">Market Insight</div>
+  <div id="reason" class="insightText">Waiting...</div>
+</div>
+
+<div class="pulse">
+  <div class="pulseRow"><span>Market Bias</span><span id="bias">—</span></div>
+  <div class="pulseRow"><span>Volatility</span><span id="vol">—</span></div>
+  <div class="pulseRow"><span>Pressure</span><span id="pressure">—</span></div>
+</div>
+
+<div class="nav">
+  <button class="active">Overview</button>
+  <button>Plan</button>
+  <button>Position</button>
+</div>
+
+</div>
+
 <script>
+
 const API_KEY = "92ef0c3056c641a5bd025c6a5a9363bb";
 
-let selectedCoin = "";
+let selectedSymbol = "";
 let timer = null;
 let priceHistory = [];
-let marketData = {};
-let marketHistory = {};
 
-const SYMBOLS = {
-  BTC: "BTC/USD",
-  ETH: "ETH/USD",
-  SOL: "SOL/USD",
-  XRP: "XRP/USD"
-};
+function pick(symbol, btn){
+  selectedSymbol = symbol;
 
-function pick(sym,start,btn){
-  selectedCoin = sym;
   document.querySelectorAll(".coinRail button").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 
-  loadRealData();
+  loadData();
   if(timer) clearInterval(timer);
-  timer = setInterval(loadRealData, 60000);
+  timer = setInterval(loadData, 60000);
 }
 
-async function loadRealData(){
-  const symbol = SYMBOLS[selectedCoin];
-
-  const url =
-    `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(symbol)}&interval=1min&outputsize=30&apikey=${API_KEY}`;
+async function loadData(){
+  const url = `https://api.twelvedata.com/time_series?symbol=${selectedSymbol}&interval=1min&outputsize=30&apikey=${API_KEY}`;
 
   const res = await fetch(url);
   const data = await res.json();
 
   if(!data.values){
-    document.getElementById("reason").innerText = data.message || "Data error.";
+    document.getElementById("reason").innerText = data.message || "Error loading data";
     return;
   }
 
   const candles = data.values.reverse();
-  priceHistory = candles.map(c=>Number(c.close));
+  priceHistory = candles.map(c => Number(c.close));
 
   const price = priceHistory.at(-1);
   const first = priceHistory[0];
-  const trendMove = ((price-first)/first)*100;
+  const change = ((price-first)/first)*100;
 
   drawChart();
   updateTicker();
 
-  let decision = "HOLD";
-  if(trendMove > 0.2) decision = "BUY";
-  else if(trendMove < -0.2) decision = "SELL";
+  let signal = "HOLD";
+  if(change > 0.2) signal = "BUY";
+  if(change < -0.2) signal = "SELL";
 
-  document.getElementById("signal").innerText = decision;
+  document.getElementById("signal").innerText = signal;
   document.getElementById("price").innerText = "$"+price.toFixed(price>100?2:4);
-  document.getElementById("move").innerText = trendMove.toFixed(2)+"%";
+  document.getElementById("move").innerText = change.toFixed(2)+"%";
 
-  document.getElementById("trend").innerText =
-    trendMove > 0 ? "BULL" : trendMove < 0 ? "BEAR" : "MIXED";
-
-  document.getElementById("confidence").innerText =
-    Math.min(100, Math.abs(trendMove*6)).toFixed(0)+"/100";
-
-  document.getElementById("setup").innerText = decision;
+  document.getElementById("trend").innerText = change>0?"BULL":"BEAR";
+  document.getElementById("confidence").innerText = Math.min(100, Math.abs(change*5)).toFixed(0)+"/100";
+  document.getElementById("setup").innerText = signal;
 
   document.getElementById("reason").innerText =
-    decision==="BUY" ? "Real market momentum building. Watch pullbacks." :
-    decision==="SELL" ? "Real market weakness showing. Stay defensive." :
-    "Real market is mixed. Wait for clarity.";
+    signal==="BUY" ? "Real momentum building. Watch entries." :
+    signal==="SELL" ? "Weakness confirmed. Stay defensive." :
+    "Market mixed. Wait.";
 
-  updatePulse();
+  updatePulse(change);
 }
 
 function drawChart(){
   const c=document.getElementById("chart");
   const ctx=c.getContext("2d");
+
   c.width=c.offsetWidth;
   c.height=90;
 
@@ -96,38 +192,29 @@ function drawChart(){
 }
 
 async function updateTicker(){
-  let html = "";
+  const coins = ["BTC/USD","ETH/USD","SOL/USD","XRP/USD"];
+  let html="";
 
-  for(const coin of Object.keys(SYMBOLS)){
-    const url =
-      `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(SYMBOLS[coin])}&apikey=${API_KEY}`;
-
+  for(const coin of coins){
     try{
-      const res = await fetch(url);
+      const res = await fetch(`https://api.twelvedata.com/quote?symbol=${coin}&apikey=${API_KEY}`);
       const q = await res.json();
-
       let change = Number(q.percent_change || 0);
-      let cls = change > 0 ? "tUp" : change < 0 ? "tDown" : "tFlat";
-
-      html += `<div class="${cls}">${coin} ${change.toFixed(2)}%</div>`;
-    }catch(e){}
+      let cls = change>0?"tUp":change<0?"tDown":"tFlat";
+      html += `<div class="${cls}">${coin.split("/")[0]} ${change.toFixed(2)}%</div>`;
+    }catch{}
   }
 
-  document.getElementById("ticker").innerHTML = html + html;
+  document.getElementById("ticker").innerHTML = html+html;
 }
 
-function updatePulse(){
-  if(priceHistory.length < 2) return;
-
-  let change = ((priceHistory.at(-1)-priceHistory[0])/priceHistory[0])*100;
-
-  document.getElementById("bias").innerText =
-    change > 0 ? "BULLISH" : change < 0 ? "BEARISH" : "MIXED";
-
-  document.getElementById("vol").innerText =
-    (Math.max(...priceHistory)-Math.min(...priceHistory)).toFixed(2);
-
-  document.getElementById("pressure").innerText =
-    change.toFixed(2)+"%";
+function updatePulse(change){
+  document.getElementById("bias").innerText = change>0?"BULLISH":"BEARISH";
+  document.getElementById("vol").innerText = (Math.max(...priceHistory)-Math.min(...priceHistory)).toFixed(2);
+  document.getElementById("pressure").innerText = change.toFixed(2)+"%";
 }
+
 </script>
+
+</body>
+</html>
