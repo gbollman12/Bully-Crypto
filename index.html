@@ -156,6 +156,43 @@ body{
   font-weight:950;
 }
 .note{color:#aeb5b0;line-height:1.45}
+.card,.stat,.quick button,.tab{
+  transition:all .18s ease;
+}
+
+.quick button:active,.tab:active{
+  transform:scale(.96);
+}
+
+.badge{
+  transition:all .25s ease;
+}
+
+.buy{
+  box-shadow:0 0 18px rgba(124,255,85,.18);
+}
+
+.sell{
+  box-shadow:0 0 18px rgba(255,77,93,.18);
+}
+
+.hold{
+  box-shadow:0 0 14px rgba(255,214,10,.12);
+}
+
+.price{
+  transition:color .25s ease, transform .18s ease;
+}
+
+.priceFlash{
+  animation:pricePulse .35s ease;
+}
+
+@keyframes pricePulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.025)}
+  100%{transform:scale(1)}
+}
 </style>
 </head>
 
@@ -357,6 +394,10 @@ function run(){
   setSignal(decision);
 
   document.getElementById("price").textContent = money(price);
+  const priceBox = document.getElementById("price");
+priceBox.classList.remove("priceFlash");
+void priceBox.offsetWidth;
+priceBox.classList.add("priceFlash");
 
   const moveEl = document.getElementById("move");
   moveEl.textContent = trendMove.toFixed(2) + "% trend";
