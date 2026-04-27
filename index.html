@@ -3,57 +3,73 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bully Crypto</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="logo.PNG">
+<link rel="icon" href="logo.PNG">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#050606">
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#050606;color:white;font-family:-apple-system,Arial}
-.app{max-width:520px;margin:auto;padding-bottom:90px}
+body{margin:0;background:#050606;color:white;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:88px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 8px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:12px;object-fit:cover}
+.title{font-size:21px;font-weight:950;letter-spacing:.5px}
+.sub{font-size:10px;color:#7cff55;font-weight:900;letter-spacing:2.4px}
+.mode{font-size:10px;color:#8b948e;border:1px solid #252b27;border-radius:999px;padding:6px 9px}
 
-/* HEADER */
-.top{display:flex;justify-content:space-between;padding:16px}
-.title{font-size:20px;font-weight:900}
-.mode{font-size:10px;border:1px solid #333;padding:5px 8px;border-radius:999px;color:#aaa}
-
-/* TICKER */
-.tickerWrap{overflow:hidden;border-top:1px solid #111;border-bottom:1px solid #111}
-.ticker{display:flex;gap:26px;padding:10px 0;white-space:nowrap;animation:scroll 18s linear infinite;font-size:13px;font-weight:900}
+.tickerWrap{overflow:hidden;border-top:1px solid #111;border-bottom:1px solid #111;background:#050606}
+.ticker{display:flex;gap:28px;white-space:nowrap;padding:9px 0;animation:tickerScroll 22s linear infinite;font-size:12px;font-weight:900}
+.ticker span{display:inline-block}
 .tUp{color:#7cff55}.tDown{color:#ff4d5d}.tFlat{color:#aaa}
-@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* COINS */
-.coinRail{display:flex;gap:8px;padding:12px;overflow-x:auto}
-.coinRail button{padding:10px 14px;border-radius:999px;background:#0b0e0c;border:1px solid #222;color:#ddd;font-weight:900}
-.coinRail button.active{background:#7cff55;color:#000}
+.coinRail{display:flex;overflow-x:auto;gap:8px;padding:12px 16px 14px}
+.coinRail::-webkit-scrollbar{display:none}
+.coinRail button{min-width:66px;padding:10px 13px;border-radius:999px;border:1px solid #242b27;background:#0b0e0c;color:#dce4df;font-weight:900}
+.coinRail button.activeCoin{background:#7cff55;color:#050606;border-color:#7cff55}
 
-/* MAIN PANEL */
-.main{margin:12px;padding:18px;border-radius:26px;background:#0d120e;border:1px solid #243028}
-.signal{font-size:36px;font-weight:900}
-.price{font-size:40px;font-weight:900;margin-top:6px}
-.move{font-size:14px;margin-top:4px;color:#aaa}
+.mainPanel{margin:0 14px;padding:18px;border-radius:28px;background:radial-gradient(circle at top right,rgba(124,255,85,.12),transparent 34%),linear-gradient(180deg,#101611,#070807);border:1px solid #263029;box-shadow:0 18px 45px rgba(0,0,0,.38)}
+.signalLabel{color:#707a74;font-size:10px;letter-spacing:1.8px;font-weight:950;text-transform:uppercase}
+.signalBig{margin-top:8px;font-size:42px;line-height:1;font-weight:950;letter-spacing:-1px}
+.buyText{color:#7cff55}.sellText{color:#ff4d5d}.holdText{color:#ffd60a}
 
-/* CHART */
-canvas{width:100%;height:90px;margin-top:12px}
+.priceBlock{margin-top:18px}
+.coinName{color:#7d8781;font-size:11px;font-weight:950;letter-spacing:1.5px}
+.price{font-size:40px;font-weight:950;letter-spacing:-1.2px;margin-top:6px;font-variant-numeric:tabular-nums}
+.move{font-size:14px;font-weight:800;color:#a9b0ab;margin-top:4px}
+.chartBox{margin-top:18px;padding-top:12px;border-top:1px solid #202822}
+.chartHead{display:flex;justify-content:space-between;color:#707a74;font-size:10px;font-weight:950;letter-spacing:1.4px;text-transform:uppercase}
+#candleChart{width:100%;height:180px;display:block;margin-top:8px}
 
-/* METRICS */
-.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px}
-.metric{background:#0b0e0c;border:1px solid #222;border-radius:16px;padding:12px}
-.metric div:first-child{font-size:10px;color:#777}
-.metric div:last-child{font-size:16px;font-weight:900}
+.metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 14px 0}
+.metric{background:#0b0e0c;border:1px solid #202722;border-radius:18px;padding:13px 10px}
+.metricLabel{color:#707a74;font-size:10px;font-weight:950;letter-spacing:1.2px;text-transform:uppercase}
+.metricValue{font-size:17px;font-weight:950;margin-top:7px}
 
-/* INSIGHT */
-.insight{margin:12px;padding:14px;border-radius:20px;background:#0f1511;border:1px solid #263029}
-.insightHeader{font-size:10px;color:#7cff55;font-weight:900;margin-bottom:6px}
-.insightText{font-size:14px}
+.panel{background:#0b0e0c;border:1px solid #202722;border-radius:22px;padding:16px;margin:14px}
+.row{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid #1b211d;color:#a9b0ab;font-size:15px}
+.row:last-child{border-bottom:0}
+.row span:first-child{color:#7d8680;font-weight:800}
+.row span:last-child{text-align:right;color:#f1f4f2;font-weight:900}
+.insight{background:linear-gradient(180deg,#0f1511,#070807);border:1px solid #263029}
+.insightTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.insightHeader{font-size:11px;font-weight:950;letter-spacing:1.6px;color:#7cff55;text-transform:uppercase}
+.insightTone{font-size:10px;font-weight:950;border:1px solid #2a332d;color:#8d978f;border-radius:999px;padding:5px 8px}
+.insightText{font-size:15px;line-height:1.5;color:#dfe6e2;font-weight:600}
 
-/* MARKET PULSE */
-.pulse{margin:12px;padding:14px;border-radius:20px;background:#0b0e0c;border:1px solid #222}
-.pulseRow{display:flex;justify-content:space-between;padding:6px 0;color:#aaa}
-.pulseRow span:last-child{color:#fff;font-weight:900}
+.field{width:100%;margin-top:10px;padding:13px;border-radius:13px;border:1px solid #242b27;background:#070908;color:white;font-size:16px}
+.saveBtn{width:100%;margin-top:14px;padding:13px;border-radius:13px;border:1px solid #7cff55;background:rgba(124,255,85,.07);color:#7cff55;font-weight:950}
+.label{color:#707a74;font-size:10px;font-weight:950;letter-spacing:1.5px;text-transform:uppercase}
 
-/* NAV */
-.nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;display:flex;padding:10px;background:#050606}
-.nav button{flex:1;padding:12px;border:1px solid #222;background:#0b0e0c;color:#777;border-radius:14px}
-.nav button.active{background:#7cff55;color:#000}
+.bottomNav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;display:flex;gap:6px;padding:10px 14px 18px;background:linear-gradient(180deg,rgba(5,6,6,.2),#050606 36%)}
+.navBtn{flex:1;border:1px solid #242b27;background:#0b0e0c;color:#7f8882;border-radius:16px;padding:13px 8px;font-weight:950}
+.navBtn.active{color:#050606;background:#7cff55;border-color:#7cff55}
+.tabPage{display:none}.tabPage.active{display:block}
+.err{color:#ff4d5d}
 </style>
 </head>
 
@@ -61,157 +77,379 @@ canvas{width:100%;height:90px;margin-top:12px}
 <div class="app">
 
 <div class="top">
-  <div class="title">BULLY CRYPTO</div>
-  <div class="mode">ANALYSIS</div>
+  <div class="brand">
+    <img src="logo.PNG" class="logo">
+    <div><div class="title">BULLY</div><div class="sub">CRYPTO</div></div>
+  </div>
+  <div class="mode">LIVE DATA</div>
 </div>
 
-<div class="tickerWrap">
-  <div id="ticker" class="ticker"></div>
-</div>
+<div class="tickerWrap"><div id="ticker" class="ticker"></div></div>
 
 <div class="coinRail">
-  <button onclick="pick('BTC',65000,this)">BTC</button>
-  <button onclick="pick('ETH',3000,this)">ETH</button>
-  <button onclick="pick('SOL',150,this)">SOL</button>
-  <button onclick="pick('XRP',0.6,this)">XRP</button>
+  <button onclick="pick('BTC',this)">BTC</button>
+  <button onclick="pick('ETH',this)">ETH</button>
+  <button onclick="pick('SOL',this)">SOL</button>
+  <button onclick="pick('XRP',this)">XRP</button>
+  <button onclick="pick('DOGE',this)">DOGE</button>
+  <button onclick="pick('ADA',this)">ADA</button>
 </div>
 
-<div class="main">
-  <div id="signal" class="signal">WAIT</div>
-  <div id="price" class="price">—</div>
-  <div id="move" class="move">Tap coin</div>
-  <canvas id="chart"></canvas>
+<div id="overview" class="tabPage active">
+  <div class="mainPanel">
+    <div class="signalLabel">Signal</div>
+    <div id="signalText" class="signalBig holdText">WAIT</div>
+
+    <div class="priceBlock">
+      <div id="coin" class="coinName">SELECT COIN</div>
+      <div id="price" class="price">—</div>
+      <div id="move" class="move">Tap a coin</div>
+    </div>
+
+    <div class="chartBox">
+      <div class="chartHead"><span>1m Candles</span><span id="chartStatus">LIVE</span></div>
+      <canvas id="candleChart" height="180"></canvas>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metricLabel">Trend</div><div id="trend" class="metricValue">—</div></div>
+    <div class="metric"><div class="metricLabel">Confidence</div><div id="confidence" class="metricValue">—</div></div>
+    <div class="metric"><div class="metricLabel">Setup</div><div id="setup" class="metricValue">—</div></div>
+  </div>
+
+  <div class="panel insight">
+    <div class="insightTop">
+      <div class="insightHeader">Market Insight</div>
+      <div id="insightTone" class="insightTone">WAIT</div>
+    </div>
+    <div id="reason" class="insightText">Waiting for live data...</div>
+  </div>
 </div>
 
-<div class="grid">
-  <div class="metric"><div>Trend</div><div id="trend">—</div></div>
-  <div class="metric"><div>Confidence</div><div id="confidence">—</div></div>
-  <div class="metric"><div>Setup</div><div id="setup">—</div></div>
+<div id="plan" class="tabPage">
+  <div class="panel">
+    <div class="row"><span>Coin</span><span id="planCoin">—</span></div>
+    <div class="row"><span>Signal</span><span id="planSignal">—</span></div>
+    <div class="row"><span>Entry Zone</span><span id="entry">—</span></div>
+    <div class="row"><span>Stop Loss</span><span id="stop">—</span></div>
+    <div class="row"><span>Target</span><span id="target">—</span></div>
+    <div class="row"><span>Risk / Reward</span><span id="riskReward">—</span></div>
+    <div class="row"><span>Trade Quality</span><span id="tradeQuality">—</span></div>
+    <div class="row"><span>Entry Timing</span><span id="entryTiming">—</span></div>
+    <div class="row"><span>Position Size</span><span id="positionSize">—</span></div>
+    <div class="row"><span>Estimated Units</span><span id="estimatedUnits">—</span></div>
+  </div>
+  <div class="panel">
+    <div class="row"><span>Trade Style</span><span id="tradeStyle">—</span></div>
+    <div class="row"><span>Action</span><span id="tradeAction">—</span></div>
+  </div>
 </div>
 
-<div class="insight">
-  <div class="insightHeader">Market Insight</div>
-  <div id="reason" class="insightText">Waiting...</div>
+<div id="position" class="tabPage">
+  <div class="panel">
+    <div class="label">Position Inputs</div>
+    <div style="margin-top:14px">Amount owned</div>
+    <input id="ownedAmount" class="field" inputmode="decimal" placeholder="Example: 0.25">
+    <div style="margin-top:14px">Average buy price</div>
+    <input id="avgBuy" class="field" inputmode="decimal" placeholder="Example: 62000">
+    <div style="margin-top:14px">Risk per trade $</div>
+    <input id="riskDollars" class="field" inputmode="decimal" placeholder="Example: 25">
+    <button class="saveBtn" onclick="savePosition()">SAVE POSITION</button>
+  </div>
+  <div class="panel">
+    <div class="row"><span>Current Value</span><span id="currentValue">—</span></div>
+    <div class="row"><span>Profit / Loss</span><span id="profitLoss">—</span></div>
+    <div class="row"><span>Position Verdict</span><span id="positionVerdict">—</span></div>
+  </div>
 </div>
 
-<div class="pulse">
-  <div class="pulseRow"><span>Market Bias</span><span id="bias">—</span></div>
-  <div class="pulseRow"><span>Volatility</span><span id="vol">—</span></div>
-  <div class="pulseRow"><span>Pressure</span><span id="pressure">—</span></div>
-</div>
-
-<div class="nav">
-  <button class="active">Overview</button>
-  <button>Plan</button>
-  <button>Position</button>
+<div class="bottomNav">
+  <button class="navBtn active" onclick="showTab('overview', this)">Overview</button>
+  <button class="navBtn" onclick="showTab('plan', this)">Plan</button>
+  <button class="navBtn" onclick="showTab('position', this)">Position</button>
 </div>
 
 </div>
 
 <script>
-let price=0, selectedCoin="", timer=null;
-let priceHistory=[], marketData={BTC:65000,ETH:3000,SOL:150,XRP:0.6};
-let marketHistory={};
+const SYMBOLS={BTC:"BTCUSDT",ETH:"ETHUSDT",SOL:"SOLUSDT",XRP:"XRPUSDT",DOGE:"DOGEUSDT",ADA:"ADAUSDT"};
+const REST="https://api.binance.com/api/v3";
+const WS="wss://data-stream.binance.vision/stream?streams=";
 
-function pick(sym,start,btn){
+let selectedCoin="", selectedPair="", candles=[], socket=null, tickerSocket=null;
+let lastDecision="WAIT";
+
+function money(n){return "$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:Number(n)>100?2:4});}
+
+function setSignal(d){
+  lastDecision=d;
+  const el=document.getElementById("signalText");
+  el.textContent=d;
+  el.className="signalBig "+(d==="BUY"?"buyText":d==="SELL"?"sellText":"holdText");
+  updatePosition();
+}
+
+async function pick(sym,btn){
   selectedCoin=sym;
-  document.querySelectorAll(".coinRail button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
+  selectedPair=SYMBOLS[sym];
 
-  price=start;
-  priceHistory=[start];
+  document.querySelectorAll(".coinRail button").forEach(b=>b.classList.remove("activeCoin"));
+  if(btn) btn.classList.add("activeCoin");
 
-  if(timer) clearInterval(timer);
-  run();
-  timer=setInterval(run,3000);
+  document.getElementById("coin").textContent=sym;
+  document.getElementById("price").textContent="Loading...";
+  document.getElementById("reason").textContent="Loading live candles...";
+  document.getElementById("chartStatus").textContent="LIVE";
+
+  loadPosition();
+
+  try{
+    await loadCandles(selectedPair);
+    connectCandleStream(selectedPair);
+    analyze();
+  }catch(e){
+    document.getElementById("price").textContent="Data blocked";
+    document.getElementById("reason").innerHTML="<span class='err'>Live data was blocked. This needs a backend/Cloudflare Worker if Binance is blocked on your device.</span>";
+  }
 }
 
-function run(){
-  price += price*(Math.random()-.5)*0.002;
-  priceHistory.push(price);
-  if(priceHistory.length>30) priceHistory.shift();
-
-  drawChart();
-  updateMarket();
-  updateTicker();
-
-  let trendMove=((priceHistory.at(-1)-priceHistory[0])/priceHistory[0])*100;
-
-  let decision="HOLD";
-  if(trendMove>0.2) decision="BUY";
-  else if(trendMove<-0.2) decision="SELL";
-
-  document.getElementById("signal").innerText=decision;
-  document.getElementById("price").innerText="$"+price.toFixed(2);
-  document.getElementById("move").innerText=trendMove.toFixed(2)+"%";
-
-  document.getElementById("trend").innerText=trendMove>0?"BULL":"BEAR";
-  document.getElementById("confidence").innerText=Math.abs(trendMove*3).toFixed(0)+"/100";
-  document.getElementById("setup").innerText=decision;
-
-  document.getElementById("reason").innerText=
-    decision==="BUY"?"Momentum building. Watch pullbacks.":
-    decision==="SELL"?"Weakness confirmed. Stay defensive.":
-    "No edge. Wait for clarity.";
-
-  updatePulse();
+async function loadCandles(pair){
+  const res=await fetch(`${REST}/klines?symbol=${pair}&interval=1m&limit=60`);
+  if(!res.ok) throw new Error("REST blocked");
+  const data=await res.json();
+  candles=data.map(k=>({
+    t:k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5]
+  }));
+  drawCandles();
 }
 
-function drawChart(){
-  const c=document.getElementById("chart");
-  const ctx=c.getContext("2d");
-  c.width=c.offsetWidth;
-  c.height=90;
+function connectCandleStream(pair){
+  if(socket) socket.close();
 
-  let min=Math.min(...priceHistory);
-  let max=Math.max(...priceHistory);
+  const stream=pair.toLowerCase()+"@kline_1m";
+  socket=new WebSocket(WS+stream);
 
-  ctx.clearRect(0,0,c.width,c.height);
-  ctx.beginPath();
+  socket.onmessage=(event)=>{
+    const msg=JSON.parse(event.data);
+    const k=msg.data.k;
 
-  priceHistory.forEach((p,i)=>{
-    let x=i/(priceHistory.length-1)*c.width;
-    let y=c.height-((p-min)/(max-min||1))*c.height;
-    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
-  });
+    const candle={t:k.t,o:+k.o,h:+k.h,l:+k.l,c:+k.c,v:+k.v};
+    const last=candles[candles.length-1];
 
-  ctx.strokeStyle="#7cff55";
-  ctx.lineWidth=2;
-  ctx.stroke();
+    if(last && last.t===candle.t) candles[candles.length-1]=candle;
+    else candles.push(candle);
+
+    if(candles.length>60) candles.shift();
+
+    drawCandles();
+    analyze();
+  };
+
+  socket.onerror=()=>{
+    document.getElementById("chartStatus").textContent="WS ERROR";
+  };
 }
 
-function updateMarket(){
-  Object.keys(marketData).forEach(c=>{
-    let val=marketData[c];
-    val+=val*(Math.random()-.5)*0.003;
-    marketData[c]=val;
+function startTicker(){
+  const streams=Object.values(SYMBOLS).map(s=>s.toLowerCase()+"@ticker").join("/");
+  tickerSocket=new WebSocket(WS+streams);
 
-    if(!marketHistory[c]) marketHistory[c]=[val];
-    marketHistory[c].push(val);
-    if(marketHistory[c].length>20) marketHistory[c].shift();
-  });
+  tickerSocket.onmessage=(event)=>{
+    const msg=JSON.parse(event.data);
+    const d=msg.data;
+    const symbol=d.s.replace("USDT","");
+    const change=+d.P;
+
+    let cls=change>0?"tUp":change<0?"tDown":"tFlat";
+    window.tickerMap=window.tickerMap||{};
+    window.tickerMap[symbol]=`<span class="${cls}">${symbol} ${change.toFixed(2)}%</span>`;
+    updateTicker();
+  };
 }
 
 function updateTicker(){
-  let html="";
-  Object.keys(marketData).forEach(c=>{
-    let h=marketHistory[c];
-    if(!h) return;
-    let change=((h.at(-1)-h[0])/h[0])*100;
-    let cls=change>0?"tUp":change<0?"tDown":"tFlat";
-    html+=`<div class="${cls}">${c} ${change.toFixed(2)}%</div>`;
-  });
+  const order=["BTC","ETH","SOL","XRP","DOGE","ADA"];
+  let html=order.map(s=>window.tickerMap?.[s]||`<span class="tFlat">${s} —</span>`).join("");
   document.getElementById("ticker").innerHTML=html+html;
 }
 
-function updatePulse(){
-  let changes=Object.values(marketHistory).map(h=>((h.at(-1)-h[0])/h[0])*100);
-  let avg=changes.reduce((a,b)=>a+b,0)/changes.length;
+function analyze(){
+  if(candles.length<10) return;
 
-  document.getElementById("bias").innerText=avg>0?"BULLISH":"BEARISH";
-  document.getElementById("vol").innerText=(Math.max(...changes)-Math.min(...changes)).toFixed(2)+"%";
-  document.getElementById("pressure").innerText=avg.toFixed(2)+"%";
+  const closes=candles.map(c=>c.c);
+  const price=closes[closes.length-1];
+  const first=closes[0];
+  const trendMove=((price-first)/first)*100;
+  const avg=closes.reduce((a,b)=>a+b,0)/closes.length;
+  const aboveAvg=price>avg;
+
+  let score=50;
+  if(trendMove>0.35)score+=25; else if(trendMove>0.15)score+=12;
+  else if(trendMove<-0.35)score-=25; else if(trendMove<-0.15)score-=12;
+  if(aboveAvg)score+=8; else score-=8;
+
+  const last=candles[candles.length-1];
+  const prev=candles[candles.length-2];
+  const move=((last.c-prev.c)/prev.c)*100;
+  if(move>0.05)score+=8; else if(move<-0.05)score-=8;
+
+  score=Math.max(0,Math.min(100,Math.round(score)));
+
+  let decision="HOLD";
+  if(score>=72&&trendMove>0.15)decision="BUY";
+  else if(score<=30&&trendMove<-0.15)decision="SELL";
+
+  setSignal(decision);
+
+  document.getElementById("price").textContent=money(price);
+  const moveEl=document.getElementById("move");
+  moveEl.textContent=trendMove.toFixed(2)+"% trend";
+  moveEl.style.color=trendMove>0?"#7cff55":trendMove<0?"#ff4d5d":"#aaa";
+
+  document.getElementById("trend").textContent=score>68?"BULL":score<32?"BEAR":"MIXED";
+  document.getElementById("setup").textContent=decision==="BUY"?"MOMENTUM":decision==="SELL"?"WEAKNESS":"WAIT";
+  document.getElementById("confidence").textContent=score+"/100";
+  document.getElementById("insightTone").textContent=decision;
+
+  document.getElementById("reason").textContent=
+    decision==="BUY"?"Live candles show momentum building. Do not chase above your entry zone.":
+    decision==="SELL"?"Live candles show weakness. Defense matters more than hoping for a rebound.":
+    "Live candles are mixed. No confirmed edge — patience here is strength.";
+
+  updatePlan(price,trendMove,score,decision);
 }
+
+function updatePlan(price,trendMove,score,decision){
+  let entryLow,entryHigh,stop,target;
+  if(decision==="BUY"){entryLow=price*.992;entryHigh=price*.998;stop=price*.970;}
+  else if(decision==="SELL"){entryLow=price*.995;entryHigh=price*1.005;stop=price*1.030;}
+  else{entryLow=price*.985;entryHigh=price*.995;stop=price*.965;}
+
+  let entryMid=(entryLow+entryHigh)/2;
+  let risk=Math.abs(entryMid-stop);
+  target=decision==="SELL"?entryMid-(risk*1.5):entryMid+(risk*1.5);
+  let rr=risk>0?Math.abs(target-entryMid)/risk:0;
+
+  let quality="WAIT";
+  if(decision==="BUY") quality=score>=78?"ELITE":"GOOD";
+  else if(decision==="SELL") quality="TRIM / AVOID";
+  else if(Math.abs(trendMove)<.10) quality="INVALID";
+
+  let timing="WAIT";
+  let dist=((price-entryMid)/entryMid)*100;
+  if(quality==="INVALID")timing="NO TRADE";
+  else if(decision==="BUY"){
+    if(price>=entryLow&&price<=entryHigh)timing="IN ZONE";
+    else if(dist>.25)timing="TOO EXTENDED";
+    else timing="WAIT PULLBACK";
+  }else if(decision==="SELL")timing="EXIT / AVOID";
+
+  let riskDollars=Number(document.getElementById("riskDollars").value)||25;
+  let units=risk>0?riskDollars/risk:0;
+  let posSize=units*entryMid;
+
+  document.getElementById("planCoin").textContent=selectedCoin||"—";
+  document.getElementById("planSignal").textContent=decision;
+  document.getElementById("entry").textContent=money(entryLow)+" - "+money(entryHigh);
+  document.getElementById("stop").textContent=money(stop);
+  document.getElementById("target").textContent=money(target);
+  document.getElementById("riskReward").textContent="1 : "+rr.toFixed(2);
+  document.getElementById("tradeQuality").textContent=quality;
+  document.getElementById("entryTiming").textContent=timing;
+  document.getElementById("positionSize").textContent=money(posSize);
+  document.getElementById("estimatedUnits").textContent=units.toFixed(4);
+  document.getElementById("tradeStyle").textContent=quality==="ELITE"?"AGGRESSIVE":quality==="GOOD"?"STANDARD":quality==="INVALID"?"NO TRADE":"DEFENSE";
+  document.getElementById("tradeAction").textContent=quality==="INVALID"?"No clean edge. Do not force a trade.":"Use the plan. Respect the stop.";
+
+  updatePosition();
+}
+
+function drawCandles(){
+  const canvas=document.getElementById("candleChart");
+  if(!canvas||candles.length<2)return;
+
+  const ctx=canvas.getContext("2d");
+  const dpr=window.devicePixelRatio||1;
+  const w=canvas.offsetWidth,h=180;
+  canvas.width=w*dpr; canvas.height=h*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+
+  const highs=candles.map(c=>c.h), lows=candles.map(c=>c.l);
+  const max=Math.max(...highs), min=Math.min(...lows), range=max-min||1;
+  const pad=10, cw=(w-pad*2)/candles.length;
+
+  ctx.strokeStyle="rgba(255,255,255,.06)";
+  ctx.lineWidth=1;
+  for(let i=1;i<4;i++){
+    let y=(h/4)*i;
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();
+  }
+
+  candles.forEach((c,i)=>{
+    const x=pad+i*cw+cw/2;
+    const yH=h-pad-((c.h-min)/range)*(h-pad*2);
+    const yL=h-pad-((c.l-min)/range)*(h-pad*2);
+    const yO=h-pad-((c.o-min)/range)*(h-pad*2);
+    const yC=h-pad-((c.c-min)/range)*(h-pad*2);
+    const up=c.c>=c.o;
+
+    ctx.strokeStyle=up?"#7cff55":"#ff4d5d";
+    ctx.fillStyle=up?"#7cff55":"#ff4d5d";
+    ctx.beginPath();ctx.moveTo(x,yH);ctx.lineTo(x,yL);ctx.stroke();
+
+    const bodyH=Math.max(2,Math.abs(yC-yO));
+    ctx.fillRect(x-cw*.28,Math.min(yO,yC),cw*.56,bodyH);
+  });
+}
+
+function savePosition(){
+  if(!selectedCoin){alert("Pick a coin first.");return;}
+  localStorage.setItem(selectedCoin+"_amount",document.getElementById("ownedAmount").value||"");
+  localStorage.setItem(selectedCoin+"_avg",document.getElementById("avgBuy").value||"");
+  localStorage.setItem(selectedCoin+"_risk",document.getElementById("riskDollars").value||"25");
+  updatePosition();
+}
+
+function loadPosition(){
+  if(!selectedCoin)return;
+  document.getElementById("ownedAmount").value=localStorage.getItem(selectedCoin+"_amount")||"";
+  document.getElementById("avgBuy").value=localStorage.getItem(selectedCoin+"_avg")||"";
+  document.getElementById("riskDollars").value=localStorage.getItem(selectedCoin+"_risk")||"25";
+  updatePosition();
+}
+
+function updatePosition(){
+  const amount=Number(document.getElementById("ownedAmount").value)||0;
+  const avg=Number(document.getElementById("avgBuy").value)||0;
+  const price=candles.length?candles[candles.length-1].c:0;
+
+  if(!price||amount<=0){
+    document.getElementById("currentValue").textContent="—";
+    document.getElementById("profitLoss").textContent="—";
+    document.getElementById("positionVerdict").textContent=lastDecision==="BUY"?"GOOD BUY CANDIDATE":lastDecision==="SELL"?"AVOID":"WAIT";
+    return;
+  }
+
+  const value=amount*price,cost=amount*avg,pnl=value-cost,pnlPct=cost>0?(pnl/cost)*100:0;
+  document.getElementById("currentValue").textContent=money(value);
+  const pnlEl=document.getElementById("profitLoss");
+  pnlEl.textContent=money(pnl)+" ("+pnlPct.toFixed(2)+"%)";
+  pnlEl.style.color=pnl>=0?"#7cff55":"#ff4d5d";
+
+  document.getElementById("positionVerdict").textContent=lastDecision==="BUY"?"ADD / HOLD":lastDecision==="SELL"?"TRIM / EXIT":"HOLD";
+}
+
+function showTab(id,btn){
+  document.querySelectorAll(".tabPage").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".navBtn").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
+  if(id==="overview")setTimeout(drawCandles,50);
+}
+
+startTicker();
 </script>
 
 </body>
