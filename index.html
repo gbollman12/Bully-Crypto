@@ -91,6 +91,7 @@ body{margin:0;background:#050606;color:white;font-family:-apple-system}
 <div class="row"><span>Position Size</span><span id="positionSize">—</span></div>
 <div class="row"><span>Estimated Units</span><span id="estimatedUnits">—</span></div>
 <div class="row"><span>Entry Timing</span><span id="entryTiming">—</span></div>
+<div class="row"><span>Range Position</span><span id="rangePos">—</span></div>
 </div>
 
 <div class="card">
@@ -158,6 +159,24 @@ function pick(sym,start){
   timer = setInterval(run, 8000);
 }
 
+let high = Math.max(...priceHistory);
+let low = Math.min(...priceHistory);
+
+let rangePos = "MID";
+
+let posPct = (price - low) / (high - low || 1);
+
+if(posPct > 0.75){
+  rangePos = "NEAR HIGH";
+}
+else if(posPct < 0.25){
+  rangePos = "NEAR LOW";
+}
+else{
+  rangePos = "MID RANGE";
+}
+
+document.getElementById("rangePos").textContent = rangePos;
 function run(){
 
   let noise = (Math.random() - 0.5) * 0.0003;
