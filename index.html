@@ -14,47 +14,201 @@
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:radial-gradient(circle at top,#102015 0%,#050606 40%,#000 100%);
+  background:#050606;
   color:white;
   font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
 }
-.app{max-width:520px;margin:auto;padding-bottom:34px}
-.header{display:flex;align-items:center;justify-content:space-between;padding:20px 18px 14px}
-.brand{display:flex;align-items:center;gap:13px}
-.logo{width:52px;height:52px;border-radius:15px;object-fit:cover}
-.title{font-size:25px;font-weight:950}
-.sub{color:#7cff55;font-size:10px;font-weight:900;letter-spacing:2.8px}
-.status{font-size:10px;color:#9aa39d;border:1px solid #29322c;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.025)}
-.sectionTitle{padding:4px 18px 8px;color:#6f7973;font-size:11px;letter-spacing:1.8px;font-weight:950;text-transform:uppercase}
-.quick{display:flex;overflow-x:auto;gap:8px;padding:0 14px 14px}
-.quick button{min-width:72px;padding:11px 14px;border-radius:999px;background:#0c0f0d;border:1px solid #252c27;color:#dfe7e2;font-weight:900}
-.quick button:active{transform:scale(.96)}
-.tabs{display:flex;gap:8px;padding:0 14px 12px}
-.tab{flex:1;padding:12px;border-radius:999px;border:1px solid #252c27;background:#0c0f0d;color:#858d87;font-weight:900}
-.tab.active{color:#050606;background:#7cff55;border-color:#7cff55}
-.card{background:linear-gradient(180deg,#121613,#070807);border:1px solid #242c26;border-radius:24px;padding:18px;margin:14px;box-shadow:0 18px 40px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.04)}
-.marketCard{padding:20px;border-color:#2c372f}
-.heroTop{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
-.label{color:#7d8781;font-size:11px;font-weight:950;letter-spacing:1.5px;text-transform:uppercase}
-.price{font-size:46px;line-height:1;font-weight:950;letter-spacing:-1px;margin-top:8px;font-variant-numeric:tabular-nums}
-.move{color:#a9b0ab;margin-top:4px;font-size:14px;font-weight:800}
-.badge{padding:12px 17px;border-radius:999px;font-size:16px;font-weight:950;border:1px solid;min-width:82px;text-align:center;letter-spacing:.5px}
-.buy{color:#7cff55;border-color:#7cff55;background:rgba(124,255,85,.08);box-shadow:0 0 20px rgba(124,255,85,.18)}
-.sell{color:#ff4d5d;border-color:#ff4d5d;background:rgba(255,77,93,.08);box-shadow:0 0 20px rgba(255,77,93,.18)}
-.hold{color:#ffd60a;border-color:#ffd60a;background:rgba(255,214,10,.08);box-shadow:0 0 16px rgba(255,214,10,.12)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px}
-.stat{background:#0d100e;border:1px solid #242c26;border-radius:20px;padding:16px}
-.statVal{font-size:23px;font-weight:950;margin-top:7px}
-.row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #202621;color:#a9b0ab}
+.app{max-width:520px;margin:auto;padding-bottom:30px}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 18px 12px;
+  border-bottom:1px solid #151a17;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:46px;height:46px;border-radius:12px;object-fit:cover}
+.title{font-size:22px;font-weight:950;letter-spacing:.4px}
+.sub{color:#7cff55;font-size:10px;font-weight:900;letter-spacing:2.4px}
+.status{
+  font-size:10px;
+  color:#858d87;
+  border:1px solid #242b27;
+  padding:6px 9px;
+  border-radius:999px;
+  background:#0a0d0b;
+  font-weight:800;
+}
+
+.sectionTitle{
+  padding:12px 18px 6px;
+  color:#666f69;
+  font-size:10px;
+  letter-spacing:1.8px;
+  font-weight:950;
+  text-transform:uppercase;
+}
+
+.quick{
+  display:flex;
+  overflow-x:auto;
+  gap:7px;
+  padding:0 14px 12px;
+}
+.quick::-webkit-scrollbar{display:none}
+.quick button{
+  min-width:64px;
+  padding:9px 12px;
+  border-radius:10px;
+  background:#0c0f0d;
+  border:1px solid #242b27;
+  color:#e5ebe7;
+  font-size:13px;
+  font-weight:900;
+}
+.quick button:active{transform:scale(.97)}
+
+.tabs{
+  display:flex;
+  padding:0 14px;
+  border-bottom:1px solid #171d19;
+}
+.tab{
+  flex:1;
+  padding:12px 4px;
+  border:0;
+  border-bottom:2px solid transparent;
+  background:transparent;
+  color:#7f8882;
+  font-weight:900;
+  font-size:14px;
+}
+.tab.active{
+  color:#7cff55;
+  border-bottom-color:#7cff55;
+}
+
+.card{
+  background:#0b0e0c;
+  border:1px solid #202722;
+  border-radius:18px;
+  padding:16px;
+  margin:12px 14px;
+  box-shadow:0 10px 28px rgba(0,0,0,.28);
+}
+.marketCard{
+  background:linear-gradient(180deg,#0e140f,#070807);
+  border-color:#263029;
+}
+.heroTop{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.label{
+  color:#6f7973;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:1.7px;
+  text-transform:uppercase;
+}
+.price{
+  font-size:42px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-1.2px;
+  margin-top:7px;
+  font-variant-numeric:tabular-nums;
+}
+.move{
+  color:#a9b0ab;
+  margin-top:5px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.badge{
+  padding:10px 15px;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:950;
+  border:1px solid;
+  min-width:78px;
+  text-align:center;
+  letter-spacing:.5px;
+  width:max-content;
+}
+.buy{color:#7cff55;border-color:#356d2c;background:rgba(124,255,85,.07)}
+.sell{color:#ff4d5d;border-color:#70313a;background:rgba(255,77,93,.07)}
+.hold{color:#ffd60a;border-color:#6f5d13;background:rgba(255,214,10,.06)}
+
+#miniChart{
+  width:100%;
+  height:96px;
+  display:block;
+  margin-top:8px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:0 14px;
+}
+.stat{
+  background:#0b0e0c;
+  border:1px solid #202722;
+  border-radius:16px;
+  padding:15px;
+}
+.statVal{
+  font-size:22px;
+  font-weight:950;
+  margin-top:6px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  padding:10px 0;
+  border-bottom:1px solid #1b211d;
+  color:#a9b0ab;
+  font-size:15px;
+}
 .row:last-child{border-bottom:0}
-.row span:first-child{color:#7f8882;font-weight:800}
-.row span:last-child{text-align:right;color:#f2f5f3;font-weight:900}
-.field{width:100%;margin-top:10px;padding:14px;border-radius:16px;border:1px solid #252c27;background:#080a09;color:white;font-size:16px}
-.saveBtn{width:100%;margin-top:14px;padding:14px;border-radius:16px;border:1px solid #7cff55;background:rgba(124,255,85,.08);color:#7cff55;font-weight:950}
+.row span:first-child{color:#7d8680;font-weight:750}
+.row span:last-child{text-align:right;color:#f1f4f2;font-weight:850}
+
+.field{
+  width:100%;
+  margin-top:10px;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #242b27;
+  background:#070908;
+  color:white;
+  font-size:16px;
+}
+.saveBtn{
+  width:100%;
+  margin-top:14px;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #7cff55;
+  background:rgba(124,255,85,.07);
+  color:#7cff55;
+  font-weight:950;
+}
 .card,.quick button,.tab,.badge{transition:all .18s ease}
-.priceFlash{animation:pricePulse .55s ease}
-@keyframes pricePulse{0%{transform:scale(1);opacity:1}35%{transform:scale(1.04);opacity:.9}100%{transform:scale(1);opacity:1}}
-#miniChart{width:100%;height:120px;display:block;margin-top:10px}
+.priceFlash{animation:pricePulse .45s ease}
+@keyframes pricePulse{
+  0%{transform:scale(1);opacity:1}
+  35%{transform:scale(1.025);opacity:.92}
+  100%{transform:scale(1);opacity:1}
+}
 </style>
 </head>
 
@@ -69,7 +223,7 @@ body{
       <div class="sub">CRYPTO</div>
     </div>
   </div>
-  <div class="status">ANALYSIS MODE</div>
+  <div class="status">ANALYSIS</div>
 </div>
 
 <div class="sectionTitle">Market Scan</div>
@@ -103,7 +257,7 @@ body{
 
   <div class="card">
     <div class="label">Price Path</div>
-    <canvas id="miniChart" height="120"></canvas>
+    <canvas id="miniChart" height="96"></canvas>
   </div>
 
   <div class="grid">
@@ -330,22 +484,22 @@ function drawChart(){
   const ctx = canvas.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
   const width = canvas.offsetWidth;
-  const height = 120;
+  const height = 96;
 
   canvas.width = width * dpr;
   canvas.height = height * dpr;
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.clearRect(0,0,width,height);
 
-  const pad = 10;
+  const pad = 8;
   const min = Math.min(...priceHistory);
   const max = Math.max(...priceHistory);
   const range = max - min || 1;
 
-  ctx.strokeStyle = "rgba(255,255,255,.08)";
+  ctx.strokeStyle = "rgba(255,255,255,.06)";
   ctx.lineWidth = 1;
-  for(let i=1;i<4;i++){
-    let y = (height/4)*i;
+  for(let i=1;i<3;i++){
+    let y = (height/3)*i;
     ctx.beginPath();
     ctx.moveTo(0,y);
     ctx.lineTo(width,y);
@@ -360,7 +514,7 @@ function drawChart(){
     else ctx.lineTo(x,y);
   });
 
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 2.5;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   ctx.strokeStyle = priceHistory[priceHistory.length-1] >= priceHistory[0] ? "#7cff55" : "#ff4d5d";
