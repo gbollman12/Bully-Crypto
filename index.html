@@ -1,372 +1,241 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  AlertTriangle,
-  BatteryCharging,
-  CheckCircle2,
-  ClipboardList,
-  CloudRain,
-  Hammer,
-  Home,
-  PackageCheck,
-  Plus,
-  Send,
-  ShieldAlert,
-  Sun,
-  Trash2,
-  Users,
-  Zap,
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foreman OS</title>
 
-const STORAGE_KEY = "crew-command-foreman-v1";
+<style>
+body {
+  margin:0;
+  background:#050606;
+  color:white;
+  font-family:-apple-system,Arial;
+}
+.app {
+  max-width:500px;
+  margin:auto;
+  padding:12px;
+  padding-bottom:90px;
+}
+.card {
+  background:#111;
+  border-radius:16px;
+  padding:12px;
+  margin-bottom:10px;
+}
+input, textarea {
+  width:100%;
+  background:#000;
+  border:1px solid #222;
+  color:white;
+  border-radius:10px;
+  padding:10px;
+  margin-top:6px;
+}
+button {
+  background:white;
+  color:black;
+  border:none;
+  padding:10px;
+  border-radius:10px;
+  font-weight:bold;
+}
+.row {
+  display:flex;
+  gap:6px;
+}
+.small {
+  font-size:12px;
+  color:#aaa;
+}
+.task {
+  display:flex;
+  gap:8px;
+  background:#000;
+  padding:8px;
+  border-radius:10px;
+  margin-bottom:6px;
+}
+.done {
+  text-decoration:line-through;
+  color:#555;
+}
+.nav {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:black;
+  display:flex;
+}
+.nav button {
+  flex:1;
+  border-radius:0;
+  background:black;
+  color:#aaa;
+}
+.nav .active {
+  color:white;
+}
+</style>
+</head>
 
-const defaultCrew = [
-  { id: 1, name: "Guy 1", role: "Lead", task: "Verify layout / measurements", zone: "Front", status: "On it" },
-  { id: 2, name: "Guy 2", role: "Cut man", task: "Cut and stage material", zone: "Saw", status: "On it" },
-  { id: 3, name: "Guy 3", role: "Framer", task: "Install / nail off", zone: "Back", status: "On it" },
+<body>
+
+<div class="app">
+
+<h2>Foreman OS</h2>
+
+<div class="card">
+<input id="job" value="Monday Plan">
+<input id="stage" value="Framing / Roof">
+</div>
+
+<div class="card">
+<div class="small">Mode</div>
+<div id="mode" style="font-size:22px;font-weight:bold;">ATTACK</div>
+</div>
+
+<div id="planTab">
+
+<div class="card">
+<h3>Tasks</h3>
+<div id="tasks"></div>
+
+<div class="row">
+<input id="newTask" placeholder="Add task">
+<button onclick="addTask()">+</button>
+</div>
+</div>
+
+<div class="card">
+<h3>Blockers</h3>
+<textarea id="blockers"></textarea>
+</div>
+
+</div>
+
+<div id="crewTab" style="display:none">
+
+<div class="card">
+<h3>Crew</h3>
+<div id="crew"></div>
+<button onclick="addCrew()">Add Guy</button>
+</div>
+
+</div>
+
+<div id="sendTab" style="display:none">
+
+<div class="card">
+<h3>Text Plan</h3>
+<textarea id="output"></textarea>
+<button onclick="copy()">Copy</button>
+</div>
+
+</div>
+
+</div>
+
+<div class="nav">
+<button onclick="tab('plan')" id="planBtn" class="active">Plan</button>
+<button onclick="tab('crew')" id="crewBtn">Crew</button>
+<button onclick="tab('send')" id="sendBtn">Send</button>
+</div>
+
+<script>
+
+let tasks = [
+  {text:"Walk job", done:false},
+  {text:"Check material", done:false}
 ];
 
-const defaultTasks = [
-  { id: 1, text: "Walk job and pick top 3 wins", done: false, priority: "High", zone: "Whole job" },
-  { id: 2, text: "Check material, nails, hangers, batteries, ladders", done: false, priority: "High", zone: "Staging" },
-  { id: 3, text: "Assign every guy a first task before tools come out", done: false, priority: "High", zone: "Crew" },
-  { id: 4, text: "Spot blockers before lunch", done: false, priority: "Medium", zone: "Risk" },
+let crew = [
+  {name:"Guy 1", task:"Layout"},
+  {name:"Guy 2", task:"Cut"}
 ];
 
-const defaultJob = {
-  jobName: "Monday Frame Plan",
-  stage: "Roof / walls / punch list",
-  weather: "Clear",
-  materials: "Nails, hangers, sheathing, fascia, blocking, ladders, saw fuel/batteries",
-  blockers: "Back access, missing material, unclear layout, weather, other trades in the way",
-  notes: "End-of-day: what got done, what slowed us down, what to hit first tomorrow.",
-};
+function render() {
+  let t = document.getElementById("tasks");
+  t.innerHTML = "";
+  tasks.forEach((task,i)=>{
+    t.innerHTML += `
+    <div class="task">
+      <input type="checkbox" onchange="toggle(${i})">
+      <div class="${task.done?'done':''}">${task.text}</div>
+    </div>`;
+  });
 
-export default function CrewForemanApp() {
-  const [tab, setTab] = useState("plan");
-  const [job, setJob] = useState(defaultJob);
-  const [crew, setCrew] = useState(defaultCrew);
-  const [tasks, setTasks] = useState(defaultTasks);
-  const [newTask, setNewTask] = useState("");
-  const [copied, setCopied] = useState(false);
+  let c = document.getElementById("crew");
+  c.innerHTML="";
+  crew.forEach((g,i)=>{
+    c.innerHTML += `
+    <div class="task">
+      <input value="${g.name}" onchange="crew[${i}].name=this.value">
+      <input value="${g.task}" onchange="crew[${i}].task=this.value">
+    </div>`;
+  });
 
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setJob(parsed.job || defaultJob);
-        setCrew(parsed.crew || defaultCrew);
-        setTasks(parsed.tasks || defaultTasks);
-      } catch {}
-    }
-  }, []);
+  let mode = "ATTACK";
+  let open = tasks.filter(t=>!t.done).length;
+  if(open<2) mode="CLEANUP";
+  else if(open<4) mode="CONTROL";
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ job, crew, tasks }));
-  }, [job, crew, tasks]);
+  document.getElementById("mode").innerText = mode;
 
-  const completed = tasks.filter((t) => t.done).length;
-  const progress = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
-  const highOpen = tasks.filter((t) => !t.done && t.priority === "High").length;
-  const mode = highOpen > 2 ? "ATTACK" : highOpen > 0 ? "CONTROL" : "CLEANUP";
+  document.getElementById("output").value =
+`FOREMAN PLAN
 
-  const dailyText = useMemo(() => {
-    const openTasks = tasks
-      .filter((t) => !t.done)
-      .map((t, i) => `${i + 1}. ${t.text} — ${t.zone} [${t.priority}]`)
-      .join("\n");
-    const crewText = crew.map((c) => `- ${c.name} (${c.role}): ${c.task} — ${c.zone}`).join("\n");
+Job: ${document.getElementById("job").value}
+Stage: ${document.getElementById("stage").value}
+Mode: ${mode}
 
-    return `CREW COMMAND — DAILY PLAN\n\nJob: ${job.jobName}\nStage: ${job.stage}\nWeather: ${job.weather}\nMode: ${mode}\nProgress: ${progress}%\n\nTOP TASKS:\n${openTasks || "All priority tasks are checked off."}\n\nCREW ASSIGNMENTS:\n${crewText}\n\nMATERIALS / TOOLS:\n${job.materials}\n\nBLOCKERS / RISKS:\n${job.blockers}\n\nEND NOTES:\n${job.notes}`;
-  }, [job, tasks, crew, mode, progress]);
+TASKS:
+${tasks.map((t,i)=>`${i+1}. ${t.text}`).join("\n")}
 
-  function updateJob(field, value) {
-    setJob({ ...job, [field]: value });
-  }
+CREW:
+${crew.map(c=>`${c.name}: ${c.task}`).join("\n")}
 
-  function updateCrew(id, field, value) {
-    setCrew(crew.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
-  }
-
-  function addTask() {
-    if (!newTask.trim()) return;
-    setTasks([
-      ...tasks,
-      { id: Date.now(), text: newTask.trim(), done: false, priority: "High", zone: "Next" },
-    ]);
-    setNewTask("");
-  }
-
-  function addCrewMember() {
-    setCrew([
-      ...crew,
-      { id: Date.now(), name: `Guy ${crew.length + 1}`, role: "Framer", task: "New assignment", zone: "Zone", status: "On it" },
-    ]);
-  }
-
-  function copyPlan() {
-    navigator.clipboard?.writeText(dailyText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  }
-
-  function resetDay() {
-    setTasks(tasks.map((t) => ({ ...t, done: false })));
-    updateJob("notes", "End-of-day: what got done, what slowed us down, what to hit first tomorrow.");
-  }
-
-  return (
-    <div className="min-h-screen bg-[#050606] text-white pb-24">
-      <div className="max-w-md mx-auto px-3 pt-3 space-y-3">
-        <Header mode={mode} />
-
-        <Card className="bg-neutral-950 border-neutral-800 rounded-3xl overflow-hidden shadow-2xl">
-          <CardContent className="p-4 space-y-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex-1">
-                <input
-                  className="w-full bg-transparent text-2xl font-black leading-tight outline-none"
-                  value={job.jobName}
-                  onChange={(e) => updateJob("jobName", e.target.value)}
-                />
-                <input
-                  className="w-full bg-transparent text-sm text-neutral-400 outline-none"
-                  value={job.stage}
-                  onChange={(e) => updateJob("stage", e.target.value)}
-                />
-              </div>
-              <div className="rounded-2xl bg-white text-black px-3 py-2 font-black text-xs">{mode}</div>
-            </div>
-
-            <div className="grid grid-cols-4 gap-2">
-              <Stat label="Crew" value={crew.length} />
-              <Stat label="Done" value={`${completed}/${tasks.length}`} />
-              <Stat label="Open High" value={highOpen} />
-              <Stat label="Score" value={`${progress}%`} />
-            </div>
-
-            <div className="h-3 bg-neutral-900 rounded-full overflow-hidden">
-              <div className="h-full bg-white rounded-full transition-all" style={{ width: `${progress}%` }} />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => updateJob("weather", "Clear")}
-                className={`rounded-2xl p-3 flex items-center justify-center gap-2 font-black ${job.weather === "Clear" ? "bg-white text-black" : "bg-neutral-900 text-white"}`}
-              >
-                <Sun size={18} /> Clear
-              </button>
-              <button
-                onClick={() => updateJob("weather", "Rain / Mud")}
-                className={`rounded-2xl p-3 flex items-center justify-center gap-2 font-black ${job.weather === "Rain / Mud" ? "bg-white text-black" : "bg-neutral-900 text-white"}`}
-              >
-                <CloudRain size={18} /> Rain/Mud
-              </button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {tab === "plan" && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-            <Section icon={<Zap size={18} />} title="Attack List">
-              <div className="space-y-2">
-                {tasks.map((task) => (
-                  <div key={task.id} className="bg-neutral-950 border border-neutral-800 rounded-2xl p-3 flex gap-3 items-start">
-                    <button
-                      onClick={() => setTasks(tasks.map((t) => (t.id === task.id ? { ...t, done: !t.done } : t)))}
-                      className={`mt-1 h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${task.done ? "bg-white text-black" : "bg-neutral-800 text-white"}`}
-                    >
-                      <CheckCircle2 size={19} />
-                    </button>
-                    <div className="flex-1 min-w-0">
-                      <div className={`font-black text-sm leading-tight ${task.done ? "line-through text-neutral-500" : "text-white"}`}>{task.text}</div>
-                      <div className="flex gap-2 mt-2">
-                        <Chip>{task.priority}</Chip>
-                        <Chip>{task.zone}</Chip>
-                      </div>
-                    </div>
-                    <button onClick={() => setTasks(tasks.filter((t) => t.id !== task.id))} className="text-neutral-500 mt-1">
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                ))}
-
-                <div className="flex gap-2">
-                  <input
-                    className="flex-1 bg-neutral-950 border border-neutral-800 rounded-2xl p-3 text-sm outline-none"
-                    placeholder="Add jobsite task..."
-                    value={newTask}
-                    onChange={(e) => setNewTask(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && addTask()}
-                  />
-                  <Button onClick={addTask} className="rounded-2xl bg-white text-black hover:bg-neutral-200 h-auto px-4">
-                    <Plus size={20} />
-                  </Button>
-                </div>
-              </div>
-            </Section>
-
-            <Section icon={<ShieldAlert size={18} />} title="Blockers">
-              <textarea
-                className="w-full min-h-24 bg-neutral-950 border border-neutral-800 rounded-2xl p-3 text-sm outline-none"
-                value={job.blockers}
-                onChange={(e) => updateJob("blockers", e.target.value)}
-              />
-            </Section>
-          </motion.div>
-        )}
-
-        {tab === "crew" && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-            <Section icon={<Users size={18} />} title="Crew Board">
-              <div className="space-y-2">
-                {crew.map((member) => (
-                  <div key={member.id} className="bg-neutral-950 border border-neutral-800 rounded-2xl p-3 space-y-2">
-                    <div className="grid grid-cols-2 gap-2">
-                      <input className="bg-neutral-900 rounded-xl p-2 font-black outline-none" value={member.name} onChange={(e) => updateCrew(member.id, "name", e.target.value)} />
-                      <input className="bg-neutral-900 rounded-xl p-2 text-sm outline-none" value={member.role} onChange={(e) => updateCrew(member.id, "role", e.target.value)} />
-                    </div>
-                    <input className="w-full bg-neutral-900 rounded-xl p-2 text-sm outline-none" value={member.task} onChange={(e) => updateCrew(member.id, "task", e.target.value)} />
-                    <div className="grid grid-cols-2 gap-2">
-                      <input className="bg-neutral-900 rounded-xl p-2 text-sm outline-none" value={member.zone} onChange={(e) => updateCrew(member.id, "zone", e.target.value)} />
-                      <select className="bg-neutral-900 rounded-xl p-2 text-sm outline-none" value={member.status} onChange={(e) => updateCrew(member.id, "status", e.target.value)}>
-                        <option>On it</option>
-                        <option>Needs help</option>
-                        <option>Waiting</option>
-                        <option>Done</option>
-                      </select>
-                    </div>
-                  </div>
-                ))}
-                <Button onClick={addCrewMember} className="w-full rounded-2xl bg-white text-black hover:bg-neutral-200 font-black">
-                  <Plus size={18} /> Add Crew Guy
-                </Button>
-              </div>
-            </Section>
-          </motion.div>
-        )}
-
-        {tab === "materials" && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-            <Section icon={<PackageCheck size={18} />} title="Material / Tool Check">
-              <textarea
-                className="w-full min-h-36 bg-neutral-950 border border-neutral-800 rounded-2xl p-3 text-sm outline-none"
-                value={job.materials}
-                onChange={(e) => updateJob("materials", e.target.value)}
-              />
-            </Section>
-            <Section icon={<BatteryCharging size={18} />} title="Morning Checks">
-              <div className="grid grid-cols-2 gap-2 text-sm font-black">
-                <MiniCheck text="Batteries" />
-                <MiniCheck text="Nails" />
-                <MiniCheck text="Saws" />
-                <MiniCheck text="Ladders" />
-                <MiniCheck text="Hardware" />
-                <MiniCheck text="Layout" />
-              </div>
-            </Section>
-          </motion.div>
-        )}
-
-        {tab === "send" && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-            <Section icon={<Send size={18} />} title="Textable Plan">
-              <textarea readOnly className="w-full min-h-64 bg-neutral-950 border border-neutral-800 rounded-2xl p-3 text-xs font-mono outline-none" value={dailyText} />
-              <Button onClick={copyPlan} className="w-full rounded-2xl bg-white text-black hover:bg-neutral-200 font-black">
-                {copied ? "Copied" : "Copy Plan to Text Crew"}
-              </Button>
-            </Section>
-            <Section icon={<ClipboardList size={18} />} title="End-of-Day Notes">
-              <textarea
-                className="w-full min-h-28 bg-neutral-950 border border-neutral-800 rounded-2xl p-3 text-sm outline-none"
-                value={job.notes}
-                onChange={(e) => updateJob("notes", e.target.value)}
-              />
-              <Button onClick={resetDay} className="w-full rounded-2xl bg-neutral-800 text-white hover:bg-neutral-700 font-black">
-                Reset Checks for Tomorrow
-              </Button>
-            </Section>
-          </motion.div>
-        )}
-      </div>
-
-      <nav className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur border-t border-neutral-800 px-3 py-2">
-        <div className="max-w-md mx-auto grid grid-cols-4 gap-2">
-          <TabButton active={tab === "plan"} onClick={() => setTab("plan")} icon={<Home size={18} />} label="Plan" />
-          <TabButton active={tab === "crew"} onClick={() => setTab("crew")} icon={<Users size={18} />} label="Crew" />
-          <TabButton active={tab === "materials"} onClick={() => setTab("materials")} icon={<PackageCheck size={18} />} label="Gear" />
-          <TabButton active={tab === "send"} onClick={() => setTab("send")} icon={<Send size={18} />} label="Send" />
-        </div>
-      </nav>
-    </div>
-  );
+BLOCKERS:
+${document.getElementById("blockers").value}`;
 }
 
-function Header({ mode }) {
-  return (
-    <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between pt-1">
-      <div>
-        <div className="text-[10px] text-neutral-500 font-black tracking-[0.2em] uppercase">Crew Command</div>
-        <h1 className="text-2xl font-black leading-tight">Foreman OS</h1>
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="text-right">
-          <div className="text-[10px] text-neutral-500 font-black uppercase">Mode</div>
-          <div className="text-sm font-black">{mode}</div>
-        </div>
-        <div className="h-12 w-12 rounded-2xl bg-white text-black flex items-center justify-center shadow-lg">
-          <Hammer size={25} />
-        </div>
-      </div>
-    </motion.div>
-  );
+function addTask(){
+  let v=document.getElementById("newTask").value;
+  if(!v) return;
+  tasks.push({text:v,done:false});
+  document.getElementById("newTask").value="";
+  render();
 }
 
-function Section({ title, icon, children }) {
-  return (
-    <Card className="bg-neutral-900 border-neutral-800 rounded-3xl shadow-xl">
-      <CardContent className="p-4 space-y-3">
-        <div className="flex items-center gap-2 text-sm font-black uppercase tracking-wide text-neutral-200">
-          <div className="text-white">{icon}</div>
-          {title}
-        </div>
-        {children}
-      </CardContent>
-    </Card>
-  );
+function toggle(i){
+  tasks[i].done=!tasks[i].done;
+  render();
 }
 
-function Stat({ label, value }) {
-  return (
-    <div className="bg-neutral-900 rounded-2xl p-3">
-      <div className="text-[10px] text-neutral-500 font-black uppercase">{label}</div>
-      <div className="text-xl font-black leading-tight">{value}</div>
-    </div>
-  );
+function addCrew(){
+  crew.push({name:"Guy",task:"Task"});
+  render();
 }
 
-function Chip({ children }) {
-  return <span className="bg-neutral-900 border border-neutral-800 rounded-full px-2 py-1 text-[10px] text-neutral-300 font-black uppercase">{children}</span>;
+function tab(name){
+  document.getElementById("planTab").style.display="none";
+  document.getElementById("crewTab").style.display="none";
+  document.getElementById("sendTab").style.display="none";
+
+  document.getElementById(name+"Tab").style.display="block";
+
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  document.getElementById(name+"Btn").classList.add("active");
 }
 
-function MiniCheck({ text }) {
-  const [checked, setChecked] = useState(false);
-  return (
-    <button onClick={() => setChecked(!checked)} className={`rounded-2xl p-3 flex items-center justify-between ${checked ? "bg-white text-black" : "bg-neutral-950 border border-neutral-800"}`}>
-      {text}
-      <CheckCircle2 size={17} />
-    </button>
-  );
+function copy(){
+  navigator.clipboard.writeText(document.getElementById("output").value);
 }
 
-function TabButton({ active, onClick, icon, label }) {
-  return (
-    <button onClick={onClick} className={`rounded-2xl py-2 flex flex-col items-center justify-center gap-1 text-[11px] font-black ${active ? "bg-white text-black" : "text-neutral-400"}`}>
-      {icon}
-      {label}
-    </button>
-  );
-}
+render();
+
+</script>
+
+</body>
+</html>
